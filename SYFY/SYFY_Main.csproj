@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SYFY_Core\SYFY_Core.csproj" />
-    <ProjectReference Include="..\SYFY_DatabaseSimulation\SYFY_DatabaseSimulation.csproj" />
+    <ProjectReference Include="..\SYFY_Core\SYFY_Application.csproj" />
+    <ProjectReference Include="..\SYFY_DatabaseSimulation\SYFY_Plugin_DatabaseSimulation.csproj" />
     <ProjectReference Include="..\SYFY_Model\SYFY_Model.csproj" />
   </ItemGroup>
 

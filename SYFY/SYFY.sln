@@ -1,15 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.33130.400
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SYFY", "SYFY.csproj", "{DCF13CF7-F415-456C-ACD1-64106828EB01}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SYFY_Main", "SYFY_Main.csproj", "{DCF13CF7-F415-456C-ACD1-64106828EB01}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SYFY_Model", "..\SYFY_Model\SYFY_Model.csproj", "{A4C64A94-7C92-4319-8ADA-3A8925169279}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SYFY_Model", "..\SYFY_Model\SYFY_Model.csproj", "{A4C64A94-7C92-4319-8ADA-3A8925169279}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SYFY_Core", "..\SYFY_Core\SYFY_Core.csproj", "{569A7DBA-C20C-4DC4-AF0F-785BC1086B6F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SYFY_Application", "..\SYFY_Core\SYFY_Application.csproj", "{569A7DBA-C20C-4DC4-AF0F-785BC1086B6F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SYFY_DatabaseSimulation", "..\SYFY_DatabaseSimulation\SYFY_DatabaseSimulation.csproj", "{DB203BF4-1B48-4664-ACB5-CED3DB0FF53B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SYFY_Plugin_DatabaseSimulation", "..\SYFY_DatabaseSimulation\SYFY_Plugin_DatabaseSimulation.csproj", "{DB203BF4-1B48-4664-ACB5-CED3DB0FF53B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

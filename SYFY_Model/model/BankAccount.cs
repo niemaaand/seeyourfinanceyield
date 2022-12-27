@@ -36,5 +36,15 @@ namespace SYFY_Model.model
         {
            
         }
+
+        public void AddAmount(decimal amount)
+        {
+            _Amount += amount;
+        }
+
+        public void SubAmount(decimal amount)
+        {
+            _Amount -= amount;
+        }
     }
 }

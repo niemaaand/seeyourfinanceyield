@@ -6,7 +6,7 @@ using System.Text;
 using SYFY_Core.DatabaseAccess;
 using SYFY_Model.model;
 
-namespace SYFY_DatabaseSimulation
+namespace SYFY_Plugin_DatabaseSimulation
 {
     public class BankingAccountLoadSimulator : IBankingAccountLoader
     {
