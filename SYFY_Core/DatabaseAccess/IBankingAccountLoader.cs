@@ -15,8 +15,8 @@ namespace SYFY_Core.DatabaseAccess
 
         public void saveBankAccount(BankAccount bankAccount);
 
-        public BankAccount createNewBankAccount(string name, string iban, string comment, 
-            CURRENCIES currency, ACCOUNTTYPE accounttype);
+       // public BankAccount createNewBankAccount(string name, string iban, string comment, 
+        //    CURRENCIES currency, ACCOUNTTYPE accounttype);
 
     }
 }

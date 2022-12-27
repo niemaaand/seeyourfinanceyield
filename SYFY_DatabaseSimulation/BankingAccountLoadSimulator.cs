@@ -38,7 +38,7 @@ namespace SYFY_Plugin_DatabaseSimulation
             bankAccounts.Add(bankAccount.Guid, bankAccount);    
         }
 
-        BankAccount IBankingAccountLoader.createNewBankAccount(string name, string iban, string comment, CURRENCIES currency, ACCOUNTTYPE accounttype)
+       /* BankAccount IBankingAccountLoader.createNewBankAccount(string name, string iban, string comment, CURRENCIES currency, ACCOUNTTYPE accounttype)
         {
             BankAccount bankAccount = new BankAccount(Guid.NewGuid());
             bankAccount.Name = name;
@@ -48,6 +48,6 @@ namespace SYFY_Plugin_DatabaseSimulation
             bankAccount.Accounttype = accounttype;
 
             return bankAccount;
-        }
+        }*/
     }
 }

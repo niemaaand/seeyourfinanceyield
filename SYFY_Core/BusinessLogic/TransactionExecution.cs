@@ -13,9 +13,9 @@ namespace SYFY_Application.BusinessLogic
     public class TransactionExecution
     {
 
-        private IDataManager _DataManger;
+        private IDataBaseConnector _DataManger;
 
-        public TransactionExecution(IDataManager dataManager)
+        public TransactionExecution(IDataBaseConnector dataManager)
         {
             _DataManger = dataManager;
         }
@@ -23,8 +23,8 @@ namespace SYFY_Application.BusinessLogic
 
         public void SaveBankingTransaction(BankingTransaction transaction)
         {
-            BankAccount from = _DataManger.getBankAccountByID(transaction.FromBankAccount);
-            BankAccount to = _DataManger.getBankAccountByID(transaction.ToBankAccount);
+            BankAccount from = _DataManger.GetBankAccountByID(transaction.FromBankAccount);
+            BankAccount to = _DataManger.GetBankAccountByID(transaction.ToBankAccount);
 
             if (from.Amount <= transaction.Amount)
             {
@@ -56,12 +56,12 @@ namespace SYFY_Application.BusinessLogic
         public void AlterBankingTransaction(BankingTransaction oldTransaction, BankingTransaction newTransaction)
         {
             // check money balances
-            BankAccount fromOld = _DataManger.getBankAccountByID(oldTransaction.FromBankAccount);
-            BankAccount toOld = _DataManger.getBankAccountByID(oldTransaction.ToBankAccount);
-            BankAccount fromNew = _DataManger.getBankAccountByID(newTransaction.FromBankAccount);
-            BankAccount toNew = _DataManger.getBankAccountByID(newTransaction.ToBankAccount);
-            decimal amountOld = oldTransaction.Amount;
-            decimal amountNew = newTransaction.Amount;
+            BankAccount fromOld = _DataManger.GetBankAccountByID(oldTransaction.FromBankAccount);
+            BankAccount toOld = _DataManger.GetBankAccountByID(oldTransaction.ToBankAccount);
+            BankAccount fromNew = _DataManger.GetBankAccountByID(newTransaction.FromBankAccount);
+            BankAccount toNew = _DataManger.GetBankAccountByID(newTransaction.ToBankAccount);
+            long amountOld = oldTransaction.Amount;
+            long amountNew = newTransaction.Amount;
 
             fromOld.AddAmount(amountOld);
             fromNew.SubAmount(amountNew);
@@ -87,7 +87,7 @@ namespace SYFY_Application.BusinessLogic
                 }
 
                 // transaction has to be saved only once, because it is the same transaction. It was just altered. 
-                _DataManger.SaveBankingTransaction(oldTransaction);
+                _DataManger.UpdateBankingTransaction(oldTransaction);
 
 
                 _DataManger.Commit();

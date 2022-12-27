@@ -10,7 +10,7 @@ namespace SYFY_Model.model
         private string _Password;
         private string _EMailAddress;
 
-        public User(Guid guid): base(guid)
+        public User(string username, string password, string email): base()
         {
 
         }

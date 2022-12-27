@@ -10,9 +10,10 @@ namespace SYFY_Model.model
         private string _Comment;
 
 
-        public TransactionTag(Guid guid): base(guid) 
+        public TransactionTag(string name, string comment=""): base() 
         {
-
+            _Name= name;
+            _Comment= comment;
         }
     }
 }

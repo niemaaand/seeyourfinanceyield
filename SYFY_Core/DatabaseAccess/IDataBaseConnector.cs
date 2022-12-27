@@ -1,0 +1,76 @@
+﻿using SYFY_Model.model;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SYFY_Application.DatabaseAccess
+{
+    /// <summary>
+    /// Interface, which should be implemented by every data base connector. 
+    /// Contains all the methods needed to connect to the data base and perform data base transactons (ACID-rules). 
+    /// </summary>
+    public interface IDataBaseConnector
+    {
+        public Guid NewGuid();
+
+        public void StartDBTransaction();
+
+        public void Commit();
+
+        public void Rollback();
+
+        /// <summary>
+        /// Saves the given bank account to the data base. 
+        /// </summary>
+        /// <param name="bankAccount"></param>
+        /// <returns>"same" bank account with GUID</returns>
+        public BankAccount SaveBankAccount(BankAccount bankAccount);
+
+        /// <summary>
+        /// Saves the given banking transaction to the data base. 
+        /// </summary>
+        /// <param name="bankingTransaction"></param>
+        /// <returns>"same" transaction but with GUID</returns>
+        public BankingTransaction SaveBankingTransaction(BankingTransaction bankingTransaction);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="transactionTag"></param>
+        /// <returns>"same" tag but with GUID</returns>
+        public TransactionTag SaveTransactionTag(TransactionTag transactionTag);
+
+        /// <summary>
+        /// Updates the given bank account in the data base. 
+        /// </summary>
+        /// <param name="bankAccount"></param>
+        public void UpdateBankAccount(BankAccount bankAccount);
+
+        /// <summary>
+        /// Updates the given banking transaction in the data base. 
+        /// </summary>
+        /// <param name="bankingTransaction"></param>
+        public void UpdateBankingTransaction(BankingTransaction bankingTransaction);
+
+        /// <summary>
+        /// Gets bank accounts from data base. Might also cache them. 
+        /// </summary>
+        /// <returns>All bank accounts which match the given filter.</returns>
+        public Dictionary<Guid, BankAccount> GetAllBankAccounts();
+
+        /// <summary>
+        /// Gets banking transaction from data base. Might also cache them. 
+        /// </summary>
+        /// <returns></returns>
+        public Dictionary<Guid, BankingTransaction> GetAllBankingTransactions();
+
+        public BankAccount GetBankAccountByID(Guid guid);
+
+       
+        public BankingTransaction GetBankingTransactionById(Guid guid);
+
+
+    }
+}
