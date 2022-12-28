@@ -7,6 +7,8 @@ namespace SYFY_Core
     public interface IDataEditorView
     {
 
+        public void ShowEditor();
+
         public void CancelEditing();
 
         public void SaveChanges();

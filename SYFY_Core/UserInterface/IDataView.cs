@@ -8,7 +8,9 @@ namespace SYFY_Core
     {
         public void ShowData();
 
-        public void OpenDataEditor();
+        public void CreateData();
+
+        public void UpdateData();
 
         public void DeleteData();
         
