@@ -22,9 +22,8 @@ namespace SYFY_Model.model
         private string _Comment;
         private long _Amount;
         private CURRENCIES _Currency;
-        private ACCOUNTTYPE _Accounttype;   
+        private ACCOUNTTYPE _Accounttype;
 
-       
         public string Name { get => _Name; set => _Name = value; }
         public string Iban { get => _Iban; set => _Iban = value; }
         public string Comment { get => _Comment; set => _Comment = value; }

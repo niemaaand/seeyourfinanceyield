@@ -31,8 +31,12 @@ namespace SYFY
             tnew.Amount = 108;
             transactionExecution.AlterBankingTransaction(t, tnew);
 
-            MainWindow bankAccountView = new MainWindow(dataManager);
-            bankAccountView.ShowDialog();
+            //MainWindow bankAccountView = new MainWindow(dataManager);
+            //bankAccountView.ShowDialog();
+
+            MainWindow mainWindow = new MainWindow(dataManager);
+            mainWindow.ShowDialog();
+
 
             /*Thread bankAccountViewThread = new Thread(BuildBankAccountView);
             bankAccountViewThread.SetApartmentState(ApartmentState.STA);

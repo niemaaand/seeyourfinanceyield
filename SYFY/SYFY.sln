@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SYFY_Application", "..\SYFY
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SYFY_Plugin_DatabaseSimulation", "..\SYFY_DatabaseSimulation\SYFY_Plugin_DatabaseSimulation.csproj", "{DB203BF4-1B48-4664-ACB5-CED3DB0FF53B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SYFY_Plugin_GUI_WPF", "..\SYFY_Plugin_GUI_WPF\SYFY_Plugin_GUI_WPF.csproj", "{BA940F49-8AB0-48D0-BBC8-A8DA7D18470F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SYFY_Plugin_GUI_WPF", "..\SYFY_Plugin_GUI_WPF\SYFY_Plugin_GUI_WPF.csproj", "{BA940F49-8AB0-48D0-BBC8-A8DA7D18470F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SYFY_Model.model
 {
-    public class BankingTransaction: DeleteableData, ICloneable
+    public class BankingTransaction : DeleteableData, ICloneable
     {
 
         private DateTime _TransactionDate;
@@ -16,16 +16,16 @@ namespace SYFY_Model.model
         private string _Comment;
         private Dictionary<Guid, TransactionTag> _TransactionTags;
 
-        public BankingTransaction(Guid from, Guid to, long amount, DateTime transactionDate, 
+        public BankingTransaction(Guid from, Guid to, long amount, DateTime transactionDate,
             DateTime postingDate = new DateTime(),
-            string comment="", Dictionary<Guid, TransactionTag> tags = null): base()
+            string comment = "", Dictionary<Guid, TransactionTag> tags = null) : base()
         {
-            _FromBankAccount= from;
+            _FromBankAccount = from;
             _ToBankAccount = to;
             _Amount = amount;
             _TransactionDate = transactionDate;
 
-            if(postingDate < transactionDate)
+            if (postingDate < transactionDate)
             {
                 _PostingDate = transactionDate;
             }
@@ -40,7 +40,7 @@ namespace SYFY_Model.model
             {
                 tags = new Dictionary<Guid, TransactionTag>();
             }
-            _TransactionTags= tags;
+            _TransactionTags = tags;
 
         }
 
@@ -52,6 +52,13 @@ namespace SYFY_Model.model
         public string Comment { get => _Comment; set => _Comment = value; }
         public Dictionary<Guid, TransactionTag> TransactionTags { get => _TransactionTags; set => _TransactionTags = value; }
 
+        public string AmountAsString { get
+            { 
+                long eur = Amount / 100;
+                long cents = Amount % 100;
+
+                return eur + "." + cents;
+            } }
 
         public object Clone()
         {
