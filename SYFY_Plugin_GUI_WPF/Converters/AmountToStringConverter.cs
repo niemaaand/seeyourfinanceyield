@@ -26,12 +26,22 @@ namespace SYFY_Plugin_GUI_WPF.Converters
 
             long eur = amount / 100;
             long cent = amount % 100;
-            return (positiveSign?"":"-") + eur + "." + cent;
+            return (positiveSign?"":"-") + eur.ToString() + "." + cent.ToString("00");
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            string strValue = value as string;
+            string strValue = (string)value;
+            decimal val = 0;
+
+            if (Decimal.TryParse(strValue, NumberStyles.Currency, CultureInfo.InvariantCulture, out val) )
+            {
+                return (long)(val * 100);
+            }
+
+            return DependencyProperty.UnsetValue;
+
+            /*string strValue = value as string;
             strValue = strValue.Replace(" ", "");
 
             bool positiveSign = true;
@@ -74,7 +84,7 @@ namespace SYFY_Plugin_GUI_WPF.Converters
                 throw new ArrayTypeMismatchException("Wrong format for amount.");
             }           
 
-            return (positiveSign?1:-1) * (eur * 100 + cent);            
+            return (positiveSign?1:-1) * (eur * 100 + cent);        */
         }
     }
 }

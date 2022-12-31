@@ -23,16 +23,18 @@ namespace SYFY_Plugin_GUI_WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-
-
-
+        private IDataBaseConnector dbConnector;
+        private bool unsavedChanges;
 
         public MainWindow(IDataBaseConnector dataManager)
         {
-            InitializeComponent();
-            this.DataContext = new MainViewModel(dataManager);
+            dbConnector= dataManager;
+            unsavedChanges = false;
 
-            BankAccountGuidToNameConverter baGuidNameConv = new BankAccountGuidToNameConverter(dataManager);
+            InitializeComponent();
+            this.DataContext = new MainViewModel(dbConnector);
+
+            BankAccountGuidToNameConverter baGuidNameConv = new BankAccountGuidToNameConverter(dbConnector);
             
             Binding bind_FromBankAccount = new Binding("FromBankAccount");
             bind_FromBankAccount.Converter = baGuidNameConv;
@@ -42,11 +44,14 @@ namespace SYFY_Plugin_GUI_WPF
             bind_ToBankAccount.Converter = baGuidNameConv;
             dgCol_Trans_ToBankAccount.Binding = bind_ToBankAccount;
 
+            dg_BankAccounts.CellEditEnding += On_CellEditEnding;
+            dg_BankAccounts.RowEditEnding += On_RowEditEnding;
+            
 
             //DependencyProperty dependency = DependencyProperty.Register("BankAccount", typeof(string), typeof(DependencyProperty));
             ComboBox box = new ComboBox();
 
-            foreach (BankAccount b in dataManager.GetAllBankAccounts().Values)
+            foreach (BankAccount b in dbConnector.GetAllBankAccounts().Values)
             {
                 //ComBoxColItems_BankAccounts.Add(new BankAccountComBoxItem(b.Guid, b.Name));
 
@@ -140,5 +145,25 @@ namespace SYFY_Plugin_GUI_WPF
         {
             //throw new NotImplementedException();
         }
+
+        private void On_CellEditEnding(object? sender, DataGridCellEditEndingEventArgs e)
+        {
+            string oldComment = ((BankAccount)((DataGrid)sender).SelectedItem).Comment;
+            string newComment = ((TextBox)e.EditingElement).Text;
+            //((TextBox)e.EditingElement).Text = "HALLO";
+            IDataBaseConnector dataManager = ((MainViewModel)((DataGrid)sender).DataContext).dataManager;
+        }
+        
+        private void On_RowEditEnding(object? sender, DataGridRowEditEndingEventArgs e)
+        {
+            BankAccount b = ((BankAccount)((DataGrid)sender).SelectedItem);
+
+        }
+
+        public void BTN_NewBankAccountClicked(object? sender, RoutedEventArgs e)
+        {
+            ((MainViewModel)((Button)sender).DataContext).bankAccounts.Add(new BankAccount("Neuer Bank Account"));
+        }
+
     }
 }

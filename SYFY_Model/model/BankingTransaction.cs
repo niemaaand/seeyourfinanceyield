@@ -44,8 +44,8 @@ namespace SYFY_Model.model
 
         }
 
-        public DateTime TransactionDate { get => _TransactionDate; set => _TransactionDate = value; }
-        public DateTime PostingDate { get => _PostingDate; set => _PostingDate = value; }
+        public DateTime TransactionDate { get => _TransactionDate; set => _TransactionDate = /*checkTransactionDate(value)*/ value; }
+        public DateTime PostingDate { get => _PostingDate; set => _PostingDate = /*checkPostingDate(value)*/ value; }
         public Guid FromBankAccount { get => _FromBankAccount; set => _FromBankAccount = value; }
         public Guid ToBankAccount { get => _ToBankAccount; set => _ToBankAccount = value; }
         public long Amount { get => _Amount; set => _Amount = value; }
@@ -69,5 +69,25 @@ namespace SYFY_Model.model
 
             return b;
         }               
+
+        private DateTime checkPostingDate(DateTime newPostingDate)
+        {
+            if (newPostingDate < _TransactionDate)
+            {
+                return _TransactionDate;
+            }
+
+            return newPostingDate;
+        }
+
+        private DateTime checkTransactionDate(DateTime newTransactionDate)
+        {
+            if(newTransactionDate > _PostingDate)
+            {
+                _PostingDate= newTransactionDate;
+            }
+
+            return newTransactionDate;
+        }
     }
 }

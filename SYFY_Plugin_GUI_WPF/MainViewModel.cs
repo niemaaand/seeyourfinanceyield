@@ -26,6 +26,8 @@ namespace SYFY_Plugin_GUI_WPF
 
         public ObservableCollection<BankAccount> bankAccounts { get; set; }
         public ObservableCollection<BankingTransaction> bankingTransactions { get; set; }
+
+        public ObservableCollection<TransactionTag> transactionTags { get; set; }
         public ObservableCollection<BankAccountComBoxItem> ComBoxColItems_BankAccounts { get; set; }
 
         public Dictionary<Guid, BankAccount>.ValueCollection BankAccounts { get; set; }
@@ -39,13 +41,19 @@ namespace SYFY_Plugin_GUI_WPF
             bankAccounts = new ObservableCollection<BankAccount>();
             foreach(BankAccount b in dataManager.GetAllBankAccounts().Values)
             {
-                bankAccounts.Add(b);
+                bankAccounts.Add((BankAccount)b.Clone());
             }
 
             bankingTransactions = new ObservableCollection<BankingTransaction>();
             foreach (BankingTransaction transaction in dataManager.GetAllBankingTransactions().Values)
             {
-                bankingTransactions.Add(transaction);
+                bankingTransactions.Add((BankingTransaction)transaction.Clone());
+            }
+
+            transactionTags = new ObservableCollection<TransactionTag>();
+            foreach(TransactionTag tag in dataManager.GetAllTransactionTags().Values)
+            {
+                transactionTags.Add(tag);
             }
 
             bankAccounts.CollectionChanged += On_BankAccountsChanged;
@@ -82,8 +90,10 @@ namespace SYFY_Plugin_GUI_WPF
 
         private void On_BankAccountsChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
+
+       
     }
 
     public class BankAccountComBoxItem

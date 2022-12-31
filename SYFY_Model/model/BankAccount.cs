@@ -14,7 +14,7 @@ namespace SYFY_Model.model
         FixedDeposit
     }
 
-    public class BankAccount: DeleteableData
+    public class BankAccount: DeleteableData, ICloneable
     {
 
         private string _Name;
@@ -51,6 +51,17 @@ namespace SYFY_Model.model
         public void SubAmount(long amount)
         {
             _Amount -= amount;
+        }
+
+        public object Clone()
+        {
+            BankAccount b = new BankAccount(this._Name, this._Iban, this._Comment,
+                this._Currency, this._Accounttype);
+
+            b.Guid = this.Guid;
+            b._Amount= this._Amount;
+
+            return b;
         }
     }
 }

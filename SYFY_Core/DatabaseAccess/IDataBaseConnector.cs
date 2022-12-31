@@ -66,6 +66,8 @@ namespace SYFY_Application.DatabaseAccess
         /// <returns></returns>
         public Dictionary<Guid, BankingTransaction> GetAllBankingTransactions();
 
+        public Dictionary<Guid, TransactionTag> GetAllTransactionTags();
+
         public BankAccount GetBankAccountByID(Guid guid);
 
        

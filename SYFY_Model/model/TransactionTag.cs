@@ -12,8 +12,11 @@ namespace SYFY_Model.model
 
         public TransactionTag(string name, string comment=""): base() 
         {
-            _Name= name;
-            _Comment= comment;
+            Name= name;
+            Comment= comment;
         }
+
+        public string Name { get => _Name; set => _Name = value; }
+        public string Comment { get => _Comment; set => _Comment = value; }
     }
 }

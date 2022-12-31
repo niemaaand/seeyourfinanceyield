@@ -40,7 +40,8 @@
             </TabItem>
             <TabItem Header="Bank Accounts">
                 <Grid Background="#FFE5E5E5">
-                    <DataGrid x:Name="dg_BankAccounts" AutoGenerateColumns="False" ItemsSource="{Binding bankAccounts}">
+                    <DataGrid x:Name="dg_BankAccounts" AutoGenerateColumns="False" ItemsSource="{Binding bankAccounts}" 
+                              CanUserAddRows="False" CanUserDeleteRows="True" Margin="0,40,0,0">
                         <DataGrid.Columns>
                             <DataGridTextColumn x:Name="dgCol_BA_Name" Binding="{Binding Name}" Header="Name"/>
                             <DataGridTextColumn x:Name="dgCol_BA_Amount"                                                 
@@ -52,6 +53,21 @@
                             <DataGridTextColumn x:Name="dgCol_BA_Iban"                                                 
                                                 Binding="{Binding Path=Iban}" 
                                                 Header="Number (Iban)"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Button x:Name="BTN_NewBankAccout" Content="Add Bank Account" 
+                            HorizontalAlignment="Left" Margin="62,20,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.227,-0.447" 
+                            Click="BTN_NewBankAccountClicked"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Transaction Tags">
+                <Grid Background="#FFE5E5E5">
+                    <DataGrid x:Name="dg_TransactionTags" AutoGenerateColumns="False" ItemsSource="{Binding transactionTags}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="dgCol_Tag_Name" Binding="{Binding Name}" Header="Name"/>                            
+                            <DataGridTextColumn x:Name="dgCol_Tag_Comment"                                                 
+                                                Binding="{Binding Comment}" 
+                                                Header="Comment"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
