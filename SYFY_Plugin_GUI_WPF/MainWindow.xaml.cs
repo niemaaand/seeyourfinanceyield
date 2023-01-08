@@ -26,19 +26,16 @@ namespace SYFY_Plugin_GUI_WPF
     public partial class MainWindow : Window
     {
         private DataManagement dataManager;
-        private bool unsavedChanges;
 
         public MainWindow(DataManagement dataManager, MainViewModel mainViewModel)
         {
-            this.dataManager= dataManager;
-            unsavedChanges = false;
+            this.dataManager = dataManager;
 
             InitializeComponent();
-            //this.DataContext = new MainViewModel(dbConnector);
             this.DataContext = mainViewModel;
 
             BankAccountGuidToNameConverter baGuidNameConv = new BankAccountGuidToNameConverter(this.dataManager);
-            
+
             Binding bind_FromBankAccount = new Binding("FromBankAccount");
             bind_FromBankAccount.Converter = baGuidNameConv;
             dgCol_Trans_FromBankAccount.Binding = bind_FromBankAccount;
@@ -51,8 +48,17 @@ namespace SYFY_Plugin_GUI_WPF
 
             dg_BankAccounts.CellEditEnding += On_CellEditEnding;
             dg_BankAccounts.RowEditEnding += On_RowEditEnding;
-                        
+            dg_Transactions.RowEditEnding += On_RowEditEnding;
+            //tabControl.IsVisibleChanged += On_VisibleChanged;
 
+
+
+
+
+
+
+
+            /*
             //DependencyProperty dependency = DependencyProperty.Register("BankAccount", typeof(string), typeof(DependencyProperty));
             ComboBox box = new ComboBox();
 
@@ -73,13 +79,13 @@ namespace SYFY_Plugin_GUI_WPF
             }
 
             //dgCol_Trans_BANew.CellTemplate = new DataTemplate(typeof(ComboBox));
-            
+
 
             DataGridTextColumn dgCol_Name = new DataGridTextColumn();
             dgCol_Name.Header = "Name";
             dgCol_Name.Binding = new Binding("Name");
             dgCol_Name.IsReadOnly = false;
-            
+
 
             DataGridTextColumn dgCol_Iban = new DataGridTextColumn();
             dgCol_Iban.Header = "Number (IBAN)";
@@ -123,7 +129,7 @@ namespace SYFY_Plugin_GUI_WPF
             dg_Transactions.Columns.Add(dgCol_TransDate);
             dg_Transactions.Columns.Add(dgCol_BankAccountFrom);
 
-            
+
 
 
             TabItem bankAccountsTab = new TabItem();
@@ -143,7 +149,7 @@ namespace SYFY_Plugin_GUI_WPF
 
 
             //this.Content = tabControl;
-        
+            */
         }
 
         private void On_BeginEditDataGrid(object? sender, DataGridBeginningEditEventArgs e)
@@ -158,13 +164,13 @@ namespace SYFY_Plugin_GUI_WPF
             //((TextBox)e.EditingElement).Text = "HALLO";
             DataManagement dataManager = ((MainViewModel)((DataGrid)sender).DataContext).dataManager;
         }
-        
+
         private void On_RowEditEnding(object? sender, DataGridRowEditEndingEventArgs e)
         {
             //BankAccount b = ((BankAccount)((DataGrid)sender).SelectedItem);
             GetDataContextFromSender(sender).DataChanged((DeleteableData)((DataGrid)sender).SelectedItem);
         }
-                
+
 
         private void BTN_NewTransaction_Click(object sender, RoutedEventArgs e)
         {
@@ -176,7 +182,8 @@ namespace SYFY_Plugin_GUI_WPF
             try
             {
                 return (((MainViewModel)((Control)sender).DataContext));
-            }catch (Exception e)
+            }
+            catch (Exception e)
             {
                 throw new NotImplementedException(e.Message);
             }
@@ -205,6 +212,19 @@ namespace SYFY_Plugin_GUI_WPF
         private void BTN_DiscardChangesBankAccounts_Click(object sender, RoutedEventArgs e)
         {
             GetDataContextFromSender(sender).DiscardChanges_Click(sender, e);
+        }
+
+
+        private void tabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            RefreshDataGrids();
+        }
+
+        private void RefreshDataGrids()
+        {
+            dg_BankAccounts.Items.Refresh();
+            dg_Transactions.Items.Refresh();
+            dg_TransactionTags.Items.Refresh();
         }
     }
 }

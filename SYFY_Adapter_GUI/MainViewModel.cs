@@ -20,37 +20,25 @@ namespace SYFY_Adapter_GUI
 {
     public class MainViewModel
     {
-        //public DependencyProperty dp;
 
         public DataManagement dataManager;
-
-        // public Dictionary<Guid, BankingTransaction>.ValueCollection Transactions { get; set; }
 
         public ObservableCollection<BankAccount> bankAccounts { get; set; }
         public ObservableCollection<BankingTransaction> bankingTransactions { get; set; }
 
         public ObservableCollection<TransactionTag> transactionTags { get; set; }
-        // public ObservableCollection<BankAccountComBoxItem> ComBoxColItems_BankAccounts { get; set; }
-
-        //  public Dictionary<Guid, BankAccount>.ValueCollection BankAccounts { get; set; }
-
-
+       
         private List<BankingTransaction> changedTransactions;
         private List<BankAccount> changedBankAccounts;
 
         public MainViewModel(DataManagement dataManager)
         {
-            //dp = DependencyProperty.Register("dataManager", typeof(IDataBaseConnector), typeof(MainViewModel));
-
             this.dataManager = dataManager;
             changedTransactions = new List<BankingTransaction>();
             changedBankAccounts = new List<BankAccount>();
 
             bankAccounts = new ObservableCollection<BankAccount>();
-            foreach (BankAccount b in dataManager.GetAllBankAccounts().Values)
-            {
-                bankAccounts.Add(b);
-            }
+            LoadBankAccounts();
 
             bankingTransactions = new ObservableCollection<BankingTransaction>();
             foreach (BankingTransaction transaction in dataManager.GetAllBankingTransactions().Values)
@@ -65,32 +53,6 @@ namespace SYFY_Adapter_GUI
             }
 
             bankAccounts.CollectionChanged += On_BankAccountsChanged;
-
-            //Dictionary<Guid, BankAccount> b = new Dictionary<Guid, BankAccount>();
-            // Dictionary<Guid, BankingTransaction> t = new Dictionary<Guid, BankingTransaction>();
-            // BankAccounts = dataManager.GetAllBankAccounts().Values;
-            // Transactions = dataManager.GetAllBankingTransactions().Values;
-
-            /*   ComBoxColItems_BankAccounts = new ObservableCollection<BankAccountComBoxItem>();
-              DependencyProperty dependency = DependencyProperty.Register("MyProperty", typeof(string), typeof(DependencyProperty));
-
-              ComboBox box = new ComboBox();
-            */
-            /* foreach (BankAccount b in BankAccounts)
-             {
-                 ComBoxColItems_BankAccounts.Add(new BankAccountComBoxItem(b.Guid, b.Name));
-
-                 //ComboBoxItem comboBoxItem = new ComboBoxItem();
-                 //comboBoxItem.SetValue(dependency, b.Guid);
-                 //comboBoxItem.Content= b.Name;
-                 //box.Items.Add(comboBoxItem);
-
-             }*/
-
-
-
-
-
 
         }
 
@@ -138,18 +100,57 @@ namespace SYFY_Adapter_GUI
         {
             foreach(BankingTransaction transaction in changedTransactions)
             {
-                dataManager.SaveBankingTransaction(transaction);
+                BankingTransaction originalTransaction = dataManager.GetBankingTransactionByID(transaction.Guid);
+
+                int index = bankingTransactions.IndexOf(transaction);
+                bankingTransactions[index] = dataManager.SaveBankingTransaction(transaction);
+
+                BankAccount fromOld = bankAccounts.FirstOrDefault(b => b.Guid.Equals(originalTransaction.FromBankAccount));
+                BankAccount fromNew = bankAccounts.FirstOrDefault(b => b.Guid.Equals(transaction.FromBankAccount));
+                BankAccount toOld = bankAccounts.FirstOrDefault(b => b.Guid.Equals(originalTransaction.ToBankAccount));
+                BankAccount toNew = bankAccounts.FirstOrDefault(b => b.Guid.Equals(transaction.ToBankAccount));
+
+                index = bankAccounts.IndexOf(fromOld);
+                bankAccounts[index] = dataManager.GetBankAccountByID(fromOld.Guid);
+
+                if (!fromOld.Guid.Equals(fromNew.Guid))
+                {
+                    index = bankAccounts.IndexOf(fromNew);
+                    bankAccounts[index] = dataManager.GetBankAccountByID(fromNew.Guid);
+                }
+
+                index = bankAccounts.IndexOf(toOld);
+                bankAccounts[index] = dataManager.GetBankAccountByID(toOld.Guid);
+
+                if (!toOld.Guid.Equals(toNew.Guid))
+                {
+                    index = bankAccounts.IndexOf(toNew);
+                    bankAccounts[index] = dataManager.GetBankAccountByID(toNew.Guid);
+                }
+
             }
-
-
 
             foreach (BankAccount bankAccount in changedBankAccounts)
             {
-                dataManager.SaveBankAccount(bankAccount);
+                BankAccount originalBankAccount = dataManager.GetBankAccountByID(bankAccount.Guid);
+                int index = bankAccounts.IndexOf(bankAccount);
+                bankAccounts[index] = dataManager.SaveBankAccount(bankAccount);
             }
+
+            LoadBankAccounts();
+
 
             changedBankAccounts.Clear();
             changedTransactions.Clear();
+        }
+
+        private void LoadBankAccounts()
+        {
+            bankAccounts.Clear();
+            foreach (BankAccount b in dataManager.GetAllBankAccounts().Values)
+            {
+                bankAccounts.Add(b);
+            }
         }
         
         public void DiscardChanges_Click(object sender, EventArgs e)
@@ -175,19 +176,6 @@ namespace SYFY_Adapter_GUI
         }
 
        
-    }
-
-    public class BankAccountComBoxItem
-    {
-        private Guid Id { get; }
-        private string Name { get; }
-
-        public BankAccountComBoxItem(Guid guid, string name)
-        {
-            Id = guid;
-            Name = name;
-        }
-
     }
 
 }

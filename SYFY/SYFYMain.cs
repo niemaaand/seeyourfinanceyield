@@ -8,6 +8,7 @@ using System.Linq;
 using SYFY_Plugin_GUI_WPF;
 using SYFY_Adapter_GUI;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace SYFY
 {
@@ -19,6 +20,7 @@ namespace SYFY
         {
             IDataBaseConnector dataManager = new DataBaseSimulator();
             DataManagement dataManagement = new DataManagement(dataManager);
+            TestDataCreator.CreateTestData(dataManagement);
 
 
             BankAccount b1 = dataManagement.GetAllBankAccounts().ElementAt(0).Value;
@@ -85,4 +87,36 @@ namespace SYFY
             waitUntilWindowClosed.Set();
         }*/
     }
+
+
+
+    internal static class TestDataCreator
+    {
+        public static void CreateTestData(DataManagement dataManager)
+        {
+            TransactionTag funTag = dataManager.SaveTransactionTag(new TransactionTag("Spaß"));
+            TransactionTag schoolTag = dataManager.SaveTransactionTag(new TransactionTag("DHBW"));
+            TransactionTag foodTag = dataManager.SaveTransactionTag(new TransactionTag("Food"));
+
+            BankAccount giroSparkasse = dataManager.SaveBankAccount(new BankAccount("Giro Sparkasse"));
+            BankAccount giroVolksbank = dataManager.SaveBankAccount(new BankAccount("Giro Volksbank"));
+            BankAccount depotSmartbroker = dataManager.SaveBankAccount(new BankAccount("Depot Smartbroker"));
+            BankAccount depotTradeRepublic = dataManager.SaveBankAccount(new BankAccount("Depot TradeRepublic"));
+            BankAccount festgeld = dataManager.SaveBankAccount(new BankAccount("Festgeld"));
+            BankAccount tagesgeld = dataManager.SaveBankAccount(new BankAccount("Tagesgeld"));
+
+            Dictionary<Guid, TransactionTag> tagsList = new Dictionary<Guid, TransactionTag>();
+            tagsList.Add(funTag.Guid, funTag);
+            tagsList.Add(schoolTag.Guid, schoolTag);
+
+            dataManager.SaveBankingTransaction(new BankingTransaction(giroSparkasse.Guid, depotTradeRepublic.Guid,
+                3078, new DateTime(2022, 12, 27), tags: tagsList));
+            dataManager.SaveBankingTransaction(new BankingTransaction(giroSparkasse.Guid, depotSmartbroker.Guid,
+                201, new DateTime(2022, 12, 29)));
+        }
+    }
+
+
+
+
 }

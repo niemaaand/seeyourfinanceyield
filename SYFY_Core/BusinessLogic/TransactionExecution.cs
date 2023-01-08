@@ -55,7 +55,7 @@ namespace SYFY_Application.BusinessLogic
             }
         }
 
-        public void AlterBankingTransaction(BankingTransaction oldTransaction, BankingTransaction newTransaction)
+        public BankingTransaction AlterBankingTransaction(BankingTransaction oldTransaction, BankingTransaction newTransaction)
         {
             // check money balances
             BankAccount fromOld = _DataManger.GetBankAccountByID(oldTransaction.FromBankAccount);
@@ -89,7 +89,7 @@ namespace SYFY_Application.BusinessLogic
                 }
 
                 // transaction has to be saved only once, because it is the same transaction. It was just altered. 
-                _DataManger.SaveBankingTransaction(oldTransaction);
+                newTransaction = _DataManger.SaveBankingTransaction(newTransaction);
 
 
                 _DataManger.Commit();
@@ -99,6 +99,8 @@ namespace SYFY_Application.BusinessLogic
                 _DataManger.Rollback();
                 throw new Exception("Updating transaction failed. \n" + ex.Message);
             }
+
+            return newTransaction;
 
         }
 

@@ -52,13 +52,13 @@ namespace SYFY_Model.model
         public string Comment { get => _Comment; set => _Comment = value; }
         public Dictionary<Guid, TransactionTag> TransactionTags { get => _TransactionTags; set => _TransactionTags = value; }
 
-        public string AmountAsString { get
+        /*public string AmountAsString { get
             { 
                 long eur = Amount / 100;
                 long cents = Amount % 100;
 
                 return eur + "." + cents;
-            } }
+            } }*/
 
         public object Clone()
         {

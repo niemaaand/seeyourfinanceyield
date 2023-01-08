@@ -23,9 +23,6 @@ namespace SYFY_Plugin_DatabaseSimulation
             _TransactionTags = new Dictionary<Guid, TransactionTag>();
 
             _CurrentlyPerformingTransaction= false;
-
-            TestDataCreator.CreateTestData(this);
-
         }
 
         void IDataBaseConnector.Commit()
@@ -158,32 +155,5 @@ namespace SYFY_Plugin_DatabaseSimulation
             //TODO
         }
        
-    }
-
-
-    internal static class TestDataCreator
-    {       
-        public static void CreateTestData(IDataBaseConnector dataBaseConnector)
-        {
-            TransactionTag funTag = dataBaseConnector.SaveTransactionTag(new TransactionTag("Spaß"));
-            TransactionTag schoolTag = dataBaseConnector.SaveTransactionTag(new TransactionTag("DHBW"));
-            TransactionTag foodTag = dataBaseConnector.SaveTransactionTag(new TransactionTag("Food"));
-
-            BankAccount giroSparkasse = dataBaseConnector.SaveBankAccount(new BankAccount("Giro Sparkasse"));
-            BankAccount giroVolksbank = dataBaseConnector.SaveBankAccount(new BankAccount("Giro Volksbank"));
-            BankAccount depotSmartbroker = dataBaseConnector.SaveBankAccount(new BankAccount("Depot Smartbroker"));
-            BankAccount depotTradeRepublic = dataBaseConnector.SaveBankAccount(new BankAccount("Depot TradeRepublic"));
-            BankAccount festgeld = dataBaseConnector.SaveBankAccount(new BankAccount("Festgeld"));
-            BankAccount tagesgeld = dataBaseConnector.SaveBankAccount(new BankAccount("Tagesgeld"));
-
-            Dictionary<Guid, TransactionTag> tagsList = new Dictionary<Guid, TransactionTag>();
-            tagsList.Add(funTag.Guid, funTag);
-            tagsList.Add(schoolTag.Guid, schoolTag);
-
-            dataBaseConnector.SaveBankingTransaction(new BankingTransaction(giroSparkasse.Guid, depotTradeRepublic.Guid,
-                3078, new DateTime(2022, 12, 27), tags:tagsList));
-            dataBaseConnector.SaveBankingTransaction(new BankingTransaction(giroSparkasse.Guid, depotSmartbroker.Guid,
-                201, new DateTime(2022, 12, 29)));
-        }
     }
 }

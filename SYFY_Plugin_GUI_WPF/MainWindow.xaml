@@ -16,7 +16,7 @@
             <ColumnDefinition Width="137*"/>
             <ColumnDefinition Width="63*"/>
         </Grid.ColumnDefinitions>
-        <TabControl x:Name="tabControl" Margin="0,42,0,0" Grid.ColumnSpan="2">
+        <TabControl x:Name="tabControl" Margin="0,42,0,0" Grid.ColumnSpan="2" SelectionChanged="tabControl_SelectionChanged">
             <TabItem Header="Transactions">
                 <Grid Background="#FFE5E5E5">
                     <DataGrid x:Name="dg_Transactions" AutoGenerateColumns="False" ItemsSource="{Binding bankingTransactions}" 
