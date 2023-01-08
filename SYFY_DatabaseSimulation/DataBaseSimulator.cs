@@ -74,7 +74,7 @@ namespace SYFY_Plugin_DatabaseSimulation
             return _Transactions[guid];
         }
 
-        public Guid NewGuid()
+        private Guid NewGuid()
         {
             //TODO
             Guid g = Guid.NewGuid();
@@ -91,35 +91,55 @@ namespace SYFY_Plugin_DatabaseSimulation
         BankAccount IDataBaseConnector.SaveBankAccount(BankAccount bankAccount)
         {
             //TODO
-            bankAccount.Guid= Guid.NewGuid();
-
-            if (!_BankAccounts.ContainsKey(bankAccount.Guid))
+            if (_BankAccounts.ContainsKey(bankAccount.Guid))
             {
-                _BankAccounts.Add(bankAccount.Guid, bankAccount);
-                return bankAccount;
+                // update
+                if (_BankAccounts.ContainsKey(bankAccount.Guid))
+                {
+                    _BankAccounts[bankAccount.Guid] = bankAccount;
+                }
+            }
+            else
+            {
+                // save newly
+                bankAccount.Guid = NewGuid();
+                
+                if (!_BankAccounts.ContainsKey(bankAccount.Guid))
+                {
+                    _BankAccounts.Add(bankAccount.Guid, bankAccount);
+                }
             }
 
-            throw new Exception("Already in DB!");
+            return _BankAccounts[bankAccount.Guid];
 
         }
 
         BankingTransaction IDataBaseConnector.SaveBankingTransaction(BankingTransaction bankingTransaction)
         {
             //TODO
-            bankingTransaction.Guid= Guid.NewGuid();
 
-            if (!_Transactions.ContainsKey(bankingTransaction.Guid))
+            if (_Transactions.ContainsKey(bankingTransaction.Guid))
             {
-                _Transactions.Add(bankingTransaction.Guid, bankingTransaction);
-                return bankingTransaction;
+                // update
+                    _Transactions[bankingTransaction.Guid] = bankingTransaction;
             }
+            else
+            {
+                // save newly
+                bankingTransaction.Guid = NewGuid();
 
-            throw new Exception("Already in DB!");
+                if (!_Transactions.ContainsKey(bankingTransaction.Guid))
+                {
+                    _Transactions.Add(bankingTransaction.Guid, bankingTransaction);
+                }
+            }
+            
+            return _Transactions[bankingTransaction.Guid];
         }
 
         TransactionTag IDataBaseConnector.SaveTransactionTag(TransactionTag transactionTag)
         {
-            transactionTag.Guid = Guid.NewGuid();
+            transactionTag.Guid = NewGuid();
 
             if (!_TransactionTags.ContainsKey(transactionTag.Guid))
             {
@@ -137,32 +157,6 @@ namespace SYFY_Plugin_DatabaseSimulation
             Console.WriteLine("Transaction started...");
             //TODO
         }
-
-        void IDataBaseConnector.UpdateBankAccount(BankAccount bankAccount)
-        {
-            //TODO
-            if (_BankAccounts.ContainsKey(bankAccount.Guid))
-            {
-                _BankAccounts[bankAccount.Guid] = bankAccount;
-                return;
-            }
-
-            throw new Exception("Not in DB!");
-        }
-
-        void IDataBaseConnector.UpdateBankingTransaction(BankingTransaction bankingTransaction)
-        {
-            //TODO
-            if (_Transactions.ContainsKey(bankingTransaction.Guid))
-            {
-                _Transactions[bankingTransaction.Guid] = bankingTransaction;
-                return;
-            }
-
-            throw new Exception("Not in DB!");
-
-        }             
-
        
     }
 

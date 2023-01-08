@@ -68,7 +68,8 @@ namespace SYFY_Model.model
             b.Guid = this.Guid;
 
             return b;
-        }               
+        }             
+       
 
         private DateTime checkPostingDate(DateTime newPostingDate)
         {

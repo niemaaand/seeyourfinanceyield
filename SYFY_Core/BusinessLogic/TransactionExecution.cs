@@ -10,7 +10,7 @@ using System.Transactions;
 
 namespace SYFY_Application.BusinessLogic
 {
-    public class TransactionExecution
+    internal class TransactionExecution
     {
 
         private IDataBaseConnector _DataManger;
@@ -21,7 +21,7 @@ namespace SYFY_Application.BusinessLogic
         }
 
 
-        public void SaveBankingTransaction(BankingTransaction transaction)
+        public BankingTransaction SaveBankingTransaction(BankingTransaction transaction)
         {
             BankAccount from = _DataManger.GetBankAccountByID(transaction.FromBankAccount);
             BankAccount to = _DataManger.GetBankAccountByID(transaction.ToBankAccount);
@@ -40,17 +40,19 @@ namespace SYFY_Application.BusinessLogic
             try
             {
                 _DataManger.StartDBTransaction();
-                _DataManger.UpdateBankAccount(from);
-                _DataManger.UpdateBankAccount(to);
-                _DataManger.SaveBankingTransaction(transaction);
+                _DataManger.SaveBankAccount(from);
+                _DataManger.SaveBankAccount(to);
+                BankingTransaction newTransaction = _DataManger.SaveBankingTransaction(transaction);
                 _DataManger.Commit();
 
-            }catch (Exception ex) 
+                return newTransaction;
+
+            }
+            catch (Exception ex) 
             {
                 _DataManger.Rollback();
+                throw new Exception("Saving Transaction failed. \n" + ex.Message);
             }
-
-
         }
 
         public void AlterBankingTransaction(BankingTransaction oldTransaction, BankingTransaction newTransaction)
@@ -73,21 +75,21 @@ namespace SYFY_Application.BusinessLogic
             try
             {
                 _DataManger.StartDBTransaction();
-                _DataManger.UpdateBankAccount(fromOld);
-                _DataManger.UpdateBankAccount(toOld);
+                _DataManger.SaveBankAccount(fromOld);
+                _DataManger.SaveBankAccount(toOld);
 
                 if (!fromOld.Guid.Equals(fromNew.Guid))
                 {
-                    _DataManger.UpdateBankAccount(fromNew);
+                    _DataManger.SaveBankAccount(fromNew);
                 }
 
                 if (!toOld.Guid.Equals(toNew.Guid))
                 {
-                    _DataManger.UpdateBankAccount(toNew);
+                    _DataManger.SaveBankAccount(toNew);
                 }
 
                 // transaction has to be saved only once, because it is the same transaction. It was just altered. 
-                _DataManger.UpdateBankingTransaction(oldTransaction);
+                _DataManger.SaveBankingTransaction(oldTransaction);
 
 
                 _DataManger.Commit();
@@ -95,6 +97,7 @@ namespace SYFY_Application.BusinessLogic
             }catch(Exception ex)
             {
                 _DataManger.Rollback();
+                throw new Exception("Updating transaction failed. \n" + ex.Message);
             }
 
         }

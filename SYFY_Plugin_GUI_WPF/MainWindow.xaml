@@ -11,15 +11,20 @@
         <converters:AmountToStringConverter x:Key="AmountToStringConverter"/>
         <converters:DateToStringConverter x:Key="DateToStringConverter"/>
     </Window.Resources>
-    <Grid>
-        <TabControl x:Name="tabControl" Margin="0,42,0,0">
+    <Grid Height="434" VerticalAlignment="Bottom">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="137*"/>
+            <ColumnDefinition Width="63*"/>
+        </Grid.ColumnDefinitions>
+        <TabControl x:Name="tabControl" Margin="0,42,0,0" Grid.ColumnSpan="2">
             <TabItem Header="Transactions">
                 <Grid Background="#FFE5E5E5">
-                    <DataGrid x:Name="dg_Transactions" AutoGenerateColumns="False" ItemsSource="{Binding bankingTransactions}">
+                    <DataGrid x:Name="dg_Transactions" AutoGenerateColumns="False" ItemsSource="{Binding bankingTransactions}" 
+                              CanUserAddRows="False" CanUserDeleteRows="True" Margin="0,40,0,0">
                         <DataGrid.Columns>
                             <DataGridTextColumn x:Name="dgCol_Trans_TransactionDate" 
                                                 Binding="{Binding TransactionDate, Converter={StaticResource DateToStringConverter}}" 
-                                                Header="Transaction Date"/>                            
+                                                Header="Transaction Date"/>
                             <DataGridTextColumn x:Name="dgCol_Trans_Amount"                                                 
                                                 Binding="{Binding Path=Amount, Converter={StaticResource AmountToStringConverter}}" 
                                                 Header="Amount"/>
@@ -36,6 +41,15 @@
                                                 Header="Posting Date"/>
                         </DataGrid.Columns>
                     </DataGrid>
+                    <Button x:Name="BTN_NewTransaction" Content="New Transaction" 
+                            HorizontalAlignment="Left" Margin="24,15,0,0" VerticalAlignment="Top"
+                            Click="BTN_NewTransaction_Click"/>
+                    <Button x:Name="BTN_SaveChangesTransactions" Content="Save Changes" 
+                            HorizontalAlignment="Left" Margin="136,15,0,0" VerticalAlignment="Top"
+                            Click="BTN_SaveChangesTransactions_Click"/>
+                    <Button x:Name="BTN_DiscardChanges" Content="Discard Changes" 
+                            HorizontalAlignment="Left" Margin="267,15,0,0" VerticalAlignment="Top"
+                            Click="BTN_DiscardChangesTransactions_Click"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Bank Accounts">
@@ -57,14 +71,20 @@
                     </DataGrid>
                     <Button x:Name="BTN_NewBankAccout" Content="Add Bank Account" 
                             HorizontalAlignment="Left" Margin="62,20,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.227,-0.447" 
-                            Click="BTN_NewBankAccountClicked"/>
+                            Click="BTN_NewBankAccount_Click"/>
+                    <Button x:Name="BTN_SaveChangesBankAccounts" Content="Save Changes" 
+                            HorizontalAlignment="Left" Margin="136,15,0,0" VerticalAlignment="Top"
+                            Click="BTN_SaveChangesBankAccounts_Click"/>
+                    <Button x:Name="BTN_DiscardChangesBankAccounts" Content="Discard Changes" 
+                            HorizontalAlignment="Left" Margin="267,15,0,0" VerticalAlignment="Top"
+                            Click="BTN_DiscardChangesBankAccounts_Click"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Transaction Tags">
                 <Grid Background="#FFE5E5E5">
                     <DataGrid x:Name="dg_TransactionTags" AutoGenerateColumns="False" ItemsSource="{Binding transactionTags}">
                         <DataGrid.Columns>
-                            <DataGridTextColumn x:Name="dgCol_Tag_Name" Binding="{Binding Name}" Header="Name"/>                            
+                            <DataGridTextColumn x:Name="dgCol_Tag_Name" Binding="{Binding Name}" Header="Name"/>
                             <DataGridTextColumn x:Name="dgCol_Tag_Comment"                                                 
                                                 Binding="{Binding Comment}" 
                                                 Header="Comment"/>
@@ -72,6 +92,6 @@
                     </DataGrid>
                 </Grid>
             </TabItem>
-        </TabControl>        
+        </TabControl>
     </Grid>
 </Window>

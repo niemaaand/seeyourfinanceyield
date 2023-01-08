@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SYFY_Plugin_DatabaseSimulat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SYFY_Plugin_GUI_WPF", "..\SYFY_Plugin_GUI_WPF\SYFY_Plugin_GUI_WPF.csproj", "{BA940F49-8AB0-48D0-BBC8-A8DA7D18470F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SYFY_Adapter_GUI", "..\SYFY_Adapter_GUI\SYFY_Adapter_GUI.csproj", "{FD61C337-90B2-4745-936C-4A8D8C295587}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{BA940F49-8AB0-48D0-BBC8-A8DA7D18470F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BA940F49-8AB0-48D0-BBC8-A8DA7D18470F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BA940F49-8AB0-48D0-BBC8-A8DA7D18470F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD61C337-90B2-4745-936C-4A8D8C295587}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD61C337-90B2-4745-936C-4A8D8C295587}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD61C337-90B2-4745-936C-4A8D8C295587}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD61C337-90B2-4745-936C-4A8D8C295587}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,6 +1,7 @@
 ﻿using SYFY_Application.DatabaseAccess;
 using SYFY_Model.model;
 using SYFY_Plugin_GUI_WPF.Converters;
+using SYFY_Adapter_GUI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using SYFY_Application.BusinessLogic;
 
 namespace SYFY_Plugin_GUI_WPF
 {
@@ -23,18 +25,19 @@ namespace SYFY_Plugin_GUI_WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        private IDataBaseConnector dbConnector;
+        private DataManagement dataManager;
         private bool unsavedChanges;
 
-        public MainWindow(IDataBaseConnector dataManager)
+        public MainWindow(DataManagement dataManager, MainViewModel mainViewModel)
         {
-            dbConnector= dataManager;
+            this.dataManager= dataManager;
             unsavedChanges = false;
 
             InitializeComponent();
-            this.DataContext = new MainViewModel(dbConnector);
+            //this.DataContext = new MainViewModel(dbConnector);
+            this.DataContext = mainViewModel;
 
-            BankAccountGuidToNameConverter baGuidNameConv = new BankAccountGuidToNameConverter(dbConnector);
+            BankAccountGuidToNameConverter baGuidNameConv = new BankAccountGuidToNameConverter(this.dataManager);
             
             Binding bind_FromBankAccount = new Binding("FromBankAccount");
             bind_FromBankAccount.Converter = baGuidNameConv;
@@ -44,18 +47,20 @@ namespace SYFY_Plugin_GUI_WPF
             bind_ToBankAccount.Converter = baGuidNameConv;
             dgCol_Trans_ToBankAccount.Binding = bind_ToBankAccount;
 
+            //dg_Transactions.RowEditEnding += On_RowEditEnding;
+
             dg_BankAccounts.CellEditEnding += On_CellEditEnding;
             dg_BankAccounts.RowEditEnding += On_RowEditEnding;
-            
+                        
 
             //DependencyProperty dependency = DependencyProperty.Register("BankAccount", typeof(string), typeof(DependencyProperty));
             ComboBox box = new ComboBox();
 
-            foreach (BankAccount b in dbConnector.GetAllBankAccounts().Values)
+            foreach (BankAccount b in this.dataManager.GetAllBankAccounts().Values)
             {
                 //ComBoxColItems_BankAccounts.Add(new BankAccountComBoxItem(b.Guid, b.Name));
 
-                
+
 
                 ComboBoxItem comboBoxItem = new ComboBoxItem()
                 {
@@ -151,19 +156,55 @@ namespace SYFY_Plugin_GUI_WPF
             string oldComment = ((BankAccount)((DataGrid)sender).SelectedItem).Comment;
             string newComment = ((TextBox)e.EditingElement).Text;
             //((TextBox)e.EditingElement).Text = "HALLO";
-            IDataBaseConnector dataManager = ((MainViewModel)((DataGrid)sender).DataContext).dataManager;
+            DataManagement dataManager = ((MainViewModel)((DataGrid)sender).DataContext).dataManager;
         }
         
         private void On_RowEditEnding(object? sender, DataGridRowEditEndingEventArgs e)
         {
-            BankAccount b = ((BankAccount)((DataGrid)sender).SelectedItem);
-
+            //BankAccount b = ((BankAccount)((DataGrid)sender).SelectedItem);
+            GetDataContextFromSender(sender).DataChanged((DeleteableData)((DataGrid)sender).SelectedItem);
         }
+                
 
-        public void BTN_NewBankAccountClicked(object? sender, RoutedEventArgs e)
+        private void BTN_NewTransaction_Click(object sender, RoutedEventArgs e)
         {
-            ((MainViewModel)((Button)sender).DataContext).bankAccounts.Add(new BankAccount("Neuer Bank Account"));
+            GetDataContextFromSender(sender).BTN_NewTransaction_Click(sender, e);
         }
 
+        private MainViewModel GetDataContextFromSender(Object? sender)
+        {
+            try
+            {
+                return (((MainViewModel)((Control)sender).DataContext));
+            }catch (Exception e)
+            {
+                throw new NotImplementedException(e.Message);
+            }
+        }
+
+        private void BTN_SaveChangesTransactions_Click(object sender, RoutedEventArgs e)
+        {
+            GetDataContextFromSender(sender).SaveChanges_Click(sender, e);
+        }
+
+        private void BTN_DiscardChangesTransactions_Click(object sender, RoutedEventArgs e)
+        {
+            //GetDataContextFromSender(sender).DiscardChangesTransactions(sender, e);
+        }
+
+        public void BTN_NewBankAccount_Click(object? sender, RoutedEventArgs e)
+        {
+            GetDataContextFromSender(sender).BTN_NewBankAccount_Click(sender, e);
+        }
+
+        private void BTN_SaveChangesBankAccounts_Click(object sender, RoutedEventArgs e)
+        {
+            GetDataContextFromSender(sender).SaveChanges_Click(sender, e);
+        }
+
+        private void BTN_DiscardChangesBankAccounts_Click(object sender, RoutedEventArgs e)
+        {
+            GetDataContextFromSender(sender).DiscardChanges_Click(sender, e);
+        }
     }
 }

@@ -6,6 +6,7 @@ using SYFY_Application.DatabaseAccess;
 using SYFY_Application.BusinessLogic;
 using System.Linq;
 using SYFY_Plugin_GUI_WPF;
+using SYFY_Adapter_GUI;
 using System.Threading;
 
 namespace SYFY
@@ -17,24 +18,26 @@ namespace SYFY
         static void Main(string[] args)
         {
             IDataBaseConnector dataManager = new DataBaseSimulator();
+            DataManagement dataManagement = new DataManagement(dataManager);
 
-            BankAccount b1 = dataManager.GetAllBankAccounts().ElementAt(0).Value;
-            BankAccount b2 = dataManager.GetAllBankAccounts().ElementAt(1).Value;
+
+            BankAccount b1 = dataManagement.GetAllBankAccounts().ElementAt(0).Value;
+            BankAccount b2 = dataManagement.GetAllBankAccounts().ElementAt(1).Value;
 
             BankingTransaction t = new BankingTransaction(b1.Guid, b2.Guid, 3456, DateTime.Today);
 
-            TransactionExecution transactionExecution = new TransactionExecution(dataManager);
-            transactionExecution.SaveBankingTransaction(t);
+            dataManagement.SaveBankingTransaction(t);
 
             BankingTransaction tnew = (BankingTransaction) t.Clone();
             tnew.Comment = "Neuer Kommentar";
             tnew.Amount = 108;
-            transactionExecution.AlterBankingTransaction(t, tnew);
+            dataManagement.SaveBankingTransaction(tnew);
 
             //MainWindow bankAccountView = new MainWindow(dataManager);
             //bankAccountView.ShowDialog();
 
-            MainWindow mainWindow = new MainWindow(dataManager);
+            MainViewModel mainViewModel = new MainViewModel(dataManagement);
+            MainWindow mainWindow = new MainWindow(dataManagement, mainViewModel);
             mainWindow.ShowDialog();
 
 

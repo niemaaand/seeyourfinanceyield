@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows;
 using SYFY_Application.DatabaseAccess;
+using SYFY_Application.BusinessLogic;
 
 namespace SYFY_Plugin_GUI_WPF.Converters
 {
@@ -15,10 +16,10 @@ namespace SYFY_Plugin_GUI_WPF.Converters
     internal class BankAccountGuidToNameConverter : IValueConverter
     {
 
-        private IDataBaseConnector dataManager;
+        private DataManagement dataManager;
                
 
-        public BankAccountGuidToNameConverter(IDataBaseConnector dbConnector)
+        public BankAccountGuidToNameConverter(DataManagement dbConnector)
         {
             dataManager= dbConnector;
         }

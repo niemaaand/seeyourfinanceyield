@@ -13,8 +13,6 @@ namespace SYFY_Application.DatabaseAccess
     /// </summary>
     public interface IDataBaseConnector
     {
-        public Guid NewGuid();
-
         public void StartDBTransaction();
 
         public void Commit();
@@ -22,14 +20,16 @@ namespace SYFY_Application.DatabaseAccess
         public void Rollback();
 
         /// <summary>
-        /// Saves the given bank account to the data base. 
+        /// Saves the given bank account to the data base. If bank account with same GUID already exists, 
+        /// this bank account is updated. 
         /// </summary>
         /// <param name="bankAccount"></param>
         /// <returns>"same" bank account with GUID</returns>
         public BankAccount SaveBankAccount(BankAccount bankAccount);
 
         /// <summary>
-        /// Saves the given banking transaction to the data base. 
+        /// Saves the given banking transaction to the data base. If a banking transaction with the same GUID 
+        /// already exists in data base, it is updated. 
         /// </summary>
         /// <param name="bankingTransaction"></param>
         /// <returns>"same" transaction but with GUID</returns>
@@ -41,19 +41,7 @@ namespace SYFY_Application.DatabaseAccess
         /// <param name="transactionTag"></param>
         /// <returns>"same" tag but with GUID</returns>
         public TransactionTag SaveTransactionTag(TransactionTag transactionTag);
-
-        /// <summary>
-        /// Updates the given bank account in the data base. 
-        /// </summary>
-        /// <param name="bankAccount"></param>
-        public void UpdateBankAccount(BankAccount bankAccount);
-
-        /// <summary>
-        /// Updates the given banking transaction in the data base. 
-        /// </summary>
-        /// <param name="bankingTransaction"></param>
-        public void UpdateBankingTransaction(BankingTransaction bankingTransaction);
-
+       
         /// <summary>
         /// Gets bank accounts from data base. Might also cache them. 
         /// </summary>
