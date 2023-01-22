@@ -137,7 +137,7 @@ namespace SYFY_Adapter_GUI
 
         }
 
-        public void SaveChanges_Click(object sender, EventArgs e)
+        public void SaveChanges_Click()
         {
             foreach(BankingTransaction transaction in changedTransactions)
             {
@@ -218,7 +218,7 @@ namespace SYFY_Adapter_GUI
         }
 
 
-        public void DiscardChanges_Click(object sender, EventArgs e)
+        public void DiscardChanges_Click()
         {
             // do reload on gui
             // use for instead of foreach to be able to change the UI's bank accounts variables. 
@@ -240,7 +240,15 @@ namespace SYFY_Adapter_GUI
             changedTransactions.Clear();
         }
 
-       
+        public bool ExistUnsavedChanges()
+        {
+            if(changedBankAccounts.Count != 0 || changedTransactions.Count != 0 || changedTransactionTags.Count != 0)
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 
 }

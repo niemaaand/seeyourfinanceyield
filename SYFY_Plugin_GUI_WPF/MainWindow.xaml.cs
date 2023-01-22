@@ -44,16 +44,16 @@ namespace SYFY_Plugin_GUI_WPF
             bind_ToBankAccount.Converter = baGuidNameConv;
             dgCol_Trans_ToBankAccount.Binding = bind_ToBankAccount;
 
-            //dg_Transactions.RowEditEnding += On_RowEditEnding;
-
+            // events to notify about changed data
             dg_BankAccounts.CellEditEnding += On_CellEditEnding;
             dg_BankAccounts.RowEditEnding += On_RowEditEnding;
             dg_Transactions.RowEditEnding += On_RowEditEnding;
-            //tabControl.IsVisibleChanged += On_VisibleChanged;
 
-            // BindingGroup bindgroup_Transactions_Tags = new BindingGroup();
+            // event to update transaction-tags shown to transaction
             dg_Transactions.CurrentCellChanged += On_CurrentCellChanged;
 
+            // event for tab changed
+            tabControl.SelectionChanged += On_TabSelectionChanged;
 
 
 
@@ -154,6 +154,39 @@ namespace SYFY_Plugin_GUI_WPF
             */
         }
 
+        private void On_TabSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.Source is TabControl)
+            {
+                // are there unsaved changes?
+                if (GetDataContextFromSender(sender).ExistUnsavedChanges())
+                {                    
+                    MessageBoxResult result = MessageBox.Show("You have unsaved changes! " +
+                        "\n Do you want to save your changes?"
+                        + "\n Yes: Save Changes \n No: Discard Changes " +
+                        "\n Cancel: Changes will not be applied, until they are saved.", 
+                        "Save Changes?",
+                    MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+
+                    if(result == MessageBoxResult.Yes)
+                    {
+                        GetDataContextFromSender(sender).SaveChanges_Click();
+                    }else if(result == MessageBoxResult.No)
+                    {
+                        GetDataContextFromSender(sender).DiscardChanges_Click();
+                    }else if(result== MessageBoxResult.Cancel)
+                    {
+                        e.Handled= true;
+                    }
+                    else
+                    {
+                        throw new NotImplementedException();
+                    }
+
+                }
+            }
+        }
+
         private void On_CurrentCellChanged(object? sender, EventArgs e)
         {
             GetDataContextFromSender(sender).ShowTags(((BankingTransaction)((DataGrid)sender).CurrentCell.Item));
@@ -198,7 +231,7 @@ namespace SYFY_Plugin_GUI_WPF
 
         private void BTN_SaveChangesTransactions_Click(object sender, RoutedEventArgs e)
         {
-            GetDataContextFromSender(sender).SaveChanges_Click(sender, e);
+            GetDataContextFromSender(sender).SaveChanges_Click();
         }
 
         private void BTN_DiscardChangesTransactions_Click(object sender, RoutedEventArgs e)
@@ -225,12 +258,12 @@ namespace SYFY_Plugin_GUI_WPF
 
         private void BTN_SaveChangesBankAccounts_Click(object sender, RoutedEventArgs e)
         {
-            GetDataContextFromSender(sender).SaveChanges_Click(sender, e);
+            GetDataContextFromSender(sender).SaveChanges_Click();
         }
 
         private void BTN_DiscardChangesBankAccounts_Click(object sender, RoutedEventArgs e)
         {
-            GetDataContextFromSender(sender).DiscardChanges_Click(sender, e);
+            GetDataContextFromSender(sender).DiscardChanges_Click();
         }
 
 
@@ -241,10 +274,16 @@ namespace SYFY_Plugin_GUI_WPF
 
         private void RefreshDataGrids()
         {
-            dg_BankAccounts.Items.Refresh();
-            dg_Transactions.Items.Refresh();
-            dg_TransactionTags.Items.Refresh();
-            dg_Transactions_Tags.Items.Refresh();
+            try
+            {
+                dg_BankAccounts.Items.Refresh();
+                dg_Transactions.Items.Refresh();
+                dg_TransactionTags.Items.Refresh();
+                dg_Transactions_Tags.Items.Refresh();
+            }catch(Exception ex)
+            {
+
+            }
         }
     }
 }

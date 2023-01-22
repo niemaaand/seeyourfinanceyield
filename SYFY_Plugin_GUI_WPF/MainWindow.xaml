@@ -59,18 +59,18 @@
                             HorizontalAlignment="Left" Margin="0,15,0,0" VerticalAlignment="Top"
                             Click="BTN_NewTransaction_Click"
                             Grid.Row="0" Grid.Column="0"/>
-                        <Button x:Name="BTN_SaveChangesTransactions" Content="Save Changes" 
-                            HorizontalAlignment="Left" Margin="0,15,0,0" VerticalAlignment="Top"
-                            Click="BTN_SaveChangesTransactions_Click"
-                            Grid.Row="0" Grid.Column="1"/>
-                        <Button x:Name="BTN_DiscardChanges" Content="Discard Changes" 
-                            HorizontalAlignment="Left" Margin="0,15,0,0" VerticalAlignment="Top"
-                            Click="BTN_DiscardChangesTransactions_Click"
-                            Grid.Row="0" Grid.Column="2"/>
                         <Button x:Name="BTN_DeleteTransaction" Content="Delete Transaction" 
                             HorizontalAlignment="Left" Margin="0,15,0,0" VerticalAlignment="Top"
                             Click="BTN_DeleteTransaction_Click"
-                            Grid.Row="0" Grid.Column="3"/>
+                            Grid.Row="0" Grid.Column="1"/>
+                        <Button x:Name="BTN_SaveChangesTransactions" Content="Save Changes" 
+                            HorizontalAlignment="Left" Margin="0,15,0,0" VerticalAlignment="Top"
+                            Click="BTN_SaveChangesTransactions_Click"
+                            Grid.Row="0" Grid.Column="2"/>
+                        <Button x:Name="BTN_DiscardChanges" Content="Discard Changes" 
+                            HorizontalAlignment="Left" Margin="0,15,0,0" VerticalAlignment="Top"
+                            Click="BTN_DiscardChangesTransactions_Click"
+                            Grid.Row="0" Grid.Column="3"/>                        
                     </Grid>
                     <Grid Grid.Row="1" Grid.Column="1">
                         <Grid.RowDefinitions>
