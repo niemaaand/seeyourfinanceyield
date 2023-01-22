@@ -51,7 +51,8 @@ namespace SYFY_Plugin_GUI_WPF
             dg_Transactions.RowEditEnding += On_RowEditEnding;
             //tabControl.IsVisibleChanged += On_VisibleChanged;
 
-            
+            // BindingGroup bindgroup_Transactions_Tags = new BindingGroup();
+            dg_Transactions.CurrentCellChanged += On_CurrentCellChanged;
 
 
 
@@ -153,6 +154,11 @@ namespace SYFY_Plugin_GUI_WPF
             */
         }
 
+        private void On_CurrentCellChanged(object? sender, EventArgs e)
+        {
+            GetDataContextFromSender(sender).ShowTags(((BankingTransaction)((DataGrid)sender).CurrentCell.Item));
+        }
+
         private void On_BeginEditDataGrid(object? sender, DataGridBeginningEditEventArgs e)
         {
             //throw new NotImplementedException();
@@ -238,6 +244,7 @@ namespace SYFY_Plugin_GUI_WPF
             dg_BankAccounts.Items.Refresh();
             dg_Transactions.Items.Refresh();
             dg_TransactionTags.Items.Refresh();
+            dg_Transactions_Tags.Items.Refresh();
         }
     }
 }

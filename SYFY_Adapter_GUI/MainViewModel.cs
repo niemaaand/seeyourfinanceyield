@@ -26,10 +26,12 @@ namespace SYFY_Adapter_GUI
         public ObservableCollection<BankAccount> bankAccounts { get; set; }
         public ObservableCollection<BankingTransaction> bankingTransactions { get; set; }
         public ObservableCollection<TransactionTag> transactionTags { get; set; }
-       
+        public ObservableCollection<TransactionTag> currentTransactionTags { get; set; }
+
         private List<BankingTransaction> changedTransactions;
         private List<BankAccount> changedBankAccounts;
         private List<TransactionTag> changedTransactionTags;
+
 
         private List<BankingTransaction> deletedTransactions;
         private List<BankAccount> deletedBankAccounts;
@@ -50,11 +52,13 @@ namespace SYFY_Adapter_GUI
             LoadBankAccounts();
 
             bankingTransactions = new ObservableCollection<BankingTransaction>();
-            LoadBankingTransactions();
-            
+            LoadBankingTransactions();            
 
             transactionTags = new ObservableCollection<TransactionTag>();
             LoadTransactionTags();
+
+            currentTransactionTags = new ObservableCollection<TransactionTag>();
+
 
             bankAccounts.CollectionChanged += On_BankAccountsChanged;
 
@@ -203,7 +207,17 @@ namespace SYFY_Adapter_GUI
                 }
             }
         }
-        
+
+        public void ShowTags(BankingTransaction transaction)
+        {
+            currentTransactionTags.Clear();
+            foreach(TransactionTag tag in transaction.TransactionTags.Values)
+            {
+                currentTransactionTags.Add(tag);
+            }
+        }
+
+
         public void DiscardChanges_Click(object sender, EventArgs e)
         {
             // do reload on gui
