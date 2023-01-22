@@ -22,7 +22,12 @@ namespace SYFY_Plugin_DatabaseSimulation
             _BankAccounts = new Dictionary<Guid, BankAccount>();
             _TransactionTags = new Dictionary<Guid, TransactionTag>();
 
-            _CurrentlyPerformingTransaction= false;
+            _CurrentlyPerformingTransaction = false;
+        }
+
+        bool IDataBaseConnector.ExistsBankingTransaction(Guid guid)
+        {
+            return _Transactions.ContainsKey(guid) ? true : false;
         }
 
         void IDataBaseConnector.Commit()
@@ -56,6 +61,7 @@ namespace SYFY_Plugin_DatabaseSimulation
         Dictionary<Guid, TransactionTag> IDataBaseConnector.GetAllTransactionTags()
         {
             //TODO
+            //return (Dictionary<Guid, TransactionTag>)_TransactionTags.Where(t => t.Value.Deleted == false);
             return _TransactionTags;
         }
 
@@ -88,19 +94,19 @@ namespace SYFY_Plugin_DatabaseSimulation
         BankAccount IDataBaseConnector.SaveBankAccount(BankAccount bankAccount)
         {
             //TODO
-            if (_BankAccounts.ContainsKey(bankAccount.Guid))
+            if (_BankAccounts.ContainsKey(bankAccount.Guid) && _BankAccounts[bankAccount.Guid].Deleted == false)
             {
                 // update
-                if (_BankAccounts.ContainsKey(bankAccount.Guid))
-                {
-                    _BankAccounts[bankAccount.Guid] = bankAccount;
-                }
+                _BankAccounts[bankAccount.Guid] = bankAccount;
+            }else if(bankAccount.Deleted || (_BankAccounts.ContainsKey(bankAccount.Guid) && _BankAccounts[bankAccount.Guid].Deleted))
+            {
+                throw new InvalidOperationException("Bank Account is deleted and can therefore not be changed.");
             }
             else
             {
                 // save newly
                 bankAccount.Guid = NewGuid();
-                
+
                 if (!_BankAccounts.ContainsKey(bankAccount.Guid))
                 {
                     _BankAccounts.Add(bankAccount.Guid, bankAccount);
@@ -115,10 +121,16 @@ namespace SYFY_Plugin_DatabaseSimulation
         {
             //TODO
 
-            if (_Transactions.ContainsKey(bankingTransaction.Guid))
+            if (_Transactions.ContainsKey(bankingTransaction.Guid) 
+                && _Transactions[bankingTransaction.Guid].Deleted ==false)
             {
                 // update
-                    _Transactions[bankingTransaction.Guid] = bankingTransaction;
+                _Transactions[bankingTransaction.Guid] = bankingTransaction;
+            }
+            else if (bankingTransaction.Deleted 
+                || (_Transactions.ContainsKey(bankingTransaction.Guid) && _Transactions[bankingTransaction.Guid].Deleted))
+            {
+                throw new InvalidOperationException("Transaction is deleted and can therefore not be changed.");
             }
             else
             {
@@ -130,30 +142,66 @@ namespace SYFY_Plugin_DatabaseSimulation
                     _Transactions.Add(bankingTransaction.Guid, bankingTransaction);
                 }
             }
-            
+
             return _Transactions[bankingTransaction.Guid];
         }
 
         TransactionTag IDataBaseConnector.SaveTransactionTag(TransactionTag transactionTag)
         {
-            transactionTag.Guid = NewGuid();
-
-            if (!_TransactionTags.ContainsKey(transactionTag.Guid))
+            if (_TransactionTags.ContainsKey(transactionTag.Guid)
+                && _TransactionTags[transactionTag.Guid].Deleted == false)
             {
-                _TransactionTags.Add(transactionTag.Guid, transactionTag);
-                return transactionTag;
+                // update
+                _TransactionTags[transactionTag.Guid] = transactionTag;
+            }
+            else if (transactionTag.Deleted
+                || (_TransactionTags.ContainsKey(transactionTag.Guid) && _TransactionTags[transactionTag.Guid].Deleted))
+            {
+                throw new InvalidOperationException("Transaction Tag is deleted and can therefore not be changed.");
+            }
+            {
+                // save newly
+                transactionTag.Guid = NewGuid();
+
+                if (!_TransactionTags.ContainsKey(transactionTag.Guid))
+                {
+                    _TransactionTags.Add(transactionTag.Guid, transactionTag);
+                }
             }
 
-            throw new Exception("Already in DB!");
+            return _TransactionTags[transactionTag.Guid];
         }
 
-       
+
         void IDataBaseConnector.StartDBTransaction()
         {
             _CurrentlyPerformingTransaction = true;
             Console.WriteLine("Transaction started...");
             //TODO
         }
-       
+
+        public void DeleteBankingTransaction(BankingTransaction transaction)
+        {
+            if (_Transactions.ContainsKey(transaction.Guid))
+            {
+                _Transactions[transaction.Guid].Delete();                
+            }
+        }
+
+        public void DeleteTransactionTag(TransactionTag tag)
+        {
+            if (_TransactionTags.ContainsKey(tag.Guid))
+            {
+                _TransactionTags[tag.Guid].Delete();
+            }
+        }
+
+        public void DeleteBankAccount(BankAccount bankAccount)
+        {
+            if (_BankAccounts.ContainsKey(bankAccount.Guid))
+            {
+                _BankAccounts[bankAccount.Guid].Delete();
+            }
+        }
     }
 }

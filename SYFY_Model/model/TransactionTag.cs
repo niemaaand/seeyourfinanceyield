@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SYFY_Model.model
 {
-    public class TransactionTag: DeleteableData
+    public class TransactionTag: DeleteableData, ICloneable
     {
         private string _Name;
         private string _Comment;
@@ -18,5 +18,13 @@ namespace SYFY_Model.model
 
         public string Name { get => _Name; set => _Name = value; }
         public string Comment { get => _Comment; set => _Comment = value; }
+
+        public object Clone()
+        {
+            TransactionTag t = new TransactionTag(_Name, _Comment);
+            t.Guid = Guid;
+
+            return t;
+        }
     }
 }

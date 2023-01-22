@@ -3,9 +3,6 @@ using SYFY_Model.model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SYFY_Application.BusinessLogic
 {
@@ -14,28 +11,29 @@ namespace SYFY_Application.BusinessLogic
         private TransactionExecution transactionExecutioner;
         private IDataBaseConnector dataBaseConnector;
 
-        private Dictionary<Guid, BankingTransaction> bankingTransactionsOriginal;
-        private Dictionary<Guid, BankAccount> bankAccountsOriginal;
+        //private Dictionary<Guid, BankingTransaction> bankingTransactionsOriginal;
+        //private Dictionary<Guid, BankAccount> bankAccountsOriginal;
 
 
         public DataManagement(IDataBaseConnector dataBaseConnector) {
             this.dataBaseConnector = dataBaseConnector;
             transactionExecutioner = new TransactionExecution(dataBaseConnector);
-            bankingTransactionsOriginal = new Dictionary<Guid, BankingTransaction>();
+            
+            /*bankingTransactionsOriginal = new Dictionary<Guid, BankingTransaction>();
             bankingTransactionsOriginal = dataBaseConnector.GetAllBankingTransactions();
 
             bankAccountsOriginal= new Dictionary<Guid, BankAccount>();
-            bankAccountsOriginal = dataBaseConnector.GetAllBankAccounts();
+            bankAccountsOriginal = dataBaseConnector.GetAllBankAccounts();*/
         }
 
         public BankingTransaction SaveBankingTransaction(BankingTransaction transaction)
         {
-            if (!bankingTransactionsOriginal.Keys.Contains(transaction.Guid)){
+            if (!dataBaseConnector.ExistsBankingTransaction(transaction.Guid)){
                 transaction = transactionExecutioner.SaveBankingTransaction(transaction);
             }
             else
             {
-                transaction = transactionExecutioner.AlterBankingTransaction(bankingTransactionsOriginal[transaction.Guid], transaction);
+                transaction = transactionExecutioner.AlterBankingTransaction(GetBankingTransactionByID(transaction.Guid), transaction);
             }
 
             return (BankingTransaction)transaction.Clone();
@@ -53,10 +51,6 @@ namespace SYFY_Application.BusinessLogic
             return (BankAccount)bankAccount.Clone();
         }
 
-       /* public void AlterBankingTransaction(BankingTransaction oldBankingTransaction, BankingTransaction newBankingTransaction)
-        {
-            transactionExecutioner.AlterBankingTransaction(oldBankingTransaction, newBankingTransaction);
-        }*/
 
         public Dictionary<Guid, BankAccount> GetAllBankAccounts()
         {            
@@ -95,15 +89,15 @@ namespace SYFY_Application.BusinessLogic
         public Dictionary<Guid, TransactionTag> GetAllTransactionTags()
         {
             // TODO
-            return dataBaseConnector.GetAllTransactionTags();
-        }
+            Dictionary<Guid, TransactionTag> tagsCopy = new Dictionary<Guid, TransactionTag>();
+            foreach(TransactionTag t in dataBaseConnector.GetAllTransactionTags().Values)
+            {
+                tagsCopy.Add(t.Guid, (TransactionTag)t.Clone());
+            }
 
-        /*public void UpdateBankingTransaction(BankingTransaction transaction)
-        {
-            //TODO
-            throw new NotImplementedException();
-            //transactionExecutioner.AlterBankingTransaction(bankingTransactionsCopy[transaction.Guid], transaction);
-        }*/
+            return tagsCopy;
+        }
+             
 
         public BankingTransaction GetBankingTransactionByID(Guid guid)
         {
@@ -113,7 +107,23 @@ namespace SYFY_Application.BusinessLogic
         public TransactionTag SaveTransactionTag(TransactionTag transactionTag)
         {
             // TODO
-            return dataBaseConnector.SaveTransactionTag(transactionTag);
+            transactionTag = dataBaseConnector.SaveTransactionTag(transactionTag);
+            return (TransactionTag)transactionTag.Clone();
+        }
+
+        public void DeleteTransactionTag(TransactionTag tag)
+        {
+            dataBaseConnector.DeleteTransactionTag(tag);
+        }
+
+        public void DeleteBankAccount(BankAccount bankAccount)
+        {
+            dataBaseConnector.DeleteBankAccount(bankAccount);
+        }
+
+        public void DeleteBankingTransaction(BankingTransaction transaction)
+        {
+            transactionExecutioner.DeleteTransaction(transaction);
         }
     }
 }

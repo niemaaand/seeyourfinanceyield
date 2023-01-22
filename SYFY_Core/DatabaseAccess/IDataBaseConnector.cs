@@ -60,7 +60,9 @@ namespace SYFY_Application.DatabaseAccess
 
        
         public BankingTransaction GetBankingTransactionById(Guid guid);
-
-
+        public bool ExistsBankingTransaction(Guid guid);
+        void DeleteBankingTransaction(BankingTransaction oldTransaction);
+        void DeleteTransactionTag(TransactionTag tag);
+        void DeleteBankAccount(BankAccount bankAccount);
     }
 }

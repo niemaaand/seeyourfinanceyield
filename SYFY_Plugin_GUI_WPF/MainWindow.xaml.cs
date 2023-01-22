@@ -51,6 +51,7 @@ namespace SYFY_Plugin_GUI_WPF
             dg_Transactions.RowEditEnding += On_RowEditEnding;
             //tabControl.IsVisibleChanged += On_VisibleChanged;
 
+            
 
 
 
@@ -197,6 +198,18 @@ namespace SYFY_Plugin_GUI_WPF
         private void BTN_DiscardChangesTransactions_Click(object sender, RoutedEventArgs e)
         {
             //GetDataContextFromSender(sender).DiscardChangesTransactions(sender, e);
+        }
+
+        private void BTN_DeleteTransaction_Click(object sender, RoutedEventArgs e)
+        {
+            BankingTransaction selected = (BankingTransaction)dg_Transactions.SelectedItem;
+            GetDataContextFromSender(sender).DataChanged(selected, true);
+        }
+
+        private void BTN_DeleteBankAccount_Click(object sender, RoutedEventArgs e)
+        {
+            BankAccount selected = (BankAccount)dg_BankAccounts.SelectedItem;
+            GetDataContextFromSender(sender).DataChanged(selected, true);
         }
 
         public void BTN_NewBankAccount_Click(object? sender, RoutedEventArgs e)

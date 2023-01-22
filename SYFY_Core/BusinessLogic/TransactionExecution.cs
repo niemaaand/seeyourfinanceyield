@@ -48,7 +48,7 @@ namespace SYFY_Application.BusinessLogic
                 return newTransaction;
 
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 _DataManger.Rollback();
                 throw new Exception("Saving Transaction failed. \n" + ex.Message);
@@ -57,19 +57,23 @@ namespace SYFY_Application.BusinessLogic
 
         public BankingTransaction AlterBankingTransaction(BankingTransaction oldTransaction, BankingTransaction newTransaction)
         {
+            return DeleteAlterTransaction(oldTransaction, newTransaction, false);            
+        }
+
+        private BankingTransaction DeleteAlterTransaction(BankingTransaction oldTransaction, BankingTransaction newTransaction, bool delete)
+        {
+
             // check money balances
             BankAccount fromOld = _DataManger.GetBankAccountByID(oldTransaction.FromBankAccount);
             BankAccount toOld = _DataManger.GetBankAccountByID(oldTransaction.ToBankAccount);
-            BankAccount fromNew = _DataManger.GetBankAccountByID(newTransaction.FromBankAccount);
-            BankAccount toNew = _DataManger.GetBankAccountByID(newTransaction.ToBankAccount);
+
+            BankAccount fromNew;
+            BankAccount toNew;
             long amountOld = oldTransaction.Amount;
-            long amountNew = newTransaction.Amount;
+
 
             fromOld.AddAmount(amountOld);
-            fromNew.SubAmount(amountNew);
-
             toOld.SubAmount(amountOld);
-            toNew.AddAmount(amountNew);
 
             // save data to db
             try
@@ -78,26 +82,50 @@ namespace SYFY_Application.BusinessLogic
                 _DataManger.SaveBankAccount(fromOld);
                 _DataManger.SaveBankAccount(toOld);
 
-                if (!fromOld.Guid.Equals(fromNew.Guid))
+                if (!delete && oldTransaction != null && newTransaction != null)
                 {
-                    _DataManger.SaveBankAccount(fromNew);
-                }
+                    long amountNew = newTransaction.Amount;
 
-                if (!toOld.Guid.Equals(toNew.Guid))
+                    fromNew = _DataManger.GetBankAccountByID(newTransaction.FromBankAccount);
+                    toNew = _DataManger.GetBankAccountByID(newTransaction.ToBankAccount);
+
+                    fromNew.SubAmount(amountNew);
+                    toNew.AddAmount(amountNew);
+
+                    if (!fromOld.Guid.Equals(fromNew.Guid))
+                    {
+                        _DataManger.SaveBankAccount(fromNew);
+                    }
+
+                    if (!toOld.Guid.Equals(toNew.Guid))
+                    {
+                        _DataManger.SaveBankAccount(toNew);
+                    }
+
+                    // transaction has to be saved only once, because it is the same transaction. It was just altered. 
+                    newTransaction = _DataManger.SaveBankingTransaction(newTransaction);
+                }
+                else
                 {
-                    _DataManger.SaveBankAccount(toNew);
+                    // delete transaction
+                    _DataManger.DeleteBankingTransaction(oldTransaction);
+                    newTransaction = _DataManger.GetBankingTransactionById(oldTransaction.Guid);
                 }
-
-                // transaction has to be saved only once, because it is the same transaction. It was just altered. 
-                newTransaction = _DataManger.SaveBankingTransaction(newTransaction);
-
 
                 _DataManger.Commit();
 
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 _DataManger.Rollback();
-                throw new Exception("Updating transaction failed. \n" + ex.Message);
+                if (!delete)
+                {
+                    throw new Exception("Updating transaction failed. \n" + ex.Message);
+                }
+                else
+                {
+                    throw new Exception("Deleting transaction failed. \n" + ex.Message);
+                }
             }
 
             return newTransaction;
@@ -105,5 +133,9 @@ namespace SYFY_Application.BusinessLogic
         }
 
 
+        internal void DeleteTransaction(BankingTransaction transaction)
+        {
+            DeleteAlterTransaction(transaction, null, true);
+        }
     }
 }
