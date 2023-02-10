@@ -74,15 +74,17 @@ namespace SYFY_Adapter_GUI
         public void BTN_NewTransaction_Click(object? sender, EventArgs e)
         {
 
-           // BankingTransaction transaction = new BankingTransaction();
+            BankingTransaction transaction = dataManager.CreateEmptyBankingTransaction();
+            bankingTransactions.Insert(0, transaction);
+            DataChanged(transaction);
 
         }
 
         public void BTN_NewBankAccount_Click(object? sender, EventArgs e)
         {
             //TODO
-            BankAccount b = new BankAccount("Neuer Bank Account");
-            bankAccounts.Add(b);
+            BankAccount b = dataManager.CreateEmptyBankAccount();
+            bankAccounts.Insert(0, b);
             DataChanged(b);
         }
             
@@ -141,11 +143,19 @@ namespace SYFY_Adapter_GUI
         {
             foreach(BankingTransaction transaction in changedTransactions)
             {
-                BankingTransaction originalTransaction = dataManager.GetBankingTransactionByID(transaction.Guid);
+                // BankingTransaction originalTransaction = dataManager.GetBankingTransactionByID(transaction.Guid);
 
                 // save/update banking-transaction
                 int index = bankingTransactions.IndexOf(transaction);
-                bankingTransactions[index] = dataManager.SaveBankingTransaction(transaction);
+
+                if(index != -1)
+                {
+                    bankingTransactions[index] = dataManager.SaveBankingTransaction(transaction);
+                }
+                else
+                {
+                    bankingTransactions.Add(dataManager.SaveBankingTransaction(transaction));
+                }
 
             }
 
@@ -153,13 +163,30 @@ namespace SYFY_Adapter_GUI
             {
                 //BankAccount originalBankAccount = dataManager.GetBankAccountByID(bankAccount.Guid);
                 int index = bankAccounts.IndexOf(bankAccount);
-                bankAccounts[index] = dataManager.SaveBankAccount(bankAccount);
+
+                if(index != -1)
+                {
+                    bankAccounts[index] = dataManager.SaveBankAccount(bankAccount);
+                }
+                else
+                {
+                    bankAccounts.Add(dataManager.SaveBankAccount(bankAccount));
+                }
+
             }
             
             foreach (TransactionTag tag in changedTransactionTags)
             {
                 int index = transactionTags.IndexOf(tag);
-                transactionTags[index] = dataManager.SaveTransactionTag(tag);
+
+                if(index != -1)
+                {
+                    transactionTags[index] = dataManager.SaveTransactionTag(tag);
+                }
+                else
+                {
+                    transactionTags.Add(dataManager.SaveTransactionTag(tag));
+                }
             }
 
 

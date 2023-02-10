@@ -60,7 +60,10 @@ namespace SYFY_Application.BusinessLogic
 
             foreach (BankAccount b in dataBaseConnector.GetAllBankAccounts().Values)
             {
-                bankAccountsCopy.Add(b.Guid, (BankAccount)b.Clone());
+                if(b.Guid != Guid.Empty)
+                {
+                    bankAccountsCopy.Add(b.Guid, (BankAccount)b.Clone());
+                }
             }
 
             return bankAccountsCopy;
@@ -74,7 +77,10 @@ namespace SYFY_Application.BusinessLogic
             // return copy
             foreach (BankingTransaction b in dataBaseConnector.GetAllBankingTransactions().Values)
             {
-                bankingTransactionsCopy.Add(b.Guid, (BankingTransaction)b.Clone());
+                if(b.Guid != Guid.Empty)
+                {
+                    bankingTransactionsCopy.Add(b.Guid, (BankingTransaction)b.Clone());
+                }
             }
 
             return bankingTransactionsCopy;
@@ -90,9 +96,12 @@ namespace SYFY_Application.BusinessLogic
         {
             // TODO
             Dictionary<Guid, TransactionTag> tagsCopy = new Dictionary<Guid, TransactionTag>();
-            foreach(TransactionTag t in dataBaseConnector.GetAllTransactionTags().Values)
+            foreach (TransactionTag t in dataBaseConnector.GetAllTransactionTags().Values)
             {
-                tagsCopy.Add(t.Guid, (TransactionTag)t.Clone());
+                if (t.Guid != Guid.Empty)
+                {
+                    tagsCopy.Add(t.Guid, (TransactionTag)t.Clone());
+                }
             }
 
             return tagsCopy;
@@ -124,6 +133,22 @@ namespace SYFY_Application.BusinessLogic
         public void DeleteBankingTransaction(BankingTransaction transaction)
         {
             transactionExecutioner.DeleteTransaction(transaction);
+        }
+
+        private Guid GetNoneBankAccountId()
+        {
+            return dataBaseConnector.GetDefaultBankAccount().Guid;
+
+        }
+
+        public BankingTransaction CreateEmptyBankingTransaction()
+        {
+            return new BankingTransaction(GetNoneBankAccountId(), GetNoneBankAccountId(), 0, DateTime.Today);
+        }
+
+        public BankAccount CreateEmptyBankAccount()
+        {
+            return new BankAccount("New Bank Account");
         }
     }
 }

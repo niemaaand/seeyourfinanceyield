@@ -189,7 +189,13 @@ namespace SYFY_Plugin_GUI_WPF
 
         private void On_CurrentCellChanged(object? sender, EventArgs e)
         {
-            GetDataContextFromSender(sender).ShowTags(((BankingTransaction)((DataGrid)sender).CurrentCell.Item));
+            try
+            {
+                GetDataContextFromSender(sender).ShowTags(((BankingTransaction)((DataGrid)sender).CurrentCell.Item));
+            }catch(Exception ex)
+            {
+
+            }
         }
 
         private void On_BeginEditDataGrid(object? sender, DataGridBeginningEditEventArgs e)

@@ -96,10 +96,11 @@ namespace SYFY_Plugin_DatabaseSimulation
             //TODO
             if (_BankAccounts.ContainsKey(bankAccount.Guid) && _BankAccounts[bankAccount.Guid].Deleted == false)
             {
-                // update
+                // update bank account
                 _BankAccounts[bankAccount.Guid] = bankAccount;
             }else if(bankAccount.Deleted || (_BankAccounts.ContainsKey(bankAccount.Guid) && _BankAccounts[bankAccount.Guid].Deleted))
             {
+                // bank account is deleted
                 throw new InvalidOperationException("Bank Account is deleted and can therefore not be changed.");
             }
             else
@@ -170,6 +171,17 @@ namespace SYFY_Plugin_DatabaseSimulation
             }
 
             return _TransactionTags[transactionTag.Guid];
+        }
+
+
+        public BankAccount GetDefaultBankAccount()
+        {
+            if (!_BankAccounts.ContainsKey(Guid.Empty))
+            {
+                _BankAccounts.Add(Guid.Empty, new BankAccount("", comment: "DEFAULT_EMPTY_BANKACCOUNT"));
+            }
+
+            return _BankAccounts[Guid.Empty];
         }
 
 
