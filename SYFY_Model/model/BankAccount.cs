@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
 
 
 namespace SYFY_Model.model
@@ -53,7 +50,7 @@ namespace SYFY_Model.model
             _Amount -= amount;
         }
 
-        public void Delete()
+        new public void Delete()
         {
             if(_Amount == 0)
             {

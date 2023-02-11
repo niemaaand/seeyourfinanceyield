@@ -10,14 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using SYFY_Application.BusinessLogic;
-using System.Linq.Expressions;
 
 namespace SYFY_Plugin_GUI_WPF
 {
@@ -205,24 +198,14 @@ namespace SYFY_Plugin_GUI_WPF
             GetDataContextFromSender(sender).DataChanged(selected, true);
         }
 
-
-        /*        private void tabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
-                {
-                    RefreshDataGrids();
-                }
-        */
-        private void RefreshDataGrids()
+        private void BTN_RemoveTagFromTransaction_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                dg_BankAccounts.Items.Refresh();
-                dg_Transactions.Items.Refresh();
-                dg_TransactionTags.Items.Refresh();
-                dg_Transactions_AlignedTransactionTags.Items.Refresh();
-            }catch(Exception ex)
-            {
 
-            }
-        }       
+        }
+
+        private void BTN_AddTagToTransaction_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
     }
 }

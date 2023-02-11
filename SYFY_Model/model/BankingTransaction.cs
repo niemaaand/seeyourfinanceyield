@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 
 namespace SYFY_Model.model
 {
@@ -46,58 +44,29 @@ namespace SYFY_Model.model
 
         public DateTime TransactionDate { get => _TransactionDate; set => _TransactionDate = /*checkTransactionDate(value)*/ value; }
         public DateTime PostingDate { get => _PostingDate; set => _PostingDate = /*checkPostingDate(value)*/ value; }
-        public Guid FromBankAccount
-        {
-            get => _FromBankAccount;
-            set
-            {
-                if (value is Guid) 
-                { _FromBankAccount = value; } 
-                else {
-                    throw new NotImplementedException();
-                }
-            }
-        }
-        public Guid ToBankAccount { 
-            get => _ToBankAccount;
-            set
-            {
-                if (value is Guid)
-                { _ToBankAccount = value; }
-                else
-                {
-                    throw new NotImplementedException();
-                }
-            }
-        }
-    
+        public Guid FromBankAccount { get => _FromBankAccount; set => _FromBankAccount = value; }
+        public Guid ToBankAccount { get => _ToBankAccount; set => _ToBankAccount = value; }
+
         public long Amount { get => _Amount; set => _Amount = value; }
         public string Comment { get => _Comment; set => _Comment = value; }
         public HashSet<Guid> TransactionTags { get => _TransactionTags; set => _TransactionTags = value; }
 
-        /*public string AmountAsString { get
-            { 
-                long eur = Amount / 100;
-                long cents = Amount % 100;
-
-                return eur + "." + cents;
-            } }*/
 
         public object Clone()
         {
             BankingTransaction b = new BankingTransaction(this._FromBankAccount, this._ToBankAccount, this._Amount,
                 this._TransactionDate, this._PostingDate, this._Comment, this._TransactionTags);
-            
+
             b.Guid = this.Guid;
 
-            if(Deleted)
+            if (Deleted)
             {
                 b.Delete();
             }
 
             return b;
-        }             
-       
+        }
+
 
         private DateTime checkPostingDate(DateTime newPostingDate)
         {
@@ -111,9 +80,9 @@ namespace SYFY_Model.model
 
         private DateTime checkTransactionDate(DateTime newTransactionDate)
         {
-            if(newTransactionDate > _PostingDate)
+            if (newTransactionDate > _PostingDate)
             {
-                _PostingDate= newTransactionDate;
+                _PostingDate = newTransactionDate;
             }
 
             return newTransactionDate;

@@ -115,10 +115,10 @@
 
                             <Button x:Name="BTN_AddTagToTransaction" Content="Add Tag" 
                             HorizontalAlignment="Center" Margin="0,0,0,0" Grid.Column="0" VerticalAlignment="Center" 
-                            Width="90"/>
+                            Width="90" Click="BTN_AddTagToTransaction_Click"/>
                             <Button x:Name="BTN_RemoveTagFromTransaction" Content="Remove Tag"
                                     Grid.Column="1" VerticalAlignment="Center"
-                                    HorizontalAlignment="Center" Width="90"/>
+                                    HorizontalAlignment="Center" Width="90" Click="BTN_RemoveTagFromTransaction_Click"/>
                         </Grid>
                     </Grid>
 

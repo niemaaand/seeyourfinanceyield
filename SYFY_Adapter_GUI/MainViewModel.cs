@@ -1,19 +1,6 @@
 ﻿using SYFY_Application.BusinessLogic;
-using SYFY_Application.DatabaseAccess;
 using SYFY_Model.model;
-using System;
-using System.CodeDom;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Globalization;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
 
 namespace SYFY_Adapter_GUI
@@ -59,25 +46,13 @@ namespace SYFY_Adapter_GUI
 
             currentTransactionTags = new ObservableCollection<TransactionTag>();
 
-
-            bankAccounts.CollectionChanged += On_BankAccountsChanged;
-
-        }
-
-
-
-        private void On_BankAccountsChanged(object? sender, NotifyCollectionChangedEventArgs e)
-        {
-            //throw new NotImplementedException();
         }
 
         public void BTN_NewTransaction_Click(object? sender, EventArgs e)
         {
-
             BankingTransaction transaction = dataManager.CreateEmptyBankingTransaction();
             bankingTransactions.Insert(0, transaction);
             DataChanged(transaction);
-
         }
 
         public void BTN_NewBankAccount_Click(object? sender, EventArgs e)
@@ -99,8 +74,6 @@ namespace SYFY_Adapter_GUI
         public void DataChanged(DeleteableData d, bool deleted = false)
         {
             //TODO       
-            //d.DataHandler.AddChanged();
-
             if(d is BankAccount)
             {
                 if (!deleted)
