@@ -87,7 +87,15 @@ namespace SYFY_Adapter_GUI
             bankAccounts.Insert(0, b);
             DataChanged(b);
         }
-            
+
+        public void BTN_NewTransactionTag_Click(object sender, EventArgs e)
+        {
+            //TODO
+            TransactionTag tag = dataManager.CreateEmptyTransactionTag();
+            transactionTags.Insert(0, tag);
+            DataChanged(tag);
+        }
+
         public void DataChanged(DeleteableData d, bool deleted = false)
         {
             //TODO       
@@ -276,6 +284,8 @@ namespace SYFY_Adapter_GUI
 
             return false;
         }
+
+       
     }
 
 }

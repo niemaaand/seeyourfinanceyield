@@ -11,7 +11,7 @@
         <converters:AmountToStringConverter x:Key="AmountToStringConverter"/>
         <converters:DateToStringConverter x:Key="DateToStringConverter"/>
     </Window.Resources>
-    <Grid Margin="0,50,0,0">        
+    <Grid Margin="0,50,0,0">
         <TabControl x:Name="tabControl" Margin="0,42,0,0" Grid.ColumnSpan="2">
             <TabItem Header="Transactions">
                 <Grid Background="#FFE5E5E5">
@@ -34,7 +34,7 @@
                             <DataGridTextColumn x:Name="dgCol_Trans_Amount"                                                 
                                                 Binding="{Binding Path=Amount, Converter={StaticResource AmountToStringConverter}}" 
                                                 Header="Amount"/>
-                            <DataGridTemplateColumn Header="Bank Account From" x:Name="dgCol_Trans_FromBankAccountCB">        
+                            <DataGridTemplateColumn Header="Bank Account From" x:Name="dgCol_Trans_FromBankAccountCB">
                                 <DataGridTemplateColumn.CellEditingTemplate>
                                     <DataTemplate>
                                         <ComboBox x:Name="cb_FromBankAccounts_Editing"
@@ -61,9 +61,6 @@
                             <DataGridTextColumn x:Name="dgCol_Trans_Comment"                                                 
                                                 Binding="{Binding Path=Comment}" 
                                                 Header="Comment"/>
-                            <!--<DataGridTextColumn x:Name="dgCol_Trans_TransactionTags"                                                 
-                                                Binding="{Binding Path=TransactionTags}" 
-                                                Header="Tags"/>-->
                             <DataGridTextColumn x:Name="dgCol_Trans_PostingDate"                                                 
                                                 Binding="{Binding Path=PostingDate, Converter={StaticResource DateToStringConverter}}" 
                                                 Header="Posting Date"/>
@@ -76,7 +73,7 @@
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        
+
                         <Button x:Name="BTN_NewTransaction" Content="New Transaction" 
                             HorizontalAlignment="Left" Margin="0,15,0,0" VerticalAlignment="Top"
                             Click="BTN_NewTransaction_Click"
@@ -89,17 +86,17 @@
                             HorizontalAlignment="Left" Margin="0,15,0,0" VerticalAlignment="Top"
                             Click="BTN_SaveChanges_Click"
                             Grid.Row="0" Grid.Column="2"/>
-                        <Button x:Name="BTN_DiscardChanges" Content="Discard Changes" 
+                        <Button x:Name="BTN_DiscardChangesTransactions" Content="Discard Changes" 
                             HorizontalAlignment="Left" Margin="0,15,0,0" VerticalAlignment="Top"
                             Click="BTN_DiscardChanges_Click"
-                            Grid.Row="0" Grid.Column="3"/>                        
+                            Grid.Row="0" Grid.Column="3"/>
                     </Grid>
                     <Grid Grid.Row="1" Grid.Column="1">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="40"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        
+
                         <DataGrid x:Name="dg_Transactions_Tags" AutoGenerateColumns="False" ItemsSource="{Binding currentTransactionTags}"
                               CanUserAddRows="False" CanUserDeleteRows="False" 
                               Grid.Row="1" Margin="0,0,0,0">
@@ -122,15 +119,24 @@
                             <Button x:Name="BTN_RemoveTagFromTransaction" Content="Remove Tag"
                                     Grid.Column="1" VerticalAlignment="Center"
                                     HorizontalAlignment="Center" Width="90"/>
-                        </Grid>                        
+                        </Grid>
                     </Grid>
-                    
+
                 </Grid>
             </TabItem>
             <TabItem Header="Bank Accounts">
                 <Grid Background="#FFE5E5E5">
-                    <DataGrid x:Name="dg_BankAccounts" AutoGenerateColumns="False" ItemsSource="{Binding bankAccounts}" 
-                              CanUserAddRows="False" CanUserDeleteRows="False" Margin="0,40,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <DataGrid Grid.Row="1" Grid.Column="0"
+                        x:Name="dg_BankAccounts" AutoGenerateColumns="False" ItemsSource="{Binding bankAccounts}" 
+                              CanUserAddRows="False" CanUserDeleteRows="False">
                         <DataGrid.Columns>
                             <DataGridTextColumn x:Name="dgCol_BA_Name" Binding="{Binding Name}" Header="Name"/>
                             <DataGridTextColumn x:Name="dgCol_BA_Amount"                                                 
@@ -144,23 +150,45 @@
                                                 Header="Number (Iban)"/>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <Button x:Name="BTN_NewBankAccout" Content="Add Bank Account" 
-                            HorizontalAlignment="Left" Margin="62,20,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.227,-0.447" 
-                            Click="BTN_NewBankAccount_Click"/>
-                    <Button x:Name="BTN_SaveChangesBankAccounts" Content="Save Changes" 
-                            HorizontalAlignment="Left" Margin="136,15,0,0" VerticalAlignment="Top"
-                            Click="BTN_SaveChanges_Click"/>
-                    <Button x:Name="BTN_DiscardChangesBankAccounts" Content="Discard Changes" 
-                            HorizontalAlignment="Left" Margin="267,15,0,0" VerticalAlignment="Top"
-                            Click="BTN_DiscardChanges_Click"/>
-                    <Button x:Name="BTN_DeleteBankAccount" Content="Delete Bank Account" 
-                            HorizontalAlignment="Left" Margin="350,15,0,0" VerticalAlignment="Top"
-                            Click="BTN_DeleteBankAccount_Click"/>
+                    <Grid Grid.Row="0" Grid.Column="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button x:Name="BTN_NewBankAccout" Content="Add Bank Account" 
+                            HorizontalAlignment="Left" Margin="0,15,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.227,-0.447" 
+                            Click="BTN_NewBankAccount_Click"
+                                Grid.Column="0"/>
+                        <Button x:Name="BTN_SaveChangesBankAccounts" Content="Save Changes" 
+                            HorizontalAlignment="Left" Margin="0,15,0,0" VerticalAlignment="Top"
+                            Click="BTN_SaveChanges_Click"
+                                Grid.Column="1"/>
+                        <Button x:Name="BTN_DiscardChangesBankAccounts" Content="Discard Changes" 
+                            HorizontalAlignment="Left" Margin="0,15,0,0" VerticalAlignment="Top"
+                            Click="BTN_DiscardChanges_Click"
+                                Grid.Column="2"/>
+                        <Button x:Name="BTN_DeleteBankAccount" Content="Delete Bank Account" 
+                            HorizontalAlignment="Left" Margin="0,15,0,0" VerticalAlignment="Top"
+                            Click="BTN_DeleteBankAccount_Click"
+                                Grid.Column="3"/>
+                    </Grid>
                 </Grid>
             </TabItem>
             <TabItem Header="Transaction Tags">
                 <Grid Background="#FFE5E5E5">
-                    <DataGrid x:Name="dg_TransactionTags" AutoGenerateColumns="False" ItemsSource="{Binding transactionTags}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <DataGrid x:Name="dg_TransactionTags" AutoGenerateColumns="False" ItemsSource="{Binding transactionTags}"
+                              Grid.Column="0" Grid.Row="1">
                         <DataGrid.Columns>
                             <DataGridTextColumn x:Name="dgCol_Tag_Name" Binding="{Binding Name}" Header="Name"/>
                             <DataGridTextColumn x:Name="dgCol_Tag_Comment"                                                 
@@ -168,6 +196,33 @@
                                                 Header="Comment"/>
                         </DataGrid.Columns>
                     </DataGrid>
+
+                    <Grid Grid.Row="0" Grid.Column="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button x:Name="BTN_NewTag" Content="Add Tag" 
+                            HorizontalAlignment="Left" Margin="0, 15,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.227,-0.447" 
+                            Click="BTN_NewTag_Click"
+                                Grid.Column="0"/>
+                        <Button x:Name="BTN_SaveChangesTags" Content="Save Changes" 
+                            HorizontalAlignment="Left" Margin="0,15,0,0" VerticalAlignment="Top"
+                            Click="BTN_SaveChanges_Click"
+                                Grid.Column="1"/>
+                        <Button x:Name="BTN_DiscardChangesTags" Content="Discard Changes" 
+                            HorizontalAlignment="Left" Margin="0,15,0,0" VerticalAlignment="Top"
+                            Click="BTN_DiscardChanges_Click"
+                                Grid.Column="2"/>
+                        <Button x:Name="BTN_DeleteTag" Content="Delete Tag" 
+                            HorizontalAlignment="Left" Margin="0,15,0,0" VerticalAlignment="Top"
+                            Click="BTN_DeleteTag_Click"
+                                Grid.Column="3"/>
+                    </Grid>
+
                 </Grid>
             </TabItem>
         </TabControl>

@@ -150,5 +150,10 @@ namespace SYFY_Application.BusinessLogic
         {
             return new BankAccount("New Bank Account");
         }
+
+        public TransactionTag CreateEmptyTransactionTag()
+        {
+            return new TransactionTag("New Transaction Tag");
+        }
     }
 }

@@ -62,7 +62,6 @@ namespace SYFY_Plugin_GUI_WPF
 
 
             // events to notify about changed data
-            dg_BankAccounts.CellEditEnding += On_CellEditEnding;
             dg_BankAccounts.RowEditEnding += On_RowEditEnding;
             dg_Transactions.RowEditEnding += On_RowEditEnding;
 
@@ -119,29 +118,10 @@ namespace SYFY_Plugin_GUI_WPF
             }
         }
 
-        private void On_BeginEditDataGrid(object? sender, DataGridBeginningEditEventArgs e)
-        {
-            //throw new NotImplementedException();
-        }
-
-        private void On_CellEditEnding(object? sender, DataGridCellEditEndingEventArgs e)
-        {
-            string oldComment = ((BankAccount)((DataGrid)sender).SelectedItem).Comment;
-            string newComment = ((TextBox)e.EditingElement).Text;
-            //((TextBox)e.EditingElement).Text = "HALLO";
-            DataManagement dataManager = ((MainViewModel)((DataGrid)sender).DataContext).dataManager;
-        }
-
         private void On_RowEditEnding(object? sender, DataGridRowEditEndingEventArgs e)
         {
             //BankAccount b = ((BankAccount)((DataGrid)sender).SelectedItem);
             GetDataContextFromSender(sender).DataChanged((DeleteableData)((DataGrid)sender).SelectedItem);
-        }
-
-
-        private void BTN_NewTransaction_Click(object sender, RoutedEventArgs e)
-        {
-            GetDataContextFromSender(sender).BTN_NewTransaction_Click(sender, e);
         }
 
         private MainViewModel GetDataContextFromSender(Object? sender)
@@ -155,16 +135,30 @@ namespace SYFY_Plugin_GUI_WPF
                 throw new NotImplementedException(e.Message);
             }
         }
-                
+
+        private void BTN_SaveChanges_Click(object sender, RoutedEventArgs e)
+        {
+            GetDataContextFromSender(sender).SaveChanges_Click();
+        }
+
         private void BTN_DiscardChanges_Click(object sender, RoutedEventArgs e)
         {
             GetDataContextFromSender(sender).DiscardChanges_Click();
+        }
+
+        private void BTN_NewTransaction_Click(object sender, RoutedEventArgs e)
+        {
+            GetDataContextFromSender(sender).BTN_NewTransaction_Click(sender, e);
         }
 
         private void BTN_DeleteTransaction_Click(object sender, RoutedEventArgs e)
         {
             BankingTransaction selected = (BankingTransaction)dg_Transactions.SelectedItem;
             GetDataContextFromSender(sender).DataChanged(selected, true);
+        }
+        public void BTN_NewBankAccount_Click(object? sender, RoutedEventArgs e)
+        {
+            GetDataContextFromSender(sender).BTN_NewBankAccount_Click(sender, e);
         }
 
         private void BTN_DeleteBankAccount_Click(object sender, RoutedEventArgs e)
@@ -173,22 +167,23 @@ namespace SYFY_Plugin_GUI_WPF
             GetDataContextFromSender(sender).DataChanged(selected, true);
         }
 
-        public void BTN_NewBankAccount_Click(object? sender, RoutedEventArgs e)
+        private void BTN_NewTag_Click(object sender, RoutedEventArgs e)
         {
-            GetDataContextFromSender(sender).BTN_NewBankAccount_Click(sender, e);
+            GetDataContextFromSender(sender).BTN_NewTransactionTag_Click(sender, e);
         }
 
-        private void BTN_SaveChanges_Click(object sender, RoutedEventArgs e)
+        private void BTN_DeleteTag_Click(object sender, RoutedEventArgs e)
         {
-            GetDataContextFromSender(sender).SaveChanges_Click();
+            TransactionTag selected = (TransactionTag)dg_Transactions_Tags.SelectedItem;
+            GetDataContextFromSender(sender).DataChanged(selected, true);
         }
-               
 
-/*        private void tabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            RefreshDataGrids();
-        }
-*/
+
+        /*        private void tabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+                {
+                    RefreshDataGrids();
+                }
+        */
         private void RefreshDataGrids()
         {
             try
@@ -201,6 +196,6 @@ namespace SYFY_Plugin_GUI_WPF
             {
 
             }
-        }
+        }       
     }
 }
