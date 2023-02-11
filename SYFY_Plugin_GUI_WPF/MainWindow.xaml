@@ -12,7 +12,7 @@
         <converters:DateToStringConverter x:Key="DateToStringConverter"/>
     </Window.Resources>
     <Grid Margin="0,50,0,0">        
-        <TabControl x:Name="tabControl" Margin="0,42,0,0" Grid.ColumnSpan="2" SelectionChanged="tabControl_SelectionChanged">
+        <TabControl x:Name="tabControl" Margin="0,42,0,0" Grid.ColumnSpan="2">
             <TabItem Header="Transactions">
                 <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
@@ -87,11 +87,11 @@
                             Grid.Row="0" Grid.Column="1"/>
                         <Button x:Name="BTN_SaveChangesTransactions" Content="Save Changes" 
                             HorizontalAlignment="Left" Margin="0,15,0,0" VerticalAlignment="Top"
-                            Click="BTN_SaveChangesTransactions_Click"
+                            Click="BTN_SaveChanges_Click"
                             Grid.Row="0" Grid.Column="2"/>
                         <Button x:Name="BTN_DiscardChanges" Content="Discard Changes" 
                             HorizontalAlignment="Left" Margin="0,15,0,0" VerticalAlignment="Top"
-                            Click="BTN_DiscardChangesTransactions_Click"
+                            Click="BTN_DiscardChanges_Click"
                             Grid.Row="0" Grid.Column="3"/>                        
                     </Grid>
                     <Grid Grid.Row="1" Grid.Column="1">
@@ -149,10 +149,10 @@
                             Click="BTN_NewBankAccount_Click"/>
                     <Button x:Name="BTN_SaveChangesBankAccounts" Content="Save Changes" 
                             HorizontalAlignment="Left" Margin="136,15,0,0" VerticalAlignment="Top"
-                            Click="BTN_SaveChangesBankAccounts_Click"/>
+                            Click="BTN_SaveChanges_Click"/>
                     <Button x:Name="BTN_DiscardChangesBankAccounts" Content="Discard Changes" 
                             HorizontalAlignment="Left" Margin="267,15,0,0" VerticalAlignment="Top"
-                            Click="BTN_DiscardChangesBankAccounts_Click"/>
+                            Click="BTN_DiscardChanges_Click"/>
                     <Button x:Name="BTN_DeleteBankAccount" Content="Delete Bank Account" 
                             HorizontalAlignment="Left" Margin="350,15,0,0" VerticalAlignment="Top"
                             Click="BTN_DeleteBankAccount_Click"/>

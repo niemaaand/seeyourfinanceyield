@@ -36,7 +36,7 @@ namespace SYFY_Plugin_GUI_WPF
             InitializeComponent();
             this.DataContext = mainViewModel;
 
-            // from bank account
+            // set data-bindint for from bank account
             Binding bind_FromBankAccount = new Binding("FromBankAccount");
             bind_FromBankAccount.Converter = baGuidNameConv;
 
@@ -48,7 +48,7 @@ namespace SYFY_Plugin_GUI_WPF
 
             dgCol_Trans_FromBankAccountCB.CellTemplate = dt_fromBankAccount;
 
-            // to bank account
+            // set data-binding for to bank account
             Binding bind_ToBankAccount = new Binding("ToBankAccount");
             bind_ToBankAccount.Converter = baGuidNameConv;
 
@@ -72,101 +72,7 @@ namespace SYFY_Plugin_GUI_WPF
             // event for tab changed
             tabControl.SelectionChanged += On_TabSelectionChanged;
 
-            
-
-
-            /*
-            //DependencyProperty dependency = DependencyProperty.Register("BankAccount", typeof(string), typeof(DependencyProperty));
-            ComboBox box = new ComboBox();
-
-            foreach (BankAccount b in this.dataManager.GetAllBankAccounts().Values)
-            {
-                //ComBoxColItems_BankAccounts.Add(new BankAccountComBoxItem(b.Guid, b.Name));
-
-
-
-                ComboBoxItem comboBoxItem = new ComboBoxItem()
-                {
-                    Content = "Content",
-                };
-                //comboBoxItem.SetValue(dependency, b.Guid);
-                //comboBoxItem.Content = b.Name;
-                box.Items.Add(comboBoxItem);
-
-            }
-
-            //dgCol_Trans_BANew.CellTemplate = new DataTemplate(typeof(ComboBox));
-
-
-            DataGridTextColumn dgCol_Name = new DataGridTextColumn();
-            dgCol_Name.Header = "Name";
-            dgCol_Name.Binding = new Binding("Name");
-            dgCol_Name.IsReadOnly = false;
-
-
-            DataGridTextColumn dgCol_Iban = new DataGridTextColumn();
-            dgCol_Iban.Header = "Number (IBAN)";
-            dgCol_Iban.Binding = new Binding("Iban");
-
-            DataGridTextColumn dgCol_Comment = new DataGridTextColumn();
-            dgCol_Comment.Header = "Comment";
-            dgCol_Comment.Binding = new Binding("Comment");
-
-            DataGridTextColumn dgCol_Amount = new DataGridTextColumn();
-            dgCol_Amount.Header = "Amount";
-            dgCol_Amount.Binding = new Binding("Amount");
-
-
-            DataGrid dataGridBankAccounts = new DataGrid();
-            dataGridBankAccounts.AutoGenerateColumns = false;
-            dataGridBankAccounts.ItemsSource = dataManager.GetAllBankAccounts().Values;
-            dataGridBankAccounts.Columns.Add(dgCol_Name);
-            dataGridBankAccounts.Columns.Add(dgCol_Iban);
-            dataGridBankAccounts.Columns.Add(dgCol_Comment);
-            dataGridBankAccounts.Columns.Add(dgCol_Amount);
-            dataGridBankAccounts.IsReadOnly = false;
-            dataGridBankAccounts.CanUserAddRows = true;
-            dataGridBankAccounts.BeginningEdit += On_BeginEditDataGrid;
-
-            DataGridTextColumn dgCol_TransDate = new DataGridTextColumn();
-            dgCol_TransDate.Header = "Date";
-            dgCol_TransDate.Binding = new Binding("TransactionDate");
-
-
-            DataGridComboBoxColumn dgCol_BankAccountFrom = new DataGridComboBoxColumn();
-            dgCol_BankAccountFrom.Header = "Bank account from";
-            dgCol_BankAccountFrom.SelectedValueBinding = new Binding("FromBankAccount");
-            dgCol_BankAccountFrom.ItemsSource = dataManager.GetAllBankAccounts();
-            dgCol_BankAccountFrom.DisplayMemberPath = "Name";
-            dgCol_BankAccountFrom.SelectedValuePath = "Guid";
-
-            DataGrid dg_Transactions = new DataGrid();
-            dg_Transactions.AutoGenerateColumns = false;
-            dg_Transactions.ItemsSource = dataManager.GetAllBankingTransactions().Values;
-            dg_Transactions.Columns.Add(dgCol_TransDate);
-            dg_Transactions.Columns.Add(dgCol_BankAccountFrom);
-
-
-
-
-            TabItem bankAccountsTab = new TabItem();
-            bankAccountsTab.Header = "BankAccounts";
-            bankAccountsTab.Content = dataGridBankAccounts;
-
-            TabItem transactionsTab = new TabItem();
-            transactionsTab.Header = "Transactions";
-            transactionsTab.Content = dg_Transactions;
-
-            TabControl tabControl = new TabControl();
-            tabControl.Items.Add(bankAccountsTab);
-            tabControl.Items.Add(transactionsTab);
-
-
-            //dgCol_Trans_FromBankAccount.Item
-
-
-            //this.Content = tabControl;
-            */
+           
         }
 
         private void On_TabSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -249,15 +155,10 @@ namespace SYFY_Plugin_GUI_WPF
                 throw new NotImplementedException(e.Message);
             }
         }
-
-        private void BTN_SaveChangesTransactions_Click(object sender, RoutedEventArgs e)
+                
+        private void BTN_DiscardChanges_Click(object sender, RoutedEventArgs e)
         {
-            GetDataContextFromSender(sender).SaveChanges_Click();
-        }
-
-        private void BTN_DiscardChangesTransactions_Click(object sender, RoutedEventArgs e)
-        {
-            //GetDataContextFromSender(sender).DiscardChangesTransactions(sender, e);
+            GetDataContextFromSender(sender).DiscardChanges_Click();
         }
 
         private void BTN_DeleteTransaction_Click(object sender, RoutedEventArgs e)
@@ -277,22 +178,17 @@ namespace SYFY_Plugin_GUI_WPF
             GetDataContextFromSender(sender).BTN_NewBankAccount_Click(sender, e);
         }
 
-        private void BTN_SaveChangesBankAccounts_Click(object sender, RoutedEventArgs e)
+        private void BTN_SaveChanges_Click(object sender, RoutedEventArgs e)
         {
             GetDataContextFromSender(sender).SaveChanges_Click();
         }
+               
 
-        private void BTN_DiscardChangesBankAccounts_Click(object sender, RoutedEventArgs e)
-        {
-            GetDataContextFromSender(sender).DiscardChanges_Click();
-        }
-
-
-        private void tabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+/*        private void tabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             RefreshDataGrids();
         }
-
+*/
         private void RefreshDataGrids()
         {
             try
