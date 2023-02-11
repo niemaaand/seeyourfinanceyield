@@ -31,18 +31,35 @@ namespace SYFY_Plugin_GUI_WPF
         {
             this.dataManager = dataManager;
 
+            BankAccountGuidToNameConverter baGuidNameConv = new BankAccountGuidToNameConverter(this.dataManager);
+
             InitializeComponent();
             this.DataContext = mainViewModel;
 
-            BankAccountGuidToNameConverter baGuidNameConv = new BankAccountGuidToNameConverter(this.dataManager);
-
+            // from bank account
             Binding bind_FromBankAccount = new Binding("FromBankAccount");
             bind_FromBankAccount.Converter = baGuidNameConv;
-            dgCol_Trans_FromBankAccount.Binding = bind_FromBankAccount;
 
+            var tb_fromBankAccount = new FrameworkElementFactory(typeof(TextBlock));
+            tb_fromBankAccount.SetBinding(TextBlock.TextProperty,
+                bind_FromBankAccount);
+
+            DataTemplate dt_fromBankAccount = new DataTemplate() { VisualTree = tb_fromBankAccount };
+
+            dgCol_Trans_FromBankAccountCB.CellTemplate = dt_fromBankAccount;
+
+            // to bank account
             Binding bind_ToBankAccount = new Binding("ToBankAccount");
             bind_ToBankAccount.Converter = baGuidNameConv;
-            dgCol_Trans_ToBankAccount.Binding = bind_ToBankAccount;
+
+            var tb_toBankAccount = new FrameworkElementFactory(typeof(TextBlock));
+            tb_toBankAccount.SetBinding(TextBlock.TextProperty,
+                bind_ToBankAccount);
+
+            DataTemplate dt_toBankAccount = new DataTemplate() { VisualTree = tb_toBankAccount };
+
+            dgCol_Trans_ToBankAccountCB.CellTemplate = dt_toBankAccount;
+
 
             // events to notify about changed data
             dg_BankAccounts.CellEditEnding += On_CellEditEnding;
@@ -55,9 +72,7 @@ namespace SYFY_Plugin_GUI_WPF
             // event for tab changed
             tabControl.SelectionChanged += On_TabSelectionChanged;
 
-
-
-
+            
 
 
             /*

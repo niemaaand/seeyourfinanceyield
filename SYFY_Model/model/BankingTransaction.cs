@@ -20,8 +20,8 @@ namespace SYFY_Model.model
             DateTime postingDate = new DateTime(),
             string comment = "", Dictionary<Guid, TransactionTag> tags = null) : base()
         {
-            _FromBankAccount = from;
-            _ToBankAccount = to;
+            FromBankAccount = from;
+            ToBankAccount = to;
             _Amount = amount;
             _TransactionDate = transactionDate;
 
@@ -46,8 +46,31 @@ namespace SYFY_Model.model
 
         public DateTime TransactionDate { get => _TransactionDate; set => _TransactionDate = /*checkTransactionDate(value)*/ value; }
         public DateTime PostingDate { get => _PostingDate; set => _PostingDate = /*checkPostingDate(value)*/ value; }
-        public Guid FromBankAccount { get => _FromBankAccount; set => _FromBankAccount = value; }
-        public Guid ToBankAccount { get => _ToBankAccount; set => _ToBankAccount = value; }
+        public Guid FromBankAccount
+        {
+            get => _FromBankAccount;
+            set
+            {
+                if (value is Guid) 
+                { _FromBankAccount = value; } 
+                else {
+                    throw new NotImplementedException();
+                }
+            }
+        }
+        public Guid ToBankAccount { 
+            get => _ToBankAccount;
+            set
+            {
+                if (value is Guid)
+                { _ToBankAccount = value; }
+                else
+                {
+                    throw new NotImplementedException();
+                }
+            }
+        }
+    
         public long Amount { get => _Amount; set => _Amount = value; }
         public string Comment { get => _Comment; set => _Comment = value; }
         public Dictionary<Guid, TransactionTag> TransactionTags { get => _TransactionTags; set => _TransactionTags = value; }
