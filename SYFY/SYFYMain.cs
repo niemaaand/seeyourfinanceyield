@@ -105,9 +105,9 @@ namespace SYFY
             BankAccount festgeld = dataManager.SaveBankAccount(new BankAccount("Festgeld"));
             BankAccount tagesgeld = dataManager.SaveBankAccount(new BankAccount("Tagesgeld"));
 
-            Dictionary<Guid, TransactionTag> tagsList = new Dictionary<Guid, TransactionTag>();
-            tagsList.Add(funTag.Guid, funTag);
-            tagsList.Add(schoolTag.Guid, schoolTag);
+            HashSet<Guid> tagsList = new HashSet<Guid>();
+            tagsList.Add(funTag.Guid);
+            tagsList.Add(schoolTag.Guid);
 
             dataManager.SaveBankingTransaction(new BankingTransaction(giroSparkasse.Guid, depotTradeRepublic.Guid,
                 3078, new DateTime(2022, 12, 27), tags: tagsList));

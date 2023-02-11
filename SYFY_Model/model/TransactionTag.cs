@@ -24,6 +24,11 @@ namespace SYFY_Model.model
             TransactionTag t = new TransactionTag(_Name, _Comment);
             t.Guid = Guid;
 
+            if(Deleted)
+            {
+                t.Delete();
+            }
+
             return t;
         }
     }

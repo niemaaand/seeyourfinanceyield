@@ -14,11 +14,11 @@ namespace SYFY_Model.model
         private Guid _ToBankAccount;
         private long _Amount;
         private string _Comment;
-        private Dictionary<Guid, TransactionTag> _TransactionTags;
+        private HashSet<Guid> _TransactionTags;
 
         public BankingTransaction(Guid from, Guid to, long amount, DateTime transactionDate,
             DateTime postingDate = new DateTime(),
-            string comment = "", Dictionary<Guid, TransactionTag> tags = null) : base()
+            string comment = "", HashSet<Guid> tags = null) : base()
         {
             FromBankAccount = from;
             ToBankAccount = to;
@@ -38,7 +38,7 @@ namespace SYFY_Model.model
 
             if (tags == null)
             {
-                tags = new Dictionary<Guid, TransactionTag>();
+                tags = new HashSet<Guid>();
             }
             _TransactionTags = tags;
 
@@ -73,7 +73,7 @@ namespace SYFY_Model.model
     
         public long Amount { get => _Amount; set => _Amount = value; }
         public string Comment { get => _Comment; set => _Comment = value; }
-        public Dictionary<Guid, TransactionTag> TransactionTags { get => _TransactionTags; set => _TransactionTags = value; }
+        public HashSet<Guid> TransactionTags { get => _TransactionTags; set => _TransactionTags = value; }
 
         /*public string AmountAsString { get
             { 
@@ -89,6 +89,11 @@ namespace SYFY_Model.model
                 this._TransactionDate, this._PostingDate, this._Comment, this._TransactionTags);
             
             b.Guid = this.Guid;
+
+            if(Deleted)
+            {
+                b.Delete();
+            }
 
             return b;
         }             

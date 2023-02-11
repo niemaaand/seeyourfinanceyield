@@ -60,7 +60,7 @@ namespace SYFY_Application.BusinessLogic
 
             foreach (BankAccount b in dataBaseConnector.GetAllBankAccounts().Values)
             {
-                if(b.Guid != Guid.Empty)
+                if(b.Guid != Guid.Empty && !b.Deleted)
                 {
                     bankAccountsCopy.Add(b.Guid, (BankAccount)b.Clone());
                 }
@@ -77,7 +77,7 @@ namespace SYFY_Application.BusinessLogic
             // return copy
             foreach (BankingTransaction b in dataBaseConnector.GetAllBankingTransactions().Values)
             {
-                if(b.Guid != Guid.Empty)
+                if(b.Guid != Guid.Empty && !b.Deleted)
                 {
                     bankingTransactionsCopy.Add(b.Guid, (BankingTransaction)b.Clone());
                 }
@@ -89,7 +89,13 @@ namespace SYFY_Application.BusinessLogic
         public BankAccount GetBankAccountByID(Guid id)
         {
             //TODO
-            return (BankAccount)dataBaseConnector.GetBankAccountByID(id).Clone();
+            BankAccount b = (BankAccount)dataBaseConnector.GetBankAccountByID(id);
+            if (b.Deleted)
+            {
+                throw new NotImplementedException();
+            }
+
+            return (BankAccount)b.Clone();
         }
 
         public Dictionary<Guid, TransactionTag> GetAllTransactionTags()
@@ -98,7 +104,7 @@ namespace SYFY_Application.BusinessLogic
             Dictionary<Guid, TransactionTag> tagsCopy = new Dictionary<Guid, TransactionTag>();
             foreach (TransactionTag t in dataBaseConnector.GetAllTransactionTags().Values)
             {
-                if (t.Guid != Guid.Empty)
+                if (t.Guid != Guid.Empty && !t.Deleted)
                 {
                     tagsCopy.Add(t.Guid, (TransactionTag)t.Clone());
                 }
@@ -110,7 +116,14 @@ namespace SYFY_Application.BusinessLogic
 
         public BankingTransaction GetBankingTransactionByID(Guid guid)
         {
-            return (BankingTransaction)dataBaseConnector.GetBankingTransactionById(guid).Clone();
+            BankingTransaction b = (BankingTransaction)dataBaseConnector.GetBankingTransactionById(guid);
+            return b.Deleted ? throw new NotImplementedException() : (BankingTransaction)b.Clone();
+        }
+
+        public TransactionTag GetTransactionTagByID(Guid guid)
+        {
+            TransactionTag t = (TransactionTag)dataBaseConnector.GetTransactionTagById(guid);
+            return t.Deleted ? throw new NotImplementedException() : (TransactionTag)t.Clone();
         }
 
         public TransactionTag SaveTransactionTag(TransactionTag transactionTag)
@@ -155,5 +168,7 @@ namespace SYFY_Application.BusinessLogic
         {
             return new TransactionTag("New Transaction Tag");
         }
+
+       
     }
 }

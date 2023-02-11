@@ -78,17 +78,17 @@
                             HorizontalAlignment="Left" Margin="0,15,0,0" VerticalAlignment="Top"
                             Click="BTN_NewTransaction_Click"
                             Grid.Row="0" Grid.Column="0"/>
-                        <Button x:Name="BTN_DeleteTransaction" Content="Delete Transaction" 
-                            HorizontalAlignment="Left" Margin="0,15,0,0" VerticalAlignment="Top"
-                            Click="BTN_DeleteTransaction_Click"
-                            Grid.Row="0" Grid.Column="1"/>
                         <Button x:Name="BTN_SaveChangesTransactions" Content="Save Changes" 
                             HorizontalAlignment="Left" Margin="0,15,0,0" VerticalAlignment="Top"
                             Click="BTN_SaveChanges_Click"
-                            Grid.Row="0" Grid.Column="2"/>
+                            Grid.Row="0" Grid.Column="1"/>                        
                         <Button x:Name="BTN_DiscardChangesTransactions" Content="Discard Changes" 
                             HorizontalAlignment="Left" Margin="0,15,0,0" VerticalAlignment="Top"
                             Click="BTN_DiscardChanges_Click"
+                            Grid.Row="0" Grid.Column="2"/>
+                        <Button x:Name="BTN_DeleteTransaction" Content="Delete Transaction" 
+                            HorizontalAlignment="Left" Margin="0,15,0,0" VerticalAlignment="Top"
+                            Click="BTN_DeleteTransaction_Click"
                             Grid.Row="0" Grid.Column="3"/>
                     </Grid>
                     <Grid Grid.Row="1" Grid.Column="1">
@@ -97,7 +97,7 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
-                        <DataGrid x:Name="dg_Transactions_Tags" AutoGenerateColumns="False" ItemsSource="{Binding currentTransactionTags}"
+                        <DataGrid x:Name="dg_Transactions_AlignedTransactionTags" AutoGenerateColumns="False" ItemsSource="{Binding currentTransactionTags}"
                               CanUserAddRows="False" CanUserDeleteRows="False" 
                               Grid.Row="1" Margin="0,0,0,0">
                             <DataGrid.Columns>

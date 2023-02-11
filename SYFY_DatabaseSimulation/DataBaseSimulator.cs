@@ -77,6 +77,13 @@ namespace SYFY_Plugin_DatabaseSimulation
             return _Transactions[guid];
         }
 
+        TransactionTag IDataBaseConnector.GetTransactionTagById(Guid guid)
+        {
+            //TODO
+            return _TransactionTags[guid];
+        }
+
+
         private Guid NewGuid()
         {
             //TODO
@@ -98,7 +105,8 @@ namespace SYFY_Plugin_DatabaseSimulation
             {
                 // update bank account
                 _BankAccounts[bankAccount.Guid] = bankAccount;
-            }else if(bankAccount.Deleted || (_BankAccounts.ContainsKey(bankAccount.Guid) && _BankAccounts[bankAccount.Guid].Deleted))
+            }
+            else if (bankAccount.Deleted || (_BankAccounts.ContainsKey(bankAccount.Guid) && _BankAccounts[bankAccount.Guid].Deleted))
             {
                 // bank account is deleted
                 throw new InvalidOperationException("Bank Account is deleted and can therefore not be changed.");
@@ -122,13 +130,13 @@ namespace SYFY_Plugin_DatabaseSimulation
         {
             //TODO
 
-            if (_Transactions.ContainsKey(bankingTransaction.Guid) 
-                && _Transactions[bankingTransaction.Guid].Deleted ==false)
+            if (_Transactions.ContainsKey(bankingTransaction.Guid)
+                && _Transactions[bankingTransaction.Guid].Deleted == false)
             {
                 // update
                 _Transactions[bankingTransaction.Guid] = bankingTransaction;
             }
-            else if (bankingTransaction.Deleted 
+            else if (bankingTransaction.Deleted
                 || (_Transactions.ContainsKey(bankingTransaction.Guid) && _Transactions[bankingTransaction.Guid].Deleted))
             {
                 throw new InvalidOperationException("Transaction is deleted and can therefore not be changed.");
@@ -160,7 +168,7 @@ namespace SYFY_Plugin_DatabaseSimulation
             {
                 throw new InvalidOperationException("Transaction Tag is deleted and can therefore not be changed.");
             }
-            {
+            else {
                 // save newly
                 transactionTag.Guid = NewGuid();
 
@@ -196,7 +204,7 @@ namespace SYFY_Plugin_DatabaseSimulation
         {
             if (_Transactions.ContainsKey(transaction.Guid))
             {
-                _Transactions[transaction.Guid].Delete();                
+                _Transactions[transaction.Guid].Delete();
             }
         }
 
@@ -215,5 +223,6 @@ namespace SYFY_Plugin_DatabaseSimulation
                 _BankAccounts[bankAccount.Guid].Delete();
             }
         }
+
     }
 }

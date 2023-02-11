@@ -53,6 +53,19 @@ namespace SYFY_Model.model
             _Amount -= amount;
         }
 
+        public void Delete()
+        {
+            if(_Amount == 0)
+            {
+                base.Delete();
+            }
+            else
+            {
+                throw new InvalidOperationException("Bank Account can only be deleted, if amount is zero.");
+            }
+
+        }
+
         public object Clone()
         {
             BankAccount b = new BankAccount(this._Name, this._Iban, this._Comment,
@@ -60,6 +73,11 @@ namespace SYFY_Model.model
 
             b.Guid = this.Guid;
             b._Amount= this._Amount;
+
+            if (Deleted)
+            {
+                b.Delete();
+            }
 
             return b;
         }

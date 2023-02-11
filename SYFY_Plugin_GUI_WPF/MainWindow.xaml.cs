@@ -17,6 +17,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SYFY_Application.BusinessLogic;
+using System.Linq.Expressions;
 
 namespace SYFY_Plugin_GUI_WPF
 {
@@ -64,9 +65,11 @@ namespace SYFY_Plugin_GUI_WPF
             // events to notify about changed data
             dg_BankAccounts.RowEditEnding += On_RowEditEnding;
             dg_Transactions.RowEditEnding += On_RowEditEnding;
+            dg_TransactionTags.RowEditEnding += On_RowEditEnding;
 
             // event to update transaction-tags shown to transaction
-            dg_Transactions.CurrentCellChanged += On_CurrentCellChanged;
+            dg_Transactions.CurrentCellChanged += On_CurrentCellChanged_Transactions;
+            
 
             // event for tab changed
             tabControl.SelectionChanged += On_TabSelectionChanged;
@@ -78,41 +81,60 @@ namespace SYFY_Plugin_GUI_WPF
         {
             if (e.Source is TabControl)
             {
-                // are there unsaved changes?
-                if (GetDataContextFromSender(sender).ExistUnsavedChanges())
-                {                    
-                    MessageBoxResult result = MessageBox.Show("You have unsaved changes! " +
-                        "\n Do you want to save your changes?"
-                        + "\n Yes: Save Changes \n No: Discard Changes " +
-                        "\n Cancel: Changes will not be applied, until they are saved.", 
-                        "Save Changes?",
-                    MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                //TODO: if editing is not finished yet, then the changes will not be recognized. 
+                // These changes will be recognized after switching again, since after first change of tab, 
+                // the editing ends. 
 
-                    if(result == MessageBoxResult.Yes)
+                try
+                {
+                    // are there unsaved changes?
+                    if (GetDataContextFromSender(sender).ExistUnsavedChanges())
                     {
-                        GetDataContextFromSender(sender).SaveChanges_Click();
-                    }else if(result == MessageBoxResult.No)
-                    {
-                        GetDataContextFromSender(sender).DiscardChanges_Click();
-                    }else if(result== MessageBoxResult.Cancel)
-                    {
-                        e.Handled= true;
-                    }
-                    else
-                    {
-                        throw new NotImplementedException();
+                        MessageBoxResult result = MessageBox.Show("You have unsaved changes! " +
+                            "\n Do you want to save your changes?"
+                            + "\n Yes: Save Changes \n No: Discard Changes " +
+                            "\n Cancel: Changes will not be applied, until they are saved.",
+                            "Save Changes?",
+                        MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+
+                        if (result == MessageBoxResult.Yes)
+                        {
+                            GetDataContextFromSender(sender).SaveChanges_Click();
+                        }
+                        else if (result == MessageBoxResult.No)
+                        {
+                            GetDataContextFromSender(sender).DiscardChanges_Click();
+                        }
+                        else if (result == MessageBoxResult.Cancel)
+                        {
+                            e.Handled = true;
+                        }
+                        else
+                        {
+                            throw new NotImplementedException();
+                        }
+
                     }
 
+                }catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "WARNING", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
         }
 
-        private void On_CurrentCellChanged(object? sender, EventArgs e)
+        private void On_CurrentCellChanged_Transactions(object? sender, EventArgs e)
         {
             try
             {
-                GetDataContextFromSender(sender).ShowTags(((BankingTransaction)((DataGrid)sender).CurrentCell.Item));
-            }catch(Exception ex)
+                var current = ((DataGrid)sender).CurrentCell.Item;
+
+                if (current is BankingTransaction)
+                {
+                    GetDataContextFromSender(sender).ShowTags((BankingTransaction)current);
+                }
+            }
+            catch(Exception ex)
             {
 
             }
@@ -120,7 +142,6 @@ namespace SYFY_Plugin_GUI_WPF
 
         private void On_RowEditEnding(object? sender, DataGridRowEditEndingEventArgs e)
         {
-            //BankAccount b = ((BankAccount)((DataGrid)sender).SelectedItem);
             GetDataContextFromSender(sender).DataChanged((DeleteableData)((DataGrid)sender).SelectedItem);
         }
 
@@ -138,7 +159,13 @@ namespace SYFY_Plugin_GUI_WPF
 
         private void BTN_SaveChanges_Click(object sender, RoutedEventArgs e)
         {
-            GetDataContextFromSender(sender).SaveChanges_Click();
+            try
+            {
+                GetDataContextFromSender(sender).SaveChanges_Click();
+            }catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message, "WARNING", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
 
         private void BTN_DiscardChanges_Click(object sender, RoutedEventArgs e)
@@ -174,7 +201,7 @@ namespace SYFY_Plugin_GUI_WPF
 
         private void BTN_DeleteTag_Click(object sender, RoutedEventArgs e)
         {
-            TransactionTag selected = (TransactionTag)dg_Transactions_Tags.SelectedItem;
+            TransactionTag selected = (TransactionTag)dg_TransactionTags.SelectedItem;
             GetDataContextFromSender(sender).DataChanged(selected, true);
         }
 
@@ -191,7 +218,7 @@ namespace SYFY_Plugin_GUI_WPF
                 dg_BankAccounts.Items.Refresh();
                 dg_Transactions.Items.Refresh();
                 dg_TransactionTags.Items.Refresh();
-                dg_Transactions_Tags.Items.Refresh();
+                dg_Transactions_AlignedTransactionTags.Items.Refresh();
             }catch(Exception ex)
             {
 
