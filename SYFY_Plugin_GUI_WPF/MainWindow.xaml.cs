@@ -1,12 +1,7 @@
-﻿using SYFY_Application.DatabaseAccess;
-using SYFY_Model.model;
+﻿using SYFY_Model.model;
 using SYFY_Plugin_GUI_WPF.Converters;
 using SYFY_Adapter_GUI;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -54,6 +49,29 @@ namespace SYFY_Plugin_GUI_WPF
 
             dgCol_Trans_ToBankAccountCB.CellTemplate = dt_toBankAccount;
 
+            // set data-binding for selected transaction-tags
+            /*TagGuidSelectedConv tagGuidSelectedConv = new TagGuidSelectedConv(this.dataManager);
+
+            Binding bind_selectedTag = new Binding("Guid");
+            bind_selectedTag.Converter = tagGuidSelectedConv;
+            */
+            /*var cb_selectedTag = new FrameworkElementFactory(typeof(CheckBox));
+
+            var tb_selectedTag_Name = new FrameworkElementFactory(typeof(TextBlock));
+            tb_selectedTag_Name.SetBinding(TextBlock.TextProperty, new Binding("Name"));
+
+            StackPanel stackPanel = new StackPanel();
+            stackPanel.Children.Add(tb_selectedTag_Name);
+
+            CB_SelectedTags
+
+
+            DataTemplate dt_cb_selectedTags = new DataTemplate();
+            dt_cb_selectedTags.VisualTree
+
+            CB_test.ItemTemplate = new DataTemplate();
+            */
+
 
             // events to notify about changed data
             dg_BankAccounts.RowEditEnding += On_RowEditEnding;
@@ -61,13 +79,39 @@ namespace SYFY_Plugin_GUI_WPF
             dg_TransactionTags.RowEditEnding += On_RowEditEnding;
 
             // event to update transaction-tags shown to transaction
-            dg_Transactions.CurrentCellChanged += On_CurrentCellChanged_Transactions;
-            
+            dg_Transactions.SelectedCellsChanged += On_SelectedCellsChanged_Transactions;
+
 
             // event for tab changed
             tabControl.SelectionChanged += On_TabSelectionChanged;
 
+            
+
+
            
+        }
+
+        private void On_SelectedCellsChanged_Transactions(object sender, SelectedCellsChangedEventArgs e)
+        {
+            try
+            {
+                var current = dg_Transactions.SelectedItem;
+
+                if (current is BankingTransaction)
+                {
+                    // newly selected banking transaction
+                    GetDataContextFromSender(sender).ShowTags((BankingTransaction)current);
+                    Grid_Transactions_TransactionTagsSelection.Visibility = Visibility.Visible;
+                }
+                else 
+                {
+                    Grid_Transactions_TransactionTagsSelection.Visibility = Visibility.Hidden;
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         private void On_TabSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -113,26 +157,14 @@ namespace SYFY_Plugin_GUI_WPF
                 {
                     MessageBox.Show(ex.Message, "WARNING", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
-            }
-        }
-
-        private void On_CurrentCellChanged_Transactions(object? sender, EventArgs e)
-        {
-            try
-            {
-                var current = ((DataGrid)sender).CurrentCell.Item;
-
-                if (current is BankingTransaction)
+                finally
                 {
-                    GetDataContextFromSender(sender).ShowTags((BankingTransaction)current);
+                    Grid_Transactions_TransactionTagsSelection.Visibility = Visibility.Hidden;
                 }
             }
-            catch(Exception ex)
-            {
-
-            }
         }
 
+      
         private void On_RowEditEnding(object? sender, DataGridRowEditEndingEventArgs e)
         {
             GetDataContextFromSender(sender).DataChanged((DeleteableData)((DataGrid)sender).SelectedItem);
@@ -200,12 +232,42 @@ namespace SYFY_Plugin_GUI_WPF
 
         private void BTN_RemoveTagFromTransaction_Click(object sender, RoutedEventArgs e)
         {
+            BankingTransaction transaction = dg_Transactions.SelectedItem as BankingTransaction;
 
+            if (transaction is BankingTransaction)
+            {
+                TransactionTag tag = dg_Transactions_AlignedTransactionTags.SelectedItem as TransactionTag;
+
+                if (tag is TransactionTag)
+                {
+                    GetDataContextFromSender(sender).RemoveTagFromTransaction(transaction, tag);
+                }
+                else
+                {
+                    MessageBox.Show("Please select Tag to remove from selected Tags.", 
+                        "INFORMATION", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
         }
 
         private void BTN_AddTagToTransaction_Click(object sender, RoutedEventArgs e)
         {
+            BankingTransaction transaction = dg_Transactions.SelectedItem as BankingTransaction;
             
+            if(transaction is BankingTransaction)
+            {
+                TransactionTag tag = dg_AvailableTags.SelectedItem as TransactionTag;
+
+                if(tag is TransactionTag)
+                {
+                    GetDataContextFromSender(sender).AddTagToTransaction(transaction, tag);
+                }
+                else
+                {
+                    MessageBox.Show("Please select Tag to add from available Tags.", 
+                        "INFORMATION", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
         }
     }
 }

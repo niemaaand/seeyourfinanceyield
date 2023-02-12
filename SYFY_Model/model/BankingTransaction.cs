@@ -50,12 +50,17 @@ namespace SYFY_Model.model
         public long Amount { get => _Amount; set => _Amount = value; }
         public string Comment { get => _Comment; set => _Comment = value; }
         public HashSet<Guid> TransactionTags { get => _TransactionTags; set => _TransactionTags = value; }
-
+               
 
         public object Clone()
         {
+            HashSet<Guid> tagsCopy = new HashSet<Guid>();
+            foreach (Guid tag in _TransactionTags) {
+                tagsCopy.Add(tag);
+            }
+
             BankingTransaction b = new BankingTransaction(this._FromBankAccount, this._ToBankAccount, this._Amount,
-                this._TransactionDate, this._PostingDate, this._Comment, this._TransactionTags);
+                this._TransactionDate, this._PostingDate, this._Comment, tagsCopy);
 
             b.Guid = this.Guid;
 

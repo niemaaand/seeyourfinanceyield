@@ -91,10 +91,12 @@
                             Click="BTN_DeleteTransaction_Click"
                             Grid.Row="0" Grid.Column="3"/>
                     </Grid>
-                    <Grid Grid.Row="1" Grid.Column="1">
+                    <Grid x:Name="Grid_Transactions_TransactionTagsSelection" Grid.Row="1" Grid.Column="1" Visibility="Hidden">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="40"/>
                             <RowDefinition Height="*"/>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="100"/>
                         </Grid.RowDefinitions>
 
                         <DataGrid x:Name="dg_Transactions_AlignedTransactionTags" AutoGenerateColumns="False" ItemsSource="{Binding currentTransactionTags}"
@@ -103,6 +105,7 @@
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
                                 <DataGridTextColumn Header="Comment" Binding="{Binding Comment}"/>
+                                <DataGridCheckBoxColumn x:Name="dg_Transactions_AlignedTransactionTags_SelectedCol" Header="Selected" Visibility="Hidden"/>
                             </DataGrid.Columns>
 
                         </DataGrid>
@@ -120,8 +123,18 @@
                                     Grid.Column="1" VerticalAlignment="Center"
                                     HorizontalAlignment="Center" Width="90" Click="BTN_RemoveTagFromTransaction_Click"/>
                         </Grid>
-                    </Grid>
-
+                        <TextBlock Text="Available Transaction Tags" Grid.Row="2"/>
+                        <DataGrid x:Name="dg_AvailableTags" Grid.Row="3" 
+                                  ItemsSource="{Binding Path=DataContext.currentlyAvailableTransactionTags, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                    AutoGenerateColumns="False"
+                                  
+                                  >
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
+                                <DataGridTextColumn Header="Comment" Binding="{Binding Comment}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                         </Grid>
                 </Grid>
             </TabItem>
             <TabItem Header="Bank Accounts">

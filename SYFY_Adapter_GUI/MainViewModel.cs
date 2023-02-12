@@ -15,6 +15,8 @@ namespace SYFY_Adapter_GUI
         public ObservableCollection<TransactionTag> transactionTags { get; set; }
         public ObservableCollection<TransactionTag> currentTransactionTags { get; set; }
 
+        public ObservableCollection<TransactionTag> currentlyAvailableTransactionTags { get; set; }
+
         private HashSet<BankingTransaction> changedTransactions;
         private HashSet<BankAccount> changedBankAccounts;
         private HashSet<TransactionTag> changedTransactionTags;
@@ -45,7 +47,7 @@ namespace SYFY_Adapter_GUI
             LoadTransactionTags();
 
             currentTransactionTags = new ObservableCollection<TransactionTag>();
-
+            currentlyAvailableTransactionTags = new ObservableCollection<TransactionTag>();
         }
 
         public void BTN_NewTransaction_Click(object? sender, EventArgs e)
@@ -246,6 +248,15 @@ namespace SYFY_Adapter_GUI
             {
                 currentTransactionTags.Add(dataManager.GetTransactionTagByID(tagId));
             }
+
+            currentlyAvailableTransactionTags.Clear();
+            foreach(TransactionTag tag in transactionTags)
+            {
+                if (!transaction.TransactionTags.Contains(tag.Guid))
+                {
+                    currentlyAvailableTransactionTags.Add(dataManager.GetTransactionTagByID(tag.Guid));
+                }
+            }
         }
 
 
@@ -312,7 +323,21 @@ namespace SYFY_Adapter_GUI
             return false;
         }
 
-       
+        public void AddTagToTransaction(BankingTransaction transaction, TransactionTag tag)
+        {
+            transaction.TransactionTags.Add(tag.Guid);
+            DataChanged(transaction);
+            currentTransactionTags.Add(tag);
+            currentlyAvailableTransactionTags.Remove(tag);
+        }
+
+        public void RemoveTagFromTransaction(BankingTransaction transaction, TransactionTag tag)
+        {
+            transaction.TransactionTags.Remove(tag.Guid);
+            DataChanged(transaction);
+            currentTransactionTags.Remove(tag);
+            currentlyAvailableTransactionTags.Add(tag);
+        }
     }
 
 }
