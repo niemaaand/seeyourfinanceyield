@@ -1,5 +1,5 @@
 ﻿using SYFY_Application.DatabaseAccess;
-using SYFY_Model.model;
+using SYFY_Domain.model;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;

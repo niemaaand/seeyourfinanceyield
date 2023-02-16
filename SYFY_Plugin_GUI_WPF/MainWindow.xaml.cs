@@ -1,4 +1,4 @@
-﻿using SYFY_Model.model;
+﻿using SYFY_Domain.model;
 using SYFY_Plugin_GUI_WPF.Converters;
 using SYFY_Adapter_GUI;
 using System;
@@ -18,6 +18,11 @@ namespace SYFY_Plugin_GUI_WPF
 
         public MainWindow(DataManagement dataManager, MainViewModel mainViewModel)
         {
+            //TODO:
+            //converters auslagern in adapter
+            //-> datentypen im view-model so wählen, dass direkt angezeigt werden kann 
+
+
             this.dataManager = dataManager;
 
             BankAccountGuidToNameConverter baGuidNameConv = new BankAccountGuidToNameConverter(this.dataManager);

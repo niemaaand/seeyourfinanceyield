@@ -1,4 +1,4 @@
-﻿using SYFY_Model.model;
+﻿using SYFY_Domain.model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -66,5 +66,7 @@ namespace SYFY_Application.DatabaseAccess
         void DeleteBankAccount(BankAccount bankAccount);
         BankAccount GetDefaultBankAccount();
         TransactionTag GetTransactionTagById(Guid guid);
+        bool ExistsTransactionTag(Guid guid);
+        bool ExistsBankAccount(Guid guid);
     }
 }

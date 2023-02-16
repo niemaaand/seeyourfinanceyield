@@ -1,5 +1,6 @@
-﻿using SYFY_Application.BusinessLogic;
-using SYFY_Model.model;
+﻿using SYFY_Adapter_GUI.ViewDataHandlers;
+using SYFY_Application.BusinessLogic;
+using SYFY_Domain.model;
 using System.Collections.ObjectModel;
 
 
@@ -17,37 +18,57 @@ namespace SYFY_Adapter_GUI
 
         public ObservableCollection<TransactionTag> currentlyAvailableTransactionTags { get; set; }
 
-        private HashSet<BankingTransaction> changedTransactions;
-        private HashSet<BankAccount> changedBankAccounts;
+        /*private HashSet<BankingTransaction> changedTransactions;
+        //private HashSet<BankAccount> changedBankAccounts;
         private HashSet<TransactionTag> changedTransactionTags;
 
 
         private HashSet<BankingTransaction> deletedTransactions;
-        private HashSet<BankAccount> deletedBankAccounts;
+        //private HashSet<BankAccount> deletedBankAccounts;
         private HashSet<TransactionTag> deletedTransactionTags;
+        */
+
+        private IViewDataHandler bankAccountHandler;
+        private IViewDataHandler bankingTransactionsHandler;
+        private IViewDataHandler transactionTagsHandler;
+        private List<IViewDataHandler> dataHandlers;
+
 
         public MainViewModel(DataManagement dataManager)
         {
             this.dataManager = dataManager;
-            changedTransactions = new HashSet<BankingTransaction>();
-            changedBankAccounts = new HashSet<BankAccount>();
+            /*changedTransactions = new HashSet<BankingTransaction>();
+            //changedBankAccounts = new HashSet<BankAccount>();
             changedTransactionTags = new HashSet<TransactionTag>();
 
             deletedTransactions = new HashSet<BankingTransaction>();
-            deletedBankAccounts = new HashSet<BankAccount>();
+            //deletedBankAccounts = new HashSet<BankAccount>();
             deletedTransactionTags = new HashSet<TransactionTag>();
-
+            */
             bankAccounts = new ObservableCollection<BankAccount>();
-            LoadBankAccounts();
+            //LoadBankAccounts();
 
             bankingTransactions = new ObservableCollection<BankingTransaction>();
-            LoadBankingTransactions();            
+            //LoadBankingTransactions();            
 
             transactionTags = new ObservableCollection<TransactionTag>();
-            LoadTransactionTags();
+            //LoadTransactionTags();
 
             currentTransactionTags = new ObservableCollection<TransactionTag>();
             currentlyAvailableTransactionTags = new ObservableCollection<TransactionTag>();
+
+
+            bankAccountHandler = new ViewDataBankAccountHandler(bankAccounts, dataManager);
+            bankingTransactionsHandler = new ViewDataBankingTransactionHandler(bankingTransactions, dataManager);
+            transactionTagsHandler = new ViewDataTransactionTagHandler(transactionTags, dataManager);
+
+            dataHandlers = new List<IViewDataHandler>
+            {
+                bankAccountHandler, bankingTransactionsHandler, transactionTagsHandler
+            };
+
+            LoadData();
+
         }
 
         public void BTN_NewTransaction_Click(object? sender, EventArgs e)
@@ -78,19 +99,12 @@ namespace SYFY_Adapter_GUI
             //TODO       
             if(d is BankAccount)
             {
-                if (!deleted)
-                {
-                    changedBankAccounts.Add((BankAccount)d);
-                }
-                else
-                {
-                    deletedBankAccounts.Add((BankAccount)d);
-                    bankAccounts.Remove((BankAccount)d);
-                    //dataManager.DeleteBankAccount((BankAccount)d);
-                }
+                bankAccountHandler.DataChanged(d, deleted);
             }
             else if(d is BankingTransaction)
             {
+                bankingTransactionsHandler.DataChanged(d, deleted);
+                /*
                 if (!deleted)
                 {
                     changedTransactions.Add((BankingTransaction)d);                        
@@ -99,12 +113,12 @@ namespace SYFY_Adapter_GUI
                 {
                     deletedTransactions.Add((BankingTransaction)d);
                     bankingTransactions.Remove((BankingTransaction)d);
-                    //dataManager.DeleteBankingTransaction((BankingTransaction)d);
-                }
+                }*/
             }
             else if(d is TransactionTag)
             {
-                if (!deleted)
+                transactionTagsHandler.DataChanged(d, deleted);
+                /*if (!deleted)
                 {
                     changedTransactionTags.Add((TransactionTag)d);
                 }
@@ -112,8 +126,7 @@ namespace SYFY_Adapter_GUI
                 {
                     deletedTransactionTags.Add((TransactionTag)d);
                     transactionTags.Remove((TransactionTag)d);
-                    //dataManager.DeleteTransactionTag((TransactionTag)d);
-                }
+                }*/
             }
             else
             {
@@ -126,121 +139,103 @@ namespace SYFY_Adapter_GUI
         {
             try
             {
-
-                foreach (BankingTransaction transaction in changedTransactions)
+                foreach (IViewDataHandler dataHandler in dataHandlers)
                 {
-                    // BankingTransaction originalTransaction = dataManager.GetBankingTransactionByID(transaction.Guid);
-
-                    // save/update banking-transaction
-                    int index = bankingTransactions.IndexOf(transaction);
-
-                    if (index != -1)
-                    {
-                        bankingTransactions[index] = dataManager.SaveBankingTransaction(transaction);
-                    }
-                    else
-                    {
-                        bankingTransactions.Add(dataManager.SaveBankingTransaction(transaction));
-                    }
-
-                }
-
-                foreach (BankAccount bankAccount in changedBankAccounts)
-                {
-                    //BankAccount originalBankAccount = dataManager.GetBankAccountByID(bankAccount.Guid);
-                    int index = bankAccounts.IndexOf(bankAccount);
-
-                    if (index != -1)
-                    {
-                        bankAccounts[index] = dataManager.SaveBankAccount(bankAccount);
-                    }
-                    else
-                    {
-                        bankAccounts.Add(dataManager.SaveBankAccount(bankAccount));
-                    }
-
-                }
-
-                foreach (TransactionTag tag in changedTransactionTags)
-                {
-                    int index = transactionTags.IndexOf(tag);
-
-                    if (index != -1)
-                    {
-                        transactionTags[index] = dataManager.SaveTransactionTag(tag);
-                    }
-                    else
-                    {
-                        transactionTags.Add(dataManager.SaveTransactionTag(tag));
-                    }
-                }
-
-                foreach (BankingTransaction transaction in deletedTransactions)
-                {
-                    dataManager.DeleteBankingTransaction(transaction);
-                }
-
-                foreach (BankAccount bankAccount in deletedBankAccounts)
-                {
-                    dataManager.DeleteBankAccount(bankAccount);
-                }
-
-                foreach (TransactionTag tag in deletedTransactionTags)
-                {
-                    dataManager.DeleteTransactionTag(tag);
+                    dataHandler.SaveChanges();
                 }
             }
-            finally
+            catch (Exception ex)
             {
-                LoadBankAccounts();
-                //LoadBankingTransactions();
 
-
-                changedBankAccounts.Clear();
-                changedTransactions.Clear();
-                changedTransactionTags.Clear();
-
-                deletedBankAccounts.Clear();
-                deletedTransactions.Clear();
-                deletedTransactionTags.Clear();
             }
+
+            LoadData();
+            //LoadBankAccounts();
+            //LoadBankingTransactions();
+
+            /*
+            foreach (BankingTransaction transaction in changedTransactions)
+            {
+                // save/update banking-transaction
+                index = bankingTransactions.IndexOf(transaction);
+
+                if (index != -1)
+                {
+                    bankingTransactions[index] = dataManager.SaveBankingTransaction(transaction);
+                }
+                else
+                {
+                    bankingTransactions.Add(dataManager.SaveBankingTransaction(transaction));
+                }
+
+            }
+
+            /*foreach (BankAccount bankAccount in changedBankAccounts)
+            {
+                index = bankAccounts.IndexOf(bankAccount);
+
+                if (index != -1)
+                {
+                    bankAccounts[index] = dataManager.SaveBankAccount(bankAccount);
+                }
+                else
+                {
+                    bankAccounts.Add(dataManager.SaveBankAccount(bankAccount));
+                }
+
+            }
+
+            foreach (TransactionTag tag in changedTransactionTags)
+            {
+                index = transactionTags.IndexOf(tag);
+
+                if (index != -1)
+                {
+                    transactionTags[index] = dataManager.SaveTransactionTag(tag);
+                }
+                else
+                {
+                    transactionTags.Add(dataManager.SaveTransactionTag(tag));
+                }
+            }
+
+            foreach (BankingTransaction transaction in deletedTransactions)
+            {
+                dataManager.DeleteBankingTransaction(transaction);
+            }
+
+            /*foreach (BankAccount bankAccount in deletedBankAccounts)
+            {
+                dataManager.DeleteBankAccount(bankAccount);
+            }
+
+            foreach (TransactionTag tag in deletedTransactionTags)
+            {
+                dataManager.DeleteTransactionTag(tag);
+            }
+
+            LoadBankAccounts();
+            //LoadBankingTransactions();
+
+
+            //changedBankAccounts.Clear();
+            changedTransactions.Clear();
+            changedTransactionTags.Clear();
+
+            //deletedBankAccounts.Clear();
+            deletedTransactions.Clear();
+            deletedTransactionTags.Clear();
+            */
         }
 
-        private void LoadBankAccounts()
+        private void LoadData()
         {
-            bankAccounts.Clear();
-            foreach (BankAccount b in dataManager.GetAllBankAccounts().Values)
+            foreach(IViewDataHandler dataHandler in dataHandlers)
             {
-                if (!b.Deleted)
-                {
-                    bankAccounts.Add(b);
-                }
+                dataHandler.LoadData();
             }
         }
-
-        private void LoadBankingTransactions()
-        {
-            bankingTransactions.Clear();
-            foreach (BankingTransaction transaction in dataManager.GetAllBankingTransactions().Values)
-            {
-                if (!transaction.Deleted)
-                {
-                    bankingTransactions.Add(transaction);
-                }
-            }
-        }
-
-        private void LoadTransactionTags()
-        {
-            foreach (TransactionTag tag in dataManager.GetAllTransactionTags().Values)
-            {
-                if (!tag.Deleted)
-                {
-                    transactionTags.Add(tag);
-                }
-            }
-        }
-
+              
         public void ShowTags(BankingTransaction transaction)
         {
             currentTransactionTags.Clear();
@@ -263,7 +258,7 @@ namespace SYFY_Adapter_GUI
         public void DiscardChanges_Click()
         {
             // do reload on gui
-            int index = 0;
+            /*int index = 0;
 
             foreach(BankAccount b in changedBankAccounts)
             {
@@ -283,6 +278,7 @@ namespace SYFY_Adapter_GUI
                 transactionTags[index] = dataManager.GetTransactionTagByID(tag.Guid);
             }
 
+
             foreach(BankAccount b in deletedBankAccounts)
             {
                 bankAccounts.Add(b);
@@ -299,25 +295,38 @@ namespace SYFY_Adapter_GUI
             }
 
             // remove unchanged elements
-            changedBankAccounts.Clear();
+            //changedBankAccounts.Clear();
             changedTransactions.Clear();
             changedTransactionTags.Clear();
 
             deletedTransactions.Clear();
-            deletedBankAccounts.Clear();
+            //deletedBankAccounts.Clear();
             deletedTransactionTags.Clear();
+            */
+            foreach(IViewDataHandler dataHandler in dataHandlers)
+            {
+                dataHandler.DiscardChanges();
+            }
         }
 
         public bool ExistUnsavedChanges()
         {
-            if(changedBankAccounts.Count != 0 
-                || deletedBankAccounts.Count != 0
-                || changedTransactions.Count != 0 
+            /*if(//changedBankAccounts.Count != 0 
+                //|| deletedBankAccounts.Count != 0
+                 changedTransactions.Count != 0 
                 || deletedTransactions.Count != 0
                 || changedTransactionTags.Count != 0
                 || deletedTransactionTags.Count != 0)
             {
                 return true;
+            }*/
+
+            foreach(IViewDataHandler dataHandler in dataHandlers)
+            {
+                if (dataHandler.ExistUnsavedChanges())
+                {
+                    return true;
+                }
             }
 
             return false;
@@ -339,5 +348,4 @@ namespace SYFY_Adapter_GUI
             currentlyAvailableTransactionTags.Add(tag);
         }
     }
-
 }

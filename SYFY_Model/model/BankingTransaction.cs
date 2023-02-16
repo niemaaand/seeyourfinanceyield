@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SYFY_Model.model
+namespace SYFY_Domain.model
 {
     public class BankingTransaction : DeleteableData, ICloneable
     {

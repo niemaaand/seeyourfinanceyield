@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace SYFY_Model.model
+namespace SYFY_Domain.model
 {
     abstract public class DeleteableData
     {

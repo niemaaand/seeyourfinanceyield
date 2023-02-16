@@ -5,7 +5,7 @@ VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SYFY_Main", "SYFY_Main.csproj", "{DCF13CF7-F415-456C-ACD1-64106828EB01}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SYFY_Model", "..\SYFY_Model\SYFY_Model.csproj", "{A4C64A94-7C92-4319-8ADA-3A8925169279}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SYFY_Domain", "..\SYFY_Model\SYFY_Domain.csproj", "{A4C64A94-7C92-4319-8ADA-3A8925169279}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SYFY_Application", "..\SYFY_Core\SYFY_Application.csproj", "{569A7DBA-C20C-4DC4-AF0F-785BC1086B6F}"
 EndProject
@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SYFY_Plugin_DatabaseSimulat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SYFY_Plugin_GUI_WPF", "..\SYFY_Plugin_GUI_WPF\SYFY_Plugin_GUI_WPF.csproj", "{BA940F49-8AB0-48D0-BBC8-A8DA7D18470F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SYFY_Adapter_GUI", "..\SYFY_Adapter_GUI\SYFY_Adapter_GUI.csproj", "{FD61C337-90B2-4745-936C-4A8D8C295587}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SYFY_Adapter_GUI", "..\SYFY_Adapter_GUI\SYFY_Adapter_GUI.csproj", "{FD61C337-90B2-4745-936C-4A8D8C295587}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SYFY_Adapter_DatabaseSimulation", "..\SYFY_Adapter_DatabaseSimulation\SYFY_Adapter_DatabaseSimulation.csproj", "{1A68FC74-33A7-4EA1-9CFF-303A58EDFFF4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{FD61C337-90B2-4745-936C-4A8D8C295587}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD61C337-90B2-4745-936C-4A8D8C295587}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD61C337-90B2-4745-936C-4A8D8C295587}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A68FC74-33A7-4EA1-9CFF-303A58EDFFF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A68FC74-33A7-4EA1-9CFF-303A58EDFFF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A68FC74-33A7-4EA1-9CFF-303A58EDFFF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A68FC74-33A7-4EA1-9CFF-303A58EDFFF4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

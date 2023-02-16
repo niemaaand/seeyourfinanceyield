@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SYFY_Model\SYFY_Model.csproj" />
+    <ProjectReference Include="..\SYFY_Model\SYFY_Domain.csproj" />
   </ItemGroup>
 
 </Project>

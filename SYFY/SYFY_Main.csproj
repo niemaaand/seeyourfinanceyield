@@ -8,7 +8,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SYFY_Core\SYFY_Application.csproj" />
     <ProjectReference Include="..\SYFY_DatabaseSimulation\SYFY_Plugin_DatabaseSimulation.csproj" />
-    <ProjectReference Include="..\SYFY_Model\SYFY_Model.csproj" />
+    <ProjectReference Include="..\SYFY_Model\SYFY_Domain.csproj" />
     <ProjectReference Include="..\SYFY_Plugin_GUI_WPF\SYFY_Plugin_GUI_WPF.csproj" />
   </ItemGroup>
 

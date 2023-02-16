@@ -1,6 +1,6 @@
 ﻿using System;
-using SYFY_Model.model;
-using SYFY_Core.DatabaseAccess;
+using SYFY_Domain.model;
+using SYFY_Application.DatabaseAccess;
 using SYFY_Plugin_DatabaseSimulation;
 using SYFY_Application.DatabaseAccess;
 using SYFY_Application.BusinessLogic;

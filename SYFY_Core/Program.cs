@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SYFY_Core
+namespace SYFY_Application
 {
     class Program
     {
