@@ -96,6 +96,9 @@ namespace SYFY_Adapter_GUI
 
         public void DataChanged(DeleteableData d, bool deleted = false)
         {
+            d.Changed(deleted);
+            return;
+
             //TODO       
             if(d is BankAccount)
             {

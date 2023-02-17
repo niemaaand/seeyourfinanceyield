@@ -14,5 +14,25 @@ namespace SYFY_Domain.model
         {
 
         }
+
+        public override void Changed(bool deleted = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override object Clone()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override DeleteableData Reload()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override DeleteableData Save()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

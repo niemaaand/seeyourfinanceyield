@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 
 namespace SYFY_Adapter_GUI.ViewDataHandlers
 {
-    internal class DataHandler<T> : IViewDataHandler where T : DeleteableData{
+    /*internal class DataHandler<T> : IViewDataHandler where T : DeleteableData{
 
         private Collection<T> data { get; }
         private HashSet<DeleteableData> changedData;
@@ -62,8 +62,8 @@ namespace SYFY_Adapter_GUI.ViewDataHandlers
             foreach (DeleteableData d in deletedData)
             {
                 d.Delete();
-                d.Save();
-                //dataManager.DeleteBankAccount((BankAccount)d);
+                //d.Save();
+                dataManager.DeleteBankAccount((BankAccount)d);
             }
 
             changedData.Clear();
@@ -101,7 +101,7 @@ namespace SYFY_Adapter_GUI.ViewDataHandlers
         void IViewDataHandler.LoadData()
         {
             data.Clear();
-            foreach (T b in dataLoader.LoadData().Values /*dataManager.GetAllBankAccounts().Values*/)
+            foreach (T b in dataLoader.LoadData().Values /*dataManager.GetAllBankAccounts().Values*//*)
             {
                 if (!b.Deleted)
                 {
@@ -114,7 +114,7 @@ namespace SYFY_Adapter_GUI.ViewDataHandlers
 
     }
 
-
+*/
 
     internal class ViewDataBankAccountHandler : IViewDataHandler
     {

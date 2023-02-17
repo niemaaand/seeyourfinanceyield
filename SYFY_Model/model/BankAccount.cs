@@ -11,7 +11,7 @@ namespace SYFY_Domain.model
         FixedDeposit
     }
 
-    public class BankAccount: DeleteableData, ICloneable
+    public class BankAccount: DeleteableData
     {
 
         private string _Name;
@@ -63,13 +63,14 @@ namespace SYFY_Domain.model
 
         }
 
-        public object Clone()
+      
+        public override object Clone()
         {
             BankAccount b = new BankAccount(this._Name, this._Iban, this._Comment,
-                this._Currency, this._Accounttype);
+                           this._Currency, this._Accounttype);
 
             b.Guid = this.Guid;
-            b._Amount= this._Amount;
+            b._Amount = this._Amount;
 
             if (Deleted)
             {
@@ -78,5 +79,21 @@ namespace SYFY_Domain.model
 
             return b;
         }
+
+        public override void Changed(bool deleted)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override DeleteableData Save()
+        {
+            return dbOperationer.SaveBankAccount(this);
+        }
+
+        public override DeleteableData Reload()
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

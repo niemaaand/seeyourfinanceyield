@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SYFY_Domain.model
 {
-    public class BankingTransaction : DeleteableData, ICloneable
+    public class BankingTransaction : DeleteableData
     {
 
         private DateTime _TransactionDate;
@@ -50,12 +50,17 @@ namespace SYFY_Domain.model
         public long Amount { get => _Amount; set => _Amount = value; }
         public string Comment { get => _Comment; set => _Comment = value; }
         public HashSet<Guid> TransactionTags { get => _TransactionTags; set => _TransactionTags = value; }
-               
 
-        public object Clone()
+        public override void Changed(bool deleted = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override object Clone()
         {
             HashSet<Guid> tagsCopy = new HashSet<Guid>();
-            foreach (Guid tag in _TransactionTags) {
+            foreach (Guid tag in _TransactionTags)
+            {
                 tagsCopy.Add(tag);
             }
 
@@ -72,6 +77,15 @@ namespace SYFY_Domain.model
             return b;
         }
 
+        public override DeleteableData Reload()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override DeleteableData Save()
+        {
+            throw new NotImplementedException();
+        }
 
         private DateTime checkPostingDate(DateTime newPostingDate)
         {

@@ -9,6 +9,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SYFY_Adapter_GUI\SYFY_Adapter_GUI.csproj" />
+    <ProjectReference Include="..\SYFY_Core\SYFY_Application.csproj" />
+    <ProjectReference Include="..\SYFY_Model\SYFY_Domain.csproj" />
   </ItemGroup>
 
 </Project>

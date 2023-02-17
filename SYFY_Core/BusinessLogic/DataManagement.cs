@@ -1,4 +1,5 @@
 ﻿using SYFY_Application.DatabaseAccess;
+using SYFY_Domain.data;
 using SYFY_Domain.model;
 using System;
 using System.Collections.Generic;
@@ -6,12 +7,24 @@ using System.Linq;
 
 namespace SYFY_Application.BusinessLogic
 {
-    public class DataManagement
+    public class DataManagement : IBasicEntityOperations
     {
         private TransactionExecution transactionExecutioner;
         private IDataBaseConnector dataBaseConnector;
 
-        public DataManagement(IDataBaseConnector dataBaseConnector) {
+        private static DataManagement _DataManagement_Instance = null;
+
+        public static DataManagement GetInstance(IDataBaseConnector dataBaseConnector)
+        {
+            if(_DataManagement_Instance is null)
+            {
+                _DataManagement_Instance = new DataManagement(dataBaseConnector);
+            }
+
+            return _DataManagement_Instance;
+        }
+
+        private DataManagement(IDataBaseConnector dataBaseConnector) {
             this.dataBaseConnector = dataBaseConnector;
             transactionExecutioner = new TransactionExecution(dataBaseConnector);            
         }
@@ -153,6 +166,11 @@ namespace SYFY_Application.BusinessLogic
 
         }
 
+        public BankingTransaction CreateNewBankingTransaction()
+        {
+
+        }
+
         public BankingTransaction CreateEmptyBankingTransaction()
         {
             return new BankingTransaction(GetNoneBankAccountId(), GetNoneBankAccountId(), 0, DateTime.Today);
@@ -160,7 +178,7 @@ namespace SYFY_Application.BusinessLogic
 
         public BankAccount CreateEmptyBankAccount()
         {
-            return new BankAccount("New Bank Account");
+            return new BankAccount(this, "New Bank Account");
         }
 
         public TransactionTag CreateEmptyTransactionTag()

@@ -1,22 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+﻿using SYFY_Domain.data;
+using System;
 
 namespace SYFY_Domain.model
 {
-    abstract public class DeleteableData
+    abstract public class DeleteableData : ICloneable
     {
         private bool _Deleted;
         private Guid _Guid;
+        protected IBasicEntityOperations dbOperationer;
 
         public bool Deleted { get => _Deleted;}
         public Guid Guid { get => _Guid; set => _Guid = SetGuid(value); }
 
-        public DeleteableData()
+        public DeleteableData(IBasicEntityOperations dbOperationer)
         {
             _Guid = Guid.Empty;
             _Deleted = false;
+            this.dbOperationer = dbOperationer;
         }
 
         public void Delete()
@@ -34,7 +34,14 @@ namespace SYFY_Domain.model
 
             //TODO
             throw new InvalidOperationException("Object already has Guid!");
-        } 
+        }
+
+        public abstract object Clone();
+        public abstract DeleteableData Save();
+
+        public abstract DeleteableData Reload();
+
+        public abstract void Changed(bool deleted = false);
 
     }
 }
