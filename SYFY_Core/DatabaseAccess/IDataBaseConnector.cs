@@ -64,7 +64,6 @@ namespace SYFY_Application.DatabaseAccess
         void DeleteBankingTransaction(BankingTransaction oldTransaction);
         void DeleteTransactionTag(TransactionTag tag);
         void DeleteBankAccount(BankAccount bankAccount);
-        BankAccount GetDefaultBankAccount();
         TransactionTag GetTransactionTagById(Guid guid);
         bool ExistsTransactionTag(Guid guid);
         bool ExistsBankAccount(Guid guid);

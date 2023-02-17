@@ -162,28 +162,48 @@ namespace SYFY_Application.BusinessLogic
 
         private Guid GetNoneBankAccountId()
         {
-            return dataBaseConnector.GetDefaultBankAccount().Guid;
+            if (!dataBaseConnector.ExistsBankAccount(Guid.Empty))
+            {
+                BankAccount b = NewBankAccount("", comment: "DEFAULT_EMPTY_BANKACCOUNT");
+                dataBaseConnector.SaveBankAccount(b);
+            }
 
+            return Guid.Empty;
         }
 
-        public BankingTransaction CreateNewBankingTransaction()
+        public BankingTransaction NewBankingTransaction(
+             Guid from, Guid to, int amount, DateTime transactionDate, DateTime postingDate = default,
+             string comment = "", HashSet<Guid> tags = null)
         {
-
+            return new BankingTransaction(this, from, to, amount, transactionDate, postingDate,
+                comment, tags);
         }
+
+        public BankAccount NewBankAccount(string name, string iban = "", string comment = "",
+            CURRENCIES currency = CURRENCIES.EUR, ACCOUNTTYPE type = ACCOUNTTYPE.Giro)
+        {
+            return new BankAccount(this, name, iban, comment, currency, type);
+        }
+
+        public TransactionTag NewTransactionTag(string name, string comment = "")
+        {
+            return new TransactionTag(this, name, comment);
+        }
+
 
         public BankingTransaction CreateEmptyBankingTransaction()
         {
-            return new BankingTransaction(GetNoneBankAccountId(), GetNoneBankAccountId(), 0, DateTime.Today);
+            return NewBankingTransaction(GetNoneBankAccountId(), GetNoneBankAccountId(), 0, DateTime.Today);
         }
 
         public BankAccount CreateEmptyBankAccount()
         {
-            return new BankAccount(this, "New Bank Account");
+            return NewBankAccount("New Bank Account");
         }
 
         public TransactionTag CreateEmptyTransactionTag()
         {
-            return new TransactionTag("New Transaction Tag");
+            return NewTransactionTag("New Transaction Tag");
         }
 
        

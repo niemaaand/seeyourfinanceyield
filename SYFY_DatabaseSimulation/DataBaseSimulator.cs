@@ -1,4 +1,5 @@
-﻿using SYFY_Application.DatabaseAccess;
+﻿using SYFY_Application.BusinessLogic;
+using SYFY_Application.DatabaseAccess;
 using SYFY_Domain.model;
 using System;
 using System.Collections.Generic;
@@ -178,17 +179,6 @@ namespace SYFY_Plugin_DatabaseSimulation
             }
 
             return _TransactionTags[transactionTag.Guid];
-        }
-
-
-        public BankAccount GetDefaultBankAccount()
-        {
-            if (!_BankAccounts.ContainsKey(Guid.Empty))
-            {
-                _BankAccounts.Add(Guid.Empty, new BankAccount("", comment: "DEFAULT_EMPTY_BANKACCOUNT"));
-            }
-
-            return _BankAccounts[Guid.Empty];
         }
 
 

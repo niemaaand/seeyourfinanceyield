@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SYFY_Domain.data;
+using System;
 
 
 namespace SYFY_Domain.model
@@ -28,8 +29,8 @@ namespace SYFY_Domain.model
         public CURRENCIES Currency { get => _Currency; set => _Currency = value; }
         public ACCOUNTTYPE Accounttype { get => _Accounttype; set => _Accounttype = value; }
 
-        public BankAccount(string name, string iban="", string comment="", 
-            CURRENCIES currency = CURRENCIES.EUR, ACCOUNTTYPE type=ACCOUNTTYPE.Giro): base()
+        public BankAccount(IBasicEntityOperations basicEntityOperations, string name, string iban="", string comment="", 
+            CURRENCIES currency = CURRENCIES.EUR, ACCOUNTTYPE type=ACCOUNTTYPE.Giro): base(basicEntityOperations)
         {
             _Name= name;
             _Iban= iban;
@@ -66,7 +67,7 @@ namespace SYFY_Domain.model
       
         public override object Clone()
         {
-            BankAccount b = new BankAccount(this._Name, this._Iban, this._Comment,
+            BankAccount b = new BankAccount(this.dbOperationer, this._Name, this._Iban, this._Comment,
                            this._Currency, this._Accounttype);
 
             b.Guid = this.Guid;

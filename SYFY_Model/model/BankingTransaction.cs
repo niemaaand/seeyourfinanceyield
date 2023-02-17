@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SYFY_Domain.data;
+using System;
 using System.Collections.Generic;
 
 namespace SYFY_Domain.model
@@ -14,9 +15,9 @@ namespace SYFY_Domain.model
         private string _Comment;
         private HashSet<Guid> _TransactionTags;
 
-        public BankingTransaction(Guid from, Guid to, long amount, DateTime transactionDate,
+        public BankingTransaction(IBasicEntityOperations basicEntityOperations, Guid from, Guid to, long amount, DateTime transactionDate,
             DateTime postingDate = new DateTime(),
-            string comment = "", HashSet<Guid> tags = null) : base()
+            string comment = "", HashSet<Guid> tags = null) : base(basicEntityOperations)
         {
             FromBankAccount = from;
             ToBankAccount = to;
@@ -64,7 +65,7 @@ namespace SYFY_Domain.model
                 tagsCopy.Add(tag);
             }
 
-            BankingTransaction b = new BankingTransaction(this._FromBankAccount, this._ToBankAccount, this._Amount,
+            BankingTransaction b = new BankingTransaction(this.dbOperationer, this._FromBankAccount, this._ToBankAccount, this._Amount,
                 this._TransactionDate, this._PostingDate, this._Comment, tagsCopy);
 
             b.Guid = this.Guid;

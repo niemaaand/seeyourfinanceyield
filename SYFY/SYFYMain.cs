@@ -26,7 +26,7 @@ namespace SYFY
             BankAccount b1 = dataManagement.GetAllBankAccounts().ElementAt(0).Value;
             BankAccount b2 = dataManagement.GetAllBankAccounts().ElementAt(1).Value;
 
-            BankingTransaction t = new BankingTransaction(b1.Guid, b2.Guid, 3456, DateTime.Today);
+            BankingTransaction t = dataManagement.NewBankingTransaction(b1.Guid, b2.Guid, 3456, DateTime.Today);
 
             dataManagement.SaveBankingTransaction(t);
 
@@ -94,24 +94,24 @@ namespace SYFY
     {
         public static void CreateTestData(DataManagement dataManager)
         {
-            TransactionTag funTag = dataManager.SaveTransactionTag(new TransactionTag("Spaß"));
-            TransactionTag schoolTag = dataManager.SaveTransactionTag(new TransactionTag("DHBW"));
-            TransactionTag foodTag = dataManager.SaveTransactionTag(new TransactionTag("Food"));
+            TransactionTag funTag = dataManager.SaveTransactionTag(dataManager.NewTransactionTag("Spaß"));
+            TransactionTag schoolTag = dataManager.SaveTransactionTag(dataManager.NewTransactionTag("DHBW"));
+            TransactionTag foodTag = dataManager.SaveTransactionTag(dataManager.NewTransactionTag("Food"));
 
-            BankAccount giroSparkasse = dataManager.SaveBankAccount(new BankAccount("Giro Sparkasse"));
-            BankAccount giroVolksbank = dataManager.SaveBankAccount(new BankAccount("Giro Volksbank"));
-            BankAccount depotSmartbroker = dataManager.SaveBankAccount(new BankAccount("Depot Smartbroker"));
-            BankAccount depotTradeRepublic = dataManager.SaveBankAccount(new BankAccount("Depot TradeRepublic"));
-            BankAccount festgeld = dataManager.SaveBankAccount(new BankAccount("Festgeld"));
-            BankAccount tagesgeld = dataManager.SaveBankAccount(new BankAccount("Tagesgeld"));
+            BankAccount giroSparkasse = dataManager.SaveBankAccount(dataManager.NewBankAccount("Giro Sparkasse"));
+            BankAccount giroVolksbank = dataManager.SaveBankAccount(dataManager.NewBankAccount("Giro Volksbank"));
+            BankAccount depotSmartbroker = dataManager.SaveBankAccount(dataManager.NewBankAccount("Depot Smartbroker"));
+            BankAccount depotTradeRepublic = dataManager.SaveBankAccount(dataManager.NewBankAccount("Depot TradeRepublic"));
+            BankAccount festgeld = dataManager.SaveBankAccount(dataManager.NewBankAccount("Festgeld"));
+            BankAccount tagesgeld = dataManager.SaveBankAccount(dataManager.NewBankAccount("Tagesgeld"));
 
             HashSet<Guid> tagsList = new HashSet<Guid>();
             tagsList.Add(funTag.Guid);
             tagsList.Add(schoolTag.Guid);
 
-            dataManager.SaveBankingTransaction(new BankingTransaction(giroSparkasse.Guid, depotTradeRepublic.Guid,
+            dataManager.SaveBankingTransaction(dataManager.NewBankingTransaction(giroSparkasse.Guid, depotTradeRepublic.Guid,
                 3078, new DateTime(2022, 12, 27), tags: tagsList));
-            dataManager.SaveBankingTransaction(new BankingTransaction(giroSparkasse.Guid, depotSmartbroker.Guid,
+            dataManager.SaveBankingTransaction(dataManager.NewBankingTransaction(giroSparkasse.Guid, depotSmartbroker.Guid,
                 201, new DateTime(2022, 12, 29)));
         }
     }

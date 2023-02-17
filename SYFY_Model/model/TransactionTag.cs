@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SYFY_Domain.data;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,7 +11,8 @@ namespace SYFY_Domain.model
         private string _Comment;
 
 
-        public TransactionTag(string name, string comment=""): base() 
+        public TransactionTag(IBasicEntityOperations basicEntityOperations, string name, string comment=""): 
+            base(basicEntityOperations) 
         {
             Name= name;
             Comment= comment;
@@ -27,7 +29,7 @@ namespace SYFY_Domain.model
         public override object Clone()
         {
 
-            TransactionTag t = new TransactionTag(_Name, _Comment);
+            TransactionTag t = new TransactionTag(dbOperationer, _Name, _Comment);
             t.Guid = Guid;
 
             if (Deleted)

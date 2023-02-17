@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SYFY_Domain.data;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,7 +11,8 @@ namespace SYFY_Domain.model
         private string _Password;
         private string _EMailAddress;
 
-        public User(string username, string password, string email): base()
+        public User(IBasicEntityOperations basicEntityOperations, string username, string password, string email): 
+            base(basicEntityOperations)
         {
 
         }
