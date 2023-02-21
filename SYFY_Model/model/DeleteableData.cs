@@ -41,7 +41,7 @@ namespace SYFY_Domain.model
 
         public abstract DeleteableData Reload();
 
-        public abstract void Changed(bool deleted = false);
+        public abstract void Changed(IChangeManager changeManager, bool deleted = false);
 
     }
 }

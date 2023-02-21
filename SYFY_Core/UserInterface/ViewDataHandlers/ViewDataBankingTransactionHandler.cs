@@ -1,17 +1,18 @@
 ﻿using SYFY_Application.BusinessLogic;
 using SYFY_Domain.model;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace SYFY_Adapter_GUI.ViewDataHandlers
 {
-    internal class ViewDataTransactionTagHandler : IViewDataHandler
+    internal class ViewDataBankingTransactionHandler : IViewDataHandler
     {
-        private ObservableCollection<TransactionTag> data;
+        public Collection<BankingTransaction> data { get; }
         private HashSet<DeleteableData> changedData;
         private HashSet<DeleteableData> deletedData;
         private DataManagement dataManager;
 
-        public ViewDataTransactionTagHandler(ObservableCollection<TransactionTag> data, DataManagement dataManager)
+        public ViewDataBankingTransactionHandler(Collection<BankingTransaction> data, DataManagement dataManager)
         {
             this.data = data;
             this.dataManager = dataManager;
@@ -29,7 +30,7 @@ namespace SYFY_Adapter_GUI.ViewDataHandlers
             else
             {
                 deletedData.Add(d);
-                data.Remove((TransactionTag)d);
+                data.Remove((BankingTransaction)d);
             }
         }
 
@@ -39,23 +40,23 @@ namespace SYFY_Adapter_GUI.ViewDataHandlers
 
             foreach (DeleteableData d in changedData)
             {
-                index = data.IndexOf((TransactionTag)d);
+                index = data.IndexOf((BankingTransaction)d);
 
                 if (index != -1)
                 {
-                    data[index] = dataManager.SaveTransactionTag((TransactionTag)d);
+                    data[index] = dataManager.SaveBankingTransaction((BankingTransaction)d);
                 }
                 else if (!deletedData.Contains(d))
                 {
-                    data.Add(dataManager.SaveTransactionTag((TransactionTag)d));
+                    data.Add(dataManager.SaveBankingTransaction((BankingTransaction)d));
                 }
             }
 
             foreach (DeleteableData d in deletedData)
             {
-                d.Delete();
+                //d.Delete();
                 //d.Save();
-                dataManager.DeleteTransactionTag((TransactionTag)d);
+                dataManager.DeleteBankingTransaction((BankingTransaction)d);
             }
 
             changedData.Clear();
@@ -80,24 +81,24 @@ namespace SYFY_Adapter_GUI.ViewDataHandlers
 
             foreach (DeleteableData d in deletedData)
             {
-                data.Add((TransactionTag)d);
+                data.Add((BankingTransaction)d);
             }
 
-            foreach (TransactionTag b in changedData)
+            foreach (BankingTransaction b in changedData)
             {
                 index = data.IndexOf(b);
-                data[index] = dataManager.GetTransactionTagByID(b.Guid);
+                data[index] = dataManager.GetBankingTransactionByID(b.Guid);
             }
         }
 
         void IViewDataHandler.LoadData()
         {
             data.Clear();
-            foreach (TransactionTag tag in dataManager.GetAllTransactionTags().Values)
+            foreach (BankingTransaction transaction in dataManager.GetAllBankingTransactions().Values)
             {
-                if (!tag.Deleted)
+                if (!transaction.Deleted)
                 {
-                    data.Add(tag);
+                    data.Add(transaction);
                 }
             }
         }

@@ -80,12 +80,7 @@ namespace SYFY_Domain.model
 
             return b;
         }
-
-        public override void Changed(bool deleted)
-        {
-            throw new NotImplementedException();
-        }
-
+               
         public override DeleteableData Save()
         {
             return dbOperationer.SaveBankAccount(this);
@@ -96,5 +91,9 @@ namespace SYFY_Domain.model
             throw new NotImplementedException();
         }
 
+        public override void Changed(IChangeManager changeManager , bool deleted = false)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

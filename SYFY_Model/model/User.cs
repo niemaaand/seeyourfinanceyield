@@ -17,7 +17,7 @@ namespace SYFY_Domain.model
 
         }
 
-        public override void Changed(bool deleted = false)
+        public override void Changed(IChangeManager changeManager, bool deleted = false)
         {
             throw new NotImplementedException();
         }

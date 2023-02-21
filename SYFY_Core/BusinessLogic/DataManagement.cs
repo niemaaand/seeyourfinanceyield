@@ -206,6 +206,9 @@ namespace SYFY_Application.BusinessLogic
             return NewTransactionTag("New Transaction Tag");
         }
 
-       
+        public void BankingTransactionChanged(BankingTransaction b, bool deleted = false)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

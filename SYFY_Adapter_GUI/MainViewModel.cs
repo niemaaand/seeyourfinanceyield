@@ -1,5 +1,6 @@
 ﻿using SYFY_Adapter_GUI.ViewDataHandlers;
 using SYFY_Application.BusinessLogic;
+using SYFY_Application.UserInterface;
 using SYFY_Domain.model;
 using System.Collections.ObjectModel;
 
@@ -28,14 +29,13 @@ namespace SYFY_Adapter_GUI
         private HashSet<TransactionTag> deletedTransactionTags;
         */
 
-        private IViewDataHandler bankAccountHandler;
-        private IViewDataHandler bankingTransactionsHandler;
-        private IViewDataHandler transactionTagsHandler;
-        private List<IViewDataHandler> dataHandlers;
+        private ChangeManager changeManager;
 
 
         public MainViewModel(DataManagement dataManager)
         {
+            changeManager = new ChangeManager(dataManager);
+
             this.dataManager = dataManager;
             /*changedTransactions = new HashSet<BankingTransaction>();
             //changedBankAccounts = new HashSet<BankAccount>();
@@ -58,16 +58,7 @@ namespace SYFY_Adapter_GUI
             currentlyAvailableTransactionTags = new ObservableCollection<TransactionTag>();
 
 
-            bankAccountHandler = new ViewDataBankAccountHandler(bankAccounts, dataManager);
-            bankingTransactionsHandler = new ViewDataBankingTransactionHandler(bankingTransactions, dataManager);
-            transactionTagsHandler = new ViewDataTransactionTagHandler(transactionTags, dataManager);
-
-            dataHandlers = new List<IViewDataHandler>
-            {
-                bankAccountHandler, bankingTransactionsHandler, transactionTagsHandler
-            };
-
-            LoadData();
+            changeManager.LoadData();
 
         }
 
@@ -96,63 +87,15 @@ namespace SYFY_Adapter_GUI
 
         public void DataChanged(DeleteableData d, bool deleted = false)
         {
-            d.Changed(deleted);
-            return;
-
-            //TODO       
-            if(d is BankAccount)
-            {
-                bankAccountHandler.DataChanged(d, deleted);
-            }
-            else if(d is BankingTransaction)
-            {
-                bankingTransactionsHandler.DataChanged(d, deleted);
-                /*
-                if (!deleted)
-                {
-                    changedTransactions.Add((BankingTransaction)d);                        
-                }
-                else
-                {
-                    deletedTransactions.Add((BankingTransaction)d);
-                    bankingTransactions.Remove((BankingTransaction)d);
-                }*/
-            }
-            else if(d is TransactionTag)
-            {
-                transactionTagsHandler.DataChanged(d, deleted);
-                /*if (!deleted)
-                {
-                    changedTransactionTags.Add((TransactionTag)d);
-                }
-                else
-                {
-                    deletedTransactionTags.Add((TransactionTag)d);
-                    transactionTags.Remove((TransactionTag)d);
-                }*/
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
-
+            d.Changed(changeManager, deleted);
         }
 
         public void SaveChanges_Click()
-        {
-            try
-            {
-                foreach (IViewDataHandler dataHandler in dataHandlers)
-                {
-                    dataHandler.SaveChanges();
-                }
-            }
-            catch (Exception ex)
-            {
+        {    
+            changeManager.SaveChanges();
+            changeManager.LoadData();
 
-            }
-
-            LoadData();
+            //LoadData();
             //LoadBankAccounts();
             //LoadBankingTransactions();
 
@@ -231,13 +174,6 @@ namespace SYFY_Adapter_GUI
             */
         }
 
-        private void LoadData()
-        {
-            foreach(IViewDataHandler dataHandler in dataHandlers)
-            {
-                dataHandler.LoadData();
-            }
-        }
               
         public void ShowTags(BankingTransaction transaction)
         {
@@ -260,6 +196,9 @@ namespace SYFY_Adapter_GUI
 
         public void DiscardChanges_Click()
         {
+            changeManager.DiscardChanges();
+            changeManager.LoadData();
+
             // do reload on gui
             /*int index = 0;
 
@@ -305,11 +244,11 @@ namespace SYFY_Adapter_GUI
             deletedTransactions.Clear();
             //deletedBankAccounts.Clear();
             deletedTransactionTags.Clear();
-            */
+            
             foreach(IViewDataHandler dataHandler in dataHandlers)
             {
                 dataHandler.DiscardChanges();
-            }
+            }*/
         }
 
         public bool ExistUnsavedChanges()
@@ -323,16 +262,7 @@ namespace SYFY_Adapter_GUI
             {
                 return true;
             }*/
-
-            foreach(IViewDataHandler dataHandler in dataHandlers)
-            {
-                if (dataHandler.ExistUnsavedChanges())
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return changeManager.ExistUnsavedChanges();
         }
 
         public void AddTagToTransaction(BankingTransaction transaction, TransactionTag tag)

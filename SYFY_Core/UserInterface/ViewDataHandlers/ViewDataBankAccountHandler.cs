@@ -1,5 +1,6 @@
 ﻿using SYFY_Application.BusinessLogic;
 using SYFY_Domain.model;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace SYFY_Adapter_GUI.ViewDataHandlers
@@ -118,7 +119,7 @@ namespace SYFY_Adapter_GUI.ViewDataHandlers
 
     internal class ViewDataBankAccountHandler : IViewDataHandler
     {
-        private Collection<BankAccount> data { get; }
+        public Collection<BankAccount> data { get; }
         private HashSet<DeleteableData> changedData;
         private HashSet<DeleteableData> deletedData;
         private DataManagement dataManager;

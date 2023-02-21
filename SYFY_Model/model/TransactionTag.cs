@@ -21,9 +21,9 @@ namespace SYFY_Domain.model
         public string Name { get => _Name; set => _Name = value; }
         public string Comment { get => _Comment; set => _Comment = value; }
 
-        public override void Changed(bool deleted = false)
+        public override void Changed(IChangeManager changeManager, bool deleted = false)
         {
-            throw new NotImplementedException();
+            changeManager.TransactionTagChanged(this, deleted);
         }
 
         public override object Clone()
