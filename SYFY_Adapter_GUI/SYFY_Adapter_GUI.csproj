@@ -8,11 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SYFY_Core\SYFY_Application.csproj" />
+    <Compile Remove="Model\**" />
+    <EmbeddedResource Remove="Model\**" />
+    <None Remove="Model\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Model\" />
+    <ProjectReference Include="..\SYFY_Core\SYFY_Application.csproj" />
+    <ProjectReference Include="..\SYFY_Model\SYFY_Domain.csproj" />
   </ItemGroup>
 
 </Project>

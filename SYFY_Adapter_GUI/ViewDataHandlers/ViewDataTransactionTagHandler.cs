@@ -86,8 +86,18 @@ namespace SYFY_Adapter_GUI.ViewDataHandlers
             foreach (TransactionTag b in changedData)
             {
                 index = data.IndexOf(b);
-                data[index] = dataManager.GetTransactionTagByID(b.Guid);
+                if (dataManager.ExistsTransactionTag(b.Guid))
+                {
+                    data[index] = dataManager.GetTransactionTagByID(b.Guid);
+                }
+                else
+                {
+                    data.Remove(b);
+                }
             }
+
+            deletedData.Clear();
+            changedData.Clear();
         }
 
         void IViewDataHandler.LoadData()

@@ -168,6 +168,19 @@ namespace SYFY_Application.BusinessLogic
             return new TransactionTag("New Transaction Tag");
         }
 
-       
+        public bool ExistsBankingTransaction(Guid guid)
+        {
+            return dataBaseConnector.ExistsBankingTransaction(guid);
+        }
+
+        public bool ExistsBankAccount(Guid guid)
+        {
+           return dataBaseConnector.ExistsBankAccount(guid);
+        }
+
+        public bool ExistsTransactionTag(Guid guid)
+        {
+           return dataBaseConnector.ExistsTransactionTag(guid);
+        }
     }
 }

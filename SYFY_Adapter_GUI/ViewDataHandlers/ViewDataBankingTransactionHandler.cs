@@ -86,8 +86,18 @@ namespace SYFY_Adapter_GUI.ViewDataHandlers
             foreach (BankingTransaction b in changedData)
             {
                 index = data.IndexOf(b);
-                data[index] = dataManager.GetBankingTransactionByID(b.Guid);
+                if (dataManager.ExistsBankingTransaction(b.Guid))
+                {
+                    data[index] = dataManager.GetBankingTransactionByID(b.Guid);
+                }
+                else
+                {
+                    data.Remove(b);
+                }
             }
+
+            deletedData.Clear();
+            changedData.Clear();
         }
 
         void IViewDataHandler.LoadData()
