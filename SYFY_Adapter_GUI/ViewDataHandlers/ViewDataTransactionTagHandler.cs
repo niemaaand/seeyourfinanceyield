@@ -111,5 +111,10 @@ namespace SYFY_Adapter_GUI.ViewDataHandlers
                 }
             }
         }
+
+        bool IViewDataHandler.Handles(DeleteableData d)
+        {
+            return d is TransactionTag;
+        }
     }
 }

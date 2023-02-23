@@ -28,9 +28,10 @@ namespace SYFY_Adapter_GUI
         private HashSet<TransactionTag> deletedTransactionTags;
         */
 
-        private IViewDataHandler bankAccountHandler;
+       /* private IViewDataHandler bankAccountHandler;
         private IViewDataHandler bankingTransactionsHandler;
         private IViewDataHandler transactionTagsHandler;
+        */
         private List<IViewDataHandler> dataHandlers;
 
 
@@ -58,13 +59,15 @@ namespace SYFY_Adapter_GUI
             currentlyAvailableTransactionTags = new ObservableCollection<TransactionTag>();
 
 
-            bankAccountHandler = new ViewDataBankAccountHandler(bankAccounts, dataManager);
+            /*bankAccountHandler = new ViewDataBankAccountHandler(bankAccounts, dataManager);
             bankingTransactionsHandler = new ViewDataBankingTransactionHandler(bankingTransactions, dataManager);
             transactionTagsHandler = new ViewDataTransactionTagHandler(transactionTags, dataManager);
-
+            */
             dataHandlers = new List<IViewDataHandler>
             {
-                bankAccountHandler, bankingTransactionsHandler, transactionTagsHandler
+                new ViewDataBankAccountHandler(bankAccounts, dataManager),
+                new ViewDataBankingTransactionHandler(bankingTransactions, dataManager),
+                new ViewDataTransactionTagHandler(transactionTags, dataManager)
             };
 
             LoadData();
@@ -95,7 +98,32 @@ namespace SYFY_Adapter_GUI
         }
 
         public void DataChanged(DeleteableData d, bool deleted = false)
-        {
+        {//d.Datacchanged
+
+           ExecActionForAllDataHandlers((h) =>
+            {
+                if (h.Handles(d))
+                {
+                    h.DataChanged(d,deleted);
+                }
+            });
+
+           /*
+
+            foreach (IViewDataHandler handler in dataHandlers)
+            {
+                if (handler.Handles(d))
+                {
+                    handler.DataChanged(d, deleted);
+                }
+            }
+
+            //ExecuteForAllDataHandlers((h) => h.DataChanged(d, deledted));
+
+            //Schleife ist doppelter Code -> Eliminieren
+            //lambda
+
+            //SHotgun surgery
             //TODO       
             if(d is BankAccount)
             {
@@ -114,7 +142,7 @@ namespace SYFY_Adapter_GUI
                     deletedTransactions.Add((BankingTransaction)d);
                     bankingTransactions.Remove((BankingTransaction)d);
                 }*/
-            }
+            /*}
             else if(d is TransactionTag)
             {
                 transactionTagsHandler.DataChanged(d, deleted);
@@ -127,22 +155,35 @@ namespace SYFY_Adapter_GUI
                     deletedTransactionTags.Add((TransactionTag)d);
                     transactionTags.Remove((TransactionTag)d);
                 }*/
-            }
+            /*}
             else
             {
                 throw new NotImplementedException();
             }
-
+            */
         }
 
+        private void ExecActionForAllDataHandlers(Action<IViewDataHandler> value)
+        {
+            //tell dont ask (DRY)
+            foreach (IViewDataHandler dataHandler in dataHandlers)
+            {
+                //value.Apply(dataHandler);
+                value.Invoke(dataHandler);
+            }
+        }
+        
+        
         public void SaveChanges_Click()
         {
             try
             {
-                foreach (IViewDataHandler dataHandler in dataHandlers)
+                ExecActionForAllDataHandlers((h) => h.SaveChanges());
+
+                /*foreach (IViewDataHandler dataHandler in dataHandlers)
                 {
                     dataHandler.SaveChanges();
-                }
+                }*/
             }
             catch (Exception ex)
             {
@@ -230,10 +271,12 @@ namespace SYFY_Adapter_GUI
 
         private void LoadData()
         {
-            foreach(IViewDataHandler dataHandler in dataHandlers)
+            ExecActionForAllDataHandlers((h) => h.LoadData());
+
+            /*foreach(IViewDataHandler dataHandler in dataHandlers)
             {
                 dataHandler.LoadData();
-            }
+            }*/
         }
               
         public void ShowTags(BankingTransaction transaction)
@@ -302,11 +345,13 @@ namespace SYFY_Adapter_GUI
             deletedTransactions.Clear();
             //deletedBankAccounts.Clear();
             deletedTransactionTags.Clear();
-            */
+            
             foreach(IViewDataHandler dataHandler in dataHandlers)
             {
                 dataHandler.DiscardChanges();
-            }
+            }*/
+
+            ExecActionForAllDataHandlers((h) => h.DiscardChanges());
         }
 
         public bool ExistUnsavedChanges()
@@ -328,8 +373,25 @@ namespace SYFY_Adapter_GUI
                     return true;
                 }
             }
-
+            
             return false;
+             
+
+            /*
+             * Hier wird Rückgabewert benötigt -> Function muss übergeben werden anstatt Action
+             * 
+             * return exec2((h) =>
+            {
+                if (h.ExistUnsavedChanges())
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            });*/
+
         }
 
         public void AddTagToTransaction(BankingTransaction transaction, TransactionTag tag)

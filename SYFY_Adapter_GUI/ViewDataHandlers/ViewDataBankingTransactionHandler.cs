@@ -11,6 +11,8 @@ namespace SYFY_Adapter_GUI.ViewDataHandlers
         private HashSet<DeleteableData> deletedData;
         private DataManagement dataManager;
 
+        //HandledType ???
+
         public ViewDataBankingTransactionHandler(ObservableCollection<BankingTransaction> data, DataManagement dataManager)
         {
             this.data = data;
@@ -110,6 +112,11 @@ namespace SYFY_Adapter_GUI.ViewDataHandlers
                     data.Add(transaction);
                 }
             }
+        }
+
+        bool IViewDataHandler.Handles(DeleteableData d)
+        {
+            return d is BankingTransaction;
         }
     }
 }

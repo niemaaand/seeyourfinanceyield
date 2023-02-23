@@ -18,5 +18,7 @@ namespace SYFY_Adapter_GUI.ViewDataHandlers
         internal void DiscardChanges();
         
         internal void LoadData();
+
+        internal bool Handles(DeleteableData d);
     }
 }
