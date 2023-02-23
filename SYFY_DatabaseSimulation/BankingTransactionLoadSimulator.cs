@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using SYFY_Core.DatabaseAccess;
-using SYFY_Model.model;
+using SYFY_Application.DatabaseAccess;
+using SYFY_Domain.model;
 
 namespace SYFY_Plugin_DatabaseSimulation
 {

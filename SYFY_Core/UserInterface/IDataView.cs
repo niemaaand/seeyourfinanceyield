@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SYFY_Core
+namespace SYFY_Application
 {
     public interface IDataView
     {

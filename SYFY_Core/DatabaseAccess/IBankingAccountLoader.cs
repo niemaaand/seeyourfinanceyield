@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-using SYFY_Model.model;
+using SYFY_Domain.model;
 
-namespace SYFY_Core.DatabaseAccess
+namespace SYFY_Application.DatabaseAccess
 {
     public interface IBankingAccountLoader
     {

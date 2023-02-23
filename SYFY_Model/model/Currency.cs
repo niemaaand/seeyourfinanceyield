@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SYFY_Model.model
+namespace SYFY_Domain.model
 {
     
     public enum CURRENCIES

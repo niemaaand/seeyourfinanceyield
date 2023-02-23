@@ -1,5 +1,5 @@
 ﻿using SYFY_Application.DatabaseAccess;
-using SYFY_Model.model;
+using SYFY_Domain.model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,7 +61,6 @@ namespace SYFY_Plugin_DatabaseSimulation
         Dictionary<Guid, TransactionTag> IDataBaseConnector.GetAllTransactionTags()
         {
             //TODO
-            //return (Dictionary<Guid, TransactionTag>)_TransactionTags.Where(t => t.Value.Deleted == false);
             return _TransactionTags;
         }
 
@@ -224,5 +223,24 @@ namespace SYFY_Plugin_DatabaseSimulation
             }
         }
 
+        bool IDataBaseConnector.ExistsTransactionTag(Guid guid)
+        {
+            if (_TransactionTags.ContainsKey(guid))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        bool IDataBaseConnector.ExistsBankAccount(Guid guid)
+        {
+            if (_BankAccounts.ContainsKey(guid))
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }

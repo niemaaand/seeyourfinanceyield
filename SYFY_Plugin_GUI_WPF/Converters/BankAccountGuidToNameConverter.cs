@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
-using System.Windows;
-using SYFY_Application.DatabaseAccess;
 using SYFY_Application.BusinessLogic;
 
 namespace SYFY_Plugin_GUI_WPF.Converters

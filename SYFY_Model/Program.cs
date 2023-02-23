@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SYFY_Model
+namespace SYFY_Domain
 {
     class Program
     {

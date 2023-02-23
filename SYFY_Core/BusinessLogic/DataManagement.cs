@@ -1,5 +1,5 @@
 ﻿using SYFY_Application.DatabaseAccess;
-using SYFY_Model.model;
+using SYFY_Domain.model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,19 +11,9 @@ namespace SYFY_Application.BusinessLogic
         private TransactionExecution transactionExecutioner;
         private IDataBaseConnector dataBaseConnector;
 
-        //private Dictionary<Guid, BankingTransaction> bankingTransactionsOriginal;
-        //private Dictionary<Guid, BankAccount> bankAccountsOriginal;
-
-
         public DataManagement(IDataBaseConnector dataBaseConnector) {
             this.dataBaseConnector = dataBaseConnector;
-            transactionExecutioner = new TransactionExecution(dataBaseConnector);
-            
-            /*bankingTransactionsOriginal = new Dictionary<Guid, BankingTransaction>();
-            bankingTransactionsOriginal = dataBaseConnector.GetAllBankingTransactions();
-
-            bankAccountsOriginal= new Dictionary<Guid, BankAccount>();
-            bankAccountsOriginal = dataBaseConnector.GetAllBankAccounts();*/
+            transactionExecutioner = new TransactionExecution(dataBaseConnector);            
         }
 
         public BankingTransaction SaveBankingTransaction(BankingTransaction transaction)
@@ -135,17 +125,26 @@ namespace SYFY_Application.BusinessLogic
 
         public void DeleteTransactionTag(TransactionTag tag)
         {
-            dataBaseConnector.DeleteTransactionTag(tag);
+            if (!dataBaseConnector.ExistsTransactionTag(tag.Guid))
+            {
+                dataBaseConnector.DeleteTransactionTag(tag);
+            }
         }
 
         public void DeleteBankAccount(BankAccount bankAccount)
         {
-            dataBaseConnector.DeleteBankAccount(bankAccount);
+            if (!dataBaseConnector.ExistsBankAccount(bankAccount.Guid))
+            {
+                dataBaseConnector.DeleteBankAccount(bankAccount);
+            }
         }
 
         public void DeleteBankingTransaction(BankingTransaction transaction)
         {
-            transactionExecutioner.DeleteTransaction(transaction);
+            if (dataBaseConnector.ExistsBankingTransaction(transaction.Guid))
+            {
+                transactionExecutioner.DeleteTransaction(transaction);
+            }
         }
 
         private Guid GetNoneBankAccountId()
@@ -169,6 +168,19 @@ namespace SYFY_Application.BusinessLogic
             return new TransactionTag("New Transaction Tag");
         }
 
-       
+        public bool ExistsBankingTransaction(Guid guid)
+        {
+            return dataBaseConnector.ExistsBankingTransaction(guid);
+        }
+
+        public bool ExistsBankAccount(Guid guid)
+        {
+           return dataBaseConnector.ExistsBankAccount(guid);
+        }
+
+        public bool ExistsTransactionTag(Guid guid)
+        {
+           return dataBaseConnector.ExistsTransactionTag(guid);
+        }
     }
 }

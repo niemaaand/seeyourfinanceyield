@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace SYFY_Model.model
+namespace SYFY_Domain.model
 {
     public enum ACCOUNTTYPE
     {
