@@ -2,7 +2,8 @@
 using SYFY_Application.BusinessLogic;
 using SYFY_Domain.model;
 using System.Collections.ObjectModel;
-
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace SYFY_Adapter_GUI
 {
@@ -21,7 +22,7 @@ namespace SYFY_Adapter_GUI
 
 
         public MainViewModel(DataManagement dataManager)
-        {
+        {   
             this.dataManager = dataManager;
             
             bankAccounts = new ObservableCollection<BankAccount>();
@@ -43,6 +44,7 @@ namespace SYFY_Adapter_GUI
 
         public void BTN_NewTransaction_Click(object? sender, EventArgs e)
         {
+            //TODO
             BankingTransaction transaction = dataManager.CreateEmptyBankingTransaction();
             bankingTransactions.Insert(0, transaction);
             DataChanged(transaction);
@@ -63,6 +65,13 @@ namespace SYFY_Adapter_GUI
             transactionTags.Insert(0, tag);
             DataChanged(tag);
         }
+        private void ExecActionForAllDataHandlers(Action<IViewDataHandler> value)
+        {
+            foreach (IViewDataHandler dataHandler in dataHandlers)
+            {
+                value.Invoke(dataHandler);
+            }
+        }
 
         public void DataChanged(DeleteableData d, bool deleted = false)
         {
@@ -74,17 +83,7 @@ namespace SYFY_Adapter_GUI
                 }
             });
         }
-
-        private void ExecActionForAllDataHandlers(Action<IViewDataHandler> value)
-        {
-            //tell dont ask (DRY)
-            foreach (IViewDataHandler dataHandler in dataHandlers)
-            {
-                value.Invoke(dataHandler);
-            }
-        }
-        
-        
+                
         public void SaveChanges_Click()
         {
             try
@@ -103,26 +102,7 @@ namespace SYFY_Adapter_GUI
         {
             ExecActionForAllDataHandlers((h) => h.LoadData());
         }
-              
-        public void ShowTags(BankingTransaction transaction)
-        {
-            currentTransactionTags.Clear();
-            foreach(Guid tagId in transaction.TransactionTags)
-            {
-                currentTransactionTags.Add(dataManager.GetTransactionTagByID(tagId));
-            }
-
-            currentlyAvailableTransactionTags.Clear();
-            foreach(TransactionTag tag in transactionTags)
-            {
-                if (!transaction.TransactionTags.Contains(tag.Guid))
-                {
-                    currentlyAvailableTransactionTags.Add(dataManager.GetTransactionTagByID(tag.Guid));
-                }
-            }
-        }
-
-
+            
         public void DiscardChanges_Click()
         {
             ExecActionForAllDataHandlers((h) => h.DiscardChanges());
@@ -143,6 +123,24 @@ namespace SYFY_Adapter_GUI
             return false;
         }
 
+        public void ShowTags(BankingTransaction transaction)
+        {
+            currentTransactionTags.Clear();
+            foreach (Guid tagId in transaction.TransactionTags)
+            {
+                currentTransactionTags.Add(dataManager.GetTransactionTagByID(tagId));
+            }
+
+            currentlyAvailableTransactionTags.Clear();
+            foreach (TransactionTag tag in transactionTags)
+            {
+                if (!transaction.TransactionTags.Contains(tag.Guid))
+                {
+                    currentlyAvailableTransactionTags.Add(dataManager.GetTransactionTagByID(tag.Guid));
+                }
+            }
+        }
+
         public void AddTagToTransaction(BankingTransaction transaction, TransactionTag tag)
         {
             transaction.TransactionTags.Add(tag.Guid);
@@ -158,5 +156,40 @@ namespace SYFY_Adapter_GUI
             currentTransactionTags.Remove(tag);
             currentlyAvailableTransactionTags.Add(tag);
         }
+    }
+
+    public interface a
+    {
+        string Name { get; }
+
+    }
+
+    public class Test : INotifyPropertyChanged, a
+    {
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        private string _Name;
+
+        public Test(string name)
+        {
+            Name = name;
+        }
+
+        public string Name {
+            get
+            {
+                return _Name;
+            }
+            set
+            {
+                _Name = value;
+                OnPropertyChanged();
+            } }
+
+        protected void OnPropertyChanged([CallerMemberName] string propertyName="")
+        {
+            PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));
+        }
+
     }
 }

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:SYFY_Plugin_GUI_WPF"
         xmlns:converters="clr-namespace:SYFY_Plugin_GUI_WPF.Converters"
         mc:Ignorable="d"
-        Title="SYFY" Height="573" Width="1000">
+        Title="SYFY" Height="573" Width="1000" ScrollViewer.HorizontalScrollBarVisibility="Auto">
     <Window.Resources>
         <converters:AmountToStringConverter x:Key="AmountToStringConverter"/>
         <converters:DateToStringConverter x:Key="DateToStringConverter"/>
@@ -14,19 +14,29 @@
     <Grid Margin="0,50,0,0">
         <TabControl x:Name="tabControl" Margin="0,42,0,0" Grid.ColumnSpan="2">
             <TabItem Header="Transactions">
-                <Grid Background="#FFE5E5E5">
+                <Grid x:Name="GRD_TabTransactions" Background="#FFE5E5E5" ScrollViewer.HorizontalScrollBarVisibility="Auto">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="4*"></ColumnDefinition>
                         <ColumnDefinition Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="40"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition x:Name="RW_TransactionsFilter"  Height="*" MinHeight="40"></RowDefinition>
+                        <RowDefinition Height="20*"></RowDefinition>
                     </Grid.RowDefinitions>
 
+                    <Grid x:Name="GRD_FilterTransactions" Grid.Row="1" Grid.ColumnSpan="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <ToggleButton x:Name="BTN_ExpandFilterTransactions" Width="80" Content="Expand Filter" Grid.Row="0" 
+                                Click="BTN_ExpandFilterTransactions_Click" 
+                                HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    </Grid>
+                    
                     <DataGrid x:Name="dg_Transactions" AutoGenerateColumns="False" ItemsSource="{Binding bankingTransactions}" 
                               CanUserAddRows="False" CanUserDeleteRows="False"
-                              Grid.Row="1" Grid.Column="0">
+                              Grid.Row="2" Grid.Column="0">
                         <DataGrid.Columns>
                             <DataGridTextColumn x:Name="dgCol_Trans_TransactionDate" 
                                                 Binding="{Binding TransactionDate, Converter={StaticResource DateToStringConverter}}" 
@@ -91,7 +101,7 @@
                             Click="BTN_DeleteTransaction_Click"
                             Grid.Row="0" Grid.Column="3"/>
                     </Grid>
-                    <Grid x:Name="Grid_Transactions_TransactionTagsSelection" Grid.Row="1" Grid.Column="1" Visibility="Hidden">
+                    <Grid x:Name="Grid_Transactions_TransactionTagsSelection" Grid.Row="2" Grid.Column="1" Visibility="Hidden">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="40"/>
                             <RowDefinition Height="*"/>
@@ -126,9 +136,7 @@
                         <TextBlock Text="Available Transaction Tags" Grid.Row="2"/>
                         <DataGrid x:Name="dg_AvailableTags" Grid.Row="3" 
                                   ItemsSource="{Binding Path=DataContext.currentlyAvailableTransactionTags, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                                    AutoGenerateColumns="False"
-                                  
-                                  >
+                                    AutoGenerateColumns="False">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
                                 <DataGridTextColumn Header="Comment" Binding="{Binding Comment}"/>
