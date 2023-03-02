@@ -40,13 +40,6 @@ namespace SYFY_Adapter_GUI
 
             LoadData();
 
-            bankAccounts.CollectionChanged += On_CollectionChanged;
-
-        }
-
-        private void On_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-        {
-            throw new NotImplementedException();
         }
 
         public void BTN_NewTransaction_Click(object? sender, EventArgs e)
