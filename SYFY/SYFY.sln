@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SYFY_Adapter_GUI", "..\SYFY
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SYFY_Adapter_DatabaseSimulation", "..\SYFY_Adapter_DatabaseSimulation\SYFY_Adapter_DatabaseSimulation.csproj", "{1A68FC74-33A7-4EA1-9CFF-303A58EDFFF4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SYFY_Adapter_GUITests", "..\SYFY_Adapter_GUITests\SYFY_Adapter_GUITests.csproj", "{F3398669-4AF5-44F7-96DA-79545EBBBAA0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{1A68FC74-33A7-4EA1-9CFF-303A58EDFFF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A68FC74-33A7-4EA1-9CFF-303A58EDFFF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A68FC74-33A7-4EA1-9CFF-303A58EDFFF4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3398669-4AF5-44F7-96DA-79545EBBBAA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3398669-4AF5-44F7-96DA-79545EBBBAA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3398669-4AF5-44F7-96DA-79545EBBBAA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3398669-4AF5-44F7-96DA-79545EBBBAA0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -2,6 +2,7 @@
 using SYFY_Application.BusinessLogic;
 using SYFY_Domain.model;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -19,7 +20,6 @@ namespace SYFY_Adapter_GUI
         public ObservableCollection<TransactionTag> currentlyAvailableTransactionTags { get; set; }
                 
         private List<IViewDataHandler> dataHandlers;
-
 
         public MainViewModel(DataManagement dataManager)
         {   
@@ -40,6 +40,13 @@ namespace SYFY_Adapter_GUI
 
             LoadData();
 
+            bankAccounts.CollectionChanged += On_CollectionChanged;
+
+        }
+
+        private void On_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         public void BTN_NewTransaction_Click(object? sender, EventArgs e)
@@ -156,40 +163,5 @@ namespace SYFY_Adapter_GUI
             currentTransactionTags.Remove(tag);
             currentlyAvailableTransactionTags.Add(tag);
         }
-    }
-
-    public interface a
-    {
-        string Name { get; }
-
-    }
-
-    public class Test : INotifyPropertyChanged, a
-    {
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        private string _Name;
-
-        public Test(string name)
-        {
-            Name = name;
-        }
-
-        public string Name {
-            get
-            {
-                return _Name;
-            }
-            set
-            {
-                _Name = value;
-                OnPropertyChanged();
-            } }
-
-        protected void OnPropertyChanged([CallerMemberName] string propertyName="")
-        {
-            PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));
-        }
-
-    }
+    }   
 }
