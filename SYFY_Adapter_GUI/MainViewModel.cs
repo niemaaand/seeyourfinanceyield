@@ -76,10 +76,7 @@ namespace SYFY_Adapter_GUI
         {
            ExecActionForAllDataHandlers((h) =>
             {
-                if (h.Handles(d))
-                {
-                    h.DataChanged(d,deleted, newlyCreated);
-                }
+                h.DataChanged(d, deleted, newlyCreated);
             });
         }
                 
