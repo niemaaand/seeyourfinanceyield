@@ -31,19 +31,10 @@ namespace SYFY_Adapter_GUI
             currentTransactionTags = new ObservableCollection<TransactionTag>();
             currentlyAvailableTransactionTags = new ObservableCollection<TransactionTag>();
 
-            dataHandlers = new List<IViewDataHandler>();
-            AddDataHandler(new List<IViewDataHandler>
-            {
-                new ViewDataBankAccountHandler(bankAccounts, dataManager),
-                new ViewDataBankingTransactionHandler(bankingTransactions, dataManager),
-                new ViewDataTransactionTagHandler(transactionTags, dataManager)
-            });
-
-            LoadData();
-
+            dataHandlers = new List<IViewDataHandler>();            
         }
-
-        private void AddDataHandler(List<IViewDataHandler> handler)
+               
+        public void AddDataHandler(List<IViewDataHandler> handler)
         {
             dataHandlers.AddRange(handler);
 

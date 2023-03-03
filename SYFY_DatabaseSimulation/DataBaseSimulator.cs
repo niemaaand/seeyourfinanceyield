@@ -2,6 +2,7 @@
 using SYFY_Domain.model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -64,22 +65,22 @@ namespace SYFY_Plugin_DatabaseSimulation
             return _TransactionTags;
         }
 
-        BankAccount IDataBaseConnector.GetBankAccountByID(Guid guid)
+        public BankAccount GetBankAccountByID(Guid guid)
         {
             //TODO
-            return _BankAccounts[guid];
+            return _BankAccounts.ContainsKey(guid)?_BankAccounts[guid]:null;
         }
 
-        BankingTransaction IDataBaseConnector.GetBankingTransactionById(Guid guid)
+        public BankingTransaction GetBankingTransactionById(Guid guid)
         {
             //TODO
-            return _Transactions[guid];
+            return _Transactions.ContainsKey(guid)?_Transactions[guid]:null;
         }
 
-        TransactionTag IDataBaseConnector.GetTransactionTagById(Guid guid)
+        public TransactionTag GetTransactionTagById(Guid guid)
         {
             //TODO
-            return _TransactionTags[guid];
+            return _TransactionTags.ContainsKey(guid) ? _TransactionTags[guid] : null;
         }
 
 
@@ -100,26 +101,25 @@ namespace SYFY_Plugin_DatabaseSimulation
         BankAccount IDataBaseConnector.SaveBankAccount(BankAccount bankAccount)
         {
             //TODO
-            if (_BankAccounts.ContainsKey(bankAccount.Guid) && _BankAccounts[bankAccount.Guid].Deleted == false)
+            if (SaveData(bankAccount, GetBankAccountByID(bankAccount.Guid), _TransactionTags.Keys))
             {
-                // update bank account
-                _BankAccounts[bankAccount.Guid] = bankAccount;
-            }
-            else if (bankAccount.Deleted || (_BankAccounts.ContainsKey(bankAccount.Guid) && _BankAccounts[bankAccount.Guid].Deleted))
-            {
-                // bank account is deleted
-                throw new InvalidOperationException("Bank Account is deleted and can therefore not be changed.");
+                // save newly
+                Guid id;
+
+                do
+                {
+                    id = NewGuid();
+                } while (_TransactionTags.ContainsKey(id));
+
+                bankAccount.Guid = id;
+                _BankAccounts.Add(bankAccount.Guid, bankAccount);
             }
             else
             {
-                // save newly
-                bankAccount.Guid = NewGuid();
-
-                if (!_BankAccounts.ContainsKey(bankAccount.Guid))
-                {
-                    _BankAccounts.Add(bankAccount.Guid, bankAccount);
-                }
+                // update
+                _BankAccounts[bankAccount.Guid] = bankAccount;
             }
+        
 
             return _BankAccounts[bankAccount.Guid];
 
@@ -129,66 +129,89 @@ namespace SYFY_Plugin_DatabaseSimulation
         {
             //TODO
 
-            if (_Transactions.ContainsKey(bankingTransaction.Guid)
-                && _Transactions[bankingTransaction.Guid].Deleted == false)
+            if (SaveData(bankingTransaction, GetBankingTransactionById(bankingTransaction.Guid), _Transactions.Keys))
             {
-                // update
-                _Transactions[bankingTransaction.Guid] = bankingTransaction;
-            }
-            else if (bankingTransaction.Deleted
-                || (_Transactions.ContainsKey(bankingTransaction.Guid) && _Transactions[bankingTransaction.Guid].Deleted))
-            {
-                throw new InvalidOperationException("Transaction is deleted and can therefore not be changed.");
+                // save newly
+                Guid id;
+
+                do
+                {
+                    id = NewGuid();
+                } while (_TransactionTags.ContainsKey(id));
+
+                bankingTransaction.Guid = id;
+                _Transactions.Add(bankingTransaction.Guid, bankingTransaction);
             }
             else
             {
-                // save newly
-                bankingTransaction.Guid = NewGuid();
-
-                if (!_Transactions.ContainsKey(bankingTransaction.Guid))
-                {
-                    _Transactions.Add(bankingTransaction.Guid, bankingTransaction);
-                }
+                // update
+                _Transactions[bankingTransaction.Guid] = bankingTransaction;
             }
 
             return _Transactions[bankingTransaction.Guid];
         }
 
+       
+
         TransactionTag IDataBaseConnector.SaveTransactionTag(TransactionTag transactionTag)
         {
-            if (_TransactionTags.ContainsKey(transactionTag.Guid)
-                && _TransactionTags[transactionTag.Guid].Deleted == false)
+            if(SaveData(transactionTag, GetTransactionTagById(transactionTag.Guid), _TransactionTags.Keys))
+            {
+                // save newly
+                Guid id; 
+
+                do
+                {
+                    id = NewGuid();
+                } while (_TransactionTags.ContainsKey(id));
+
+                transactionTag.Guid = id;
+                _TransactionTags.Add(transactionTag.Guid, transactionTag);
+            }
+            else
             {
                 // update
                 _TransactionTags[transactionTag.Guid] = transactionTag;
-            }
-            else if (transactionTag.Deleted
-                || (_TransactionTags.ContainsKey(transactionTag.Guid) && _TransactionTags[transactionTag.Guid].Deleted))
-            {
-                throw new InvalidOperationException("Transaction Tag is deleted and can therefore not be changed.");
-            }
-            else {
-                // save newly
-                transactionTag.Guid = NewGuid();
-
-                if (!_TransactionTags.ContainsKey(transactionTag.Guid))
-                {
-                    _TransactionTags.Add(transactionTag.Guid, transactionTag);
-                }
             }
 
             return _TransactionTags[transactionTag.Guid];
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="savedData"></param>
+        /// <param name="keys"></param>
+        /// <returns>true: save newly, false: update</returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        private bool SaveData(DeleteableData data, DeleteableData savedData, ICollection<Guid> keys)
+        {
+            if(savedData == null)
+            {
+                return true;
+            }
+            else if(savedData.Deleted || data.Deleted)
+            {
+                throw new InvalidOperationException("Data is deleted and can therefore not be changed.");
+            }
+            else
+            {
+                return false;
+            }
+
+        }
 
         public BankAccount GetDefaultBankAccount()
         {
-            if (!_BankAccounts.ContainsKey(Guid.Empty))
+            Guid defaultId = new Guid("F4635B58-8D25-40A1-95B3-C9CDB424205A");
+
+            if (!_BankAccounts.ContainsKey(defaultId))
             {
-                _BankAccounts.Add(Guid.Empty, new BankAccount("", comment: "DEFAULT_EMPTY_BANKACCOUNT"));
+                _BankAccounts.Add(defaultId, new BankAccount("", comment: "DEFAULT_EMPTY_BANKACCOUNT") { Guid = defaultId});
             }
 
-            return _BankAccounts[Guid.Empty];
+            return _BankAccounts[defaultId];
         }
 
 

@@ -9,6 +9,7 @@ using SYFY_Plugin_GUI_WPF;
 using SYFY_Adapter_GUI;
 using System.Threading;
 using System.Collections.Generic;
+using SYFY_Adapter_GUI.ViewDataHandlers;
 
 namespace SYFY
 {
@@ -35,10 +36,15 @@ namespace SYFY
             tnew.Amount = 108;
             dataManagement.SaveBankingTransaction(tnew);
 
-            //MainWindow bankAccountView = new MainWindow(dataManager);
-            //bankAccountView.ShowDialog();
-
             MainViewModel mainViewModel = new MainViewModel(dataManagement);
+            mainViewModel.AddDataHandler(new List<IViewDataHandler>
+            {
+                new ViewDataBankAccountHandler(mainViewModel.bankAccounts, dataManagement),
+                new ViewDataBankingTransactionHandler(mainViewModel.bankingTransactions, dataManagement),
+                new ViewDataTransactionTagHandler(mainViewModel.transactionTags, dataManagement)
+            });
+
+
             MainWindow mainWindow = new MainWindow(dataManagement, mainViewModel);
             mainWindow.ShowDialog();
 

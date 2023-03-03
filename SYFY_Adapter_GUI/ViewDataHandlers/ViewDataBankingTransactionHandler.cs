@@ -4,14 +4,12 @@ using System.Collections.ObjectModel;
 
 namespace SYFY_Adapter_GUI.ViewDataHandlers
 {
-    internal class ViewDataBankingTransactionHandler : IViewDataHandler
+    public class ViewDataBankingTransactionHandler : IViewDataHandler
     {
         private ObservableCollection<BankingTransaction> data;
         private HashSet<DeleteableData> changedData;
         private HashSet<DeleteableData> deletedData;
         private DataManagement dataManager;
-
-        //HandledType ???
 
         public ViewDataBankingTransactionHandler(ObservableCollection<BankingTransaction> data, DataManagement dataManager)
         {

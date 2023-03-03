@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using SYFY_Adapter_GUI;
+using SYFY_Adapter_GUI.ViewDataHandlers;
 using SYFY_Application.BusinessLogic;
 using SYFY_Application.DatabaseAccess;
 using SYFY_Domain.model;
@@ -27,15 +28,16 @@ namespace SYFY_Adapter_GUI.Tests
             tags.Add(tag.Guid, tag);
 
             Mock<IDataBaseConnector> dbConnector = new Mock<IDataBaseConnector>();
-            dbConnector.Setup(x => x.GetAllBankAccounts()).Returns(new Dictionary<Guid, BankAccount>());
             dbConnector.Setup(x => x.GetAllBankingTransactions()).Returns(new Dictionary<Guid, BankingTransaction>());
-            dbConnector.Setup(x => x.GetAllTransactionTags()).Returns(tags);
-            
             dbConnector.Setup(x => x.ExistsTransactionTag(tag.Guid)).Returns(tags.ContainsKey(tag.Guid));
 
-            Mock<DataManagement> d = new Mock<DataManagement>(dbConnector.Object);
+            Mock<DataManagement> dataManager = new Mock<DataManagement>(dbConnector.Object);
 
-            MainViewModel mainViewModel = new MainViewModel(d.Object);
+            MainViewModel mainViewModel = new MainViewModel(dataManager.Object);
+            mainViewModel.AddDataHandler(new List<IViewDataHandler>
+            {
+                new ViewDataBankingTransactionHandler(mainViewModel.bankingTransactions, dataManager.Object)
+            });
 
             // act
             mainViewModel.AddTagToTransaction(transaction, tag);

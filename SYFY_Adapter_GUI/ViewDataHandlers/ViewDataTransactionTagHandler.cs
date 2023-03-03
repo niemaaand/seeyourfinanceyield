@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 
 namespace SYFY_Adapter_GUI.ViewDataHandlers
 {
-    internal class ViewDataTransactionTagHandler : IViewDataHandler
+    public class ViewDataTransactionTagHandler : IViewDataHandler
     {
         private ObservableCollection<TransactionTag> data;
         private HashSet<DeleteableData> changedData;

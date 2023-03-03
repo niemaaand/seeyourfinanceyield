@@ -48,9 +48,11 @@ namespace SYFY_Application.BusinessLogic
             // ?only return copy of bank accounts?
             Dictionary<Guid, BankAccount> bankAccountsCopy = new Dictionary<Guid, BankAccount>();
 
+            Guid defaultId = GetNoneBankAccountId();
+
             foreach (BankAccount b in dataBaseConnector.GetAllBankAccounts().Values)
             {
-                if(b.Guid != Guid.Empty && !b.Deleted)
+                if(b.Guid != Guid.Empty && !b.Deleted && !b.Guid.Equals(defaultId))
                 {
                     bankAccountsCopy.Add(b.Guid, (BankAccount)b.Clone());
                 }

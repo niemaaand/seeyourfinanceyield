@@ -117,7 +117,7 @@ namespace SYFY_Adapter_GUI.ViewDataHandlers
 
 
 
-    internal class ViewDataBankAccountHandler : IViewDataHandler
+    public class ViewDataBankAccountHandler : IViewDataHandler
     {
         private Collection<BankAccount> data { get; }
         private HashSet<DeleteableData> changedData;
