@@ -132,17 +132,25 @@ namespace SYFY_Adapter_GUI.ViewDataHandlers
             deletedData = new HashSet<DeleteableData>();
         }
 
-        public void DataChanged(DeleteableData d, bool deleted = false)
+        public void DataChanged(DeleteableData d, bool deleted = false, bool newlyCreated = false)
         {
-            //TODO       
-            if (!deleted)
+            if (Handles(d))
             {
-                changedData.Add(d);
-            }
-            else
-            {
-                deletedData.Add(d);
-                data.Remove((BankAccount)d);
+                if (newlyCreated)
+                {
+                    data.Add((BankAccount)d);
+                }
+
+                //TODO       
+                if (!deleted)
+                {
+                    changedData.Add(d);
+                }
+                else
+                {
+                    deletedData.Add(d);
+                    data.Remove((BankAccount)d);
+                }
             }
         }
 
@@ -201,7 +209,7 @@ namespace SYFY_Adapter_GUI.ViewDataHandlers
                 index = data.IndexOf(b);
                 if (dataManager.ExistsBankAccount(b.Guid))
                 {
-                data[index] = dataManager.GetBankAccountByID(b.Guid);
+                    data[index] = dataManager.GetBankAccountByID(b.Guid);
                 }
                 else
                 {
@@ -225,7 +233,7 @@ namespace SYFY_Adapter_GUI.ViewDataHandlers
             }
         }
 
-        bool IViewDataHandler.Handles(DeleteableData d)
+        public bool Handles(DeleteableData d)
         {
             return d is BankAccount;
         }

@@ -30,6 +30,8 @@ namespace SYFY_Adapter_GUI.Tests
             dbConnector.Setup(x => x.GetAllBankAccounts()).Returns(new Dictionary<Guid, BankAccount>());
             dbConnector.Setup(x => x.GetAllBankingTransactions()).Returns(new Dictionary<Guid, BankingTransaction>());
             dbConnector.Setup(x => x.GetAllTransactionTags()).Returns(tags);
+            
+            dbConnector.Setup(x => x.ExistsTransactionTag(tag.Guid)).Returns(tags.ContainsKey(tag.Guid));
 
             Mock<DataManagement> d = new Mock<DataManagement>(dbConnector.Object);
 
@@ -39,7 +41,7 @@ namespace SYFY_Adapter_GUI.Tests
             mainViewModel.AddTagToTransaction(transaction, tag);
 
             // assert
-            Assert.IsTrue(transaction.TransactionTags.Contains(tag.Guid)); // removed from data
+            Assert.IsTrue(transaction.TransactionTags.Contains(tag.Guid)); // added to data
             Assert.IsFalse(mainViewModel.currentlyAvailableTransactionTags.Contains(tag)); // correctly shown in gui
             Assert.IsTrue(mainViewModel.currentTransactionTags.Contains(tag));
         }

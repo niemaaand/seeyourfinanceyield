@@ -31,39 +31,47 @@ namespace SYFY_Adapter_GUI
             currentTransactionTags = new ObservableCollection<TransactionTag>();
             currentlyAvailableTransactionTags = new ObservableCollection<TransactionTag>();
 
-            dataHandlers = new List<IViewDataHandler>
+            dataHandlers = new List<IViewDataHandler>();
+            AddDataHandler(new List<IViewDataHandler>
             {
                 new ViewDataBankAccountHandler(bankAccounts, dataManager),
                 new ViewDataBankingTransactionHandler(bankingTransactions, dataManager),
                 new ViewDataTransactionTagHandler(transactionTags, dataManager)
-            };
+            });
 
             LoadData();
 
+        }
+
+        private void AddDataHandler(List<IViewDataHandler> handler)
+        {
+            dataHandlers.AddRange(handler);
+
+            foreach(IViewDataHandler h in handler)
+            {
+                h.LoadData();
+            }
         }
 
         public void BTN_NewTransaction_Click(object? sender, EventArgs e)
         {
             //TODO
             BankingTransaction transaction = dataManager.CreateEmptyBankingTransaction();
-            bankingTransactions.Insert(0, transaction);
-            DataChanged(transaction);
+            DataChanged(transaction, newlyCreated: true);
         }
 
         public void BTN_NewBankAccount_Click(object? sender, EventArgs e)
         {
             //TODO
             BankAccount b = dataManager.CreateEmptyBankAccount();
-            bankAccounts.Insert(0, b);
-            DataChanged(b);
+            DataChanged(b, newlyCreated:true);
         }
 
         public void BTN_NewTransactionTag_Click(object sender, EventArgs e)
         {
             //TODO
             TransactionTag tag = dataManager.CreateEmptyTransactionTag();
-            transactionTags.Insert(0, tag);
-            DataChanged(tag);
+            DataChanged(tag, newlyCreated:true);
         }
         private void ExecActionForAllDataHandlers(Action<IViewDataHandler> value)
         {
@@ -73,13 +81,13 @@ namespace SYFY_Adapter_GUI
             }
         }
 
-        public void DataChanged(DeleteableData d, bool deleted = false)
+        public void DataChanged(DeleteableData d, bool deleted = false, bool newlyCreated = false)
         {
            ExecActionForAllDataHandlers((h) =>
             {
                 if (h.Handles(d))
                 {
-                    h.DataChanged(d,deleted);
+                    h.DataChanged(d,deleted, newlyCreated);
                 }
             });
         }
@@ -136,14 +144,21 @@ namespace SYFY_Adapter_GUI
             {
                 if (!transaction.TransactionTags.Contains(tag.Guid))
                 {
-                    currentlyAvailableTransactionTags.Add(dataManager.GetTransactionTagByID(tag.Guid));
+                    try
+                    {
+                        currentlyAvailableTransactionTags.Add(dataManager.GetTransactionTagByID(tag.Guid));
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
                 }
             }
         }
 
         public void AddTagToTransaction(BankingTransaction transaction, TransactionTag tag)
         {
-            transaction.TransactionTags.Add(tag.Guid);
+            dataManager.AddTagToTransaction(transaction, tag);
             DataChanged(transaction);
             currentTransactionTags.Add(tag);
             currentlyAvailableTransactionTags.Remove(tag);
@@ -151,7 +166,7 @@ namespace SYFY_Adapter_GUI
 
         public void RemoveTagFromTransaction(BankingTransaction transaction, TransactionTag tag)
         {
-            transaction.TransactionTags.Remove(tag.Guid);
+            dataManager.RemoveTagFromTransaction(transaction, tag);
             DataChanged(transaction);
             currentTransactionTags.Remove(tag);
             currentlyAvailableTransactionTags.Add(tag);

@@ -182,5 +182,21 @@ namespace SYFY_Application.BusinessLogic
         {
            return dataBaseConnector.ExistsTransactionTag(guid);
         }
+
+        public void RemoveTagFromTransaction(BankingTransaction transaction, TransactionTag tag)
+        {
+            if(transaction.TransactionTags.Contains(tag.Guid))
+            {
+                transaction.TransactionTags.Remove(tag.Guid);
+            }
+        }
+
+        public void AddTagToTransaction(BankingTransaction transaction, TransactionTag tag)
+        {
+            if (ExistsTransactionTag(tag.Guid))
+            {
+                transaction.TransactionTags.Add(tag.Guid);
+            }
+        }
     }
 }
