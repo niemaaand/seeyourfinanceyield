@@ -11,7 +11,7 @@ namespace SYFY_Application.DatabaseAccess
     /// Interface, which should be implemented by every data base connector. 
     /// Contains all the methods needed to connect to the data base and perform data base transactons (ACID-rules). 
     /// </summary>
-    public interface IDataBaseConnectorFacade
+    public interface IDataBaseConnectorAdapter
     {
         public void StartDBTransaction();
 

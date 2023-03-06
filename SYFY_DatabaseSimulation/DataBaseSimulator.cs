@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace SYFY_Plugin_DatabaseSimulation
 {
-    public class DataBaseSimulator : IDataBaseConnectorFacade
+    public class DataBaseSimulator : IDataBaseConnectorAdapter
     {
 
         private BankAccountDBSimulator bankAccountDBSimulator;
@@ -24,27 +24,27 @@ namespace SYFY_Plugin_DatabaseSimulation
 
         }
 
-        bool IDataBaseConnectorFacade.ExistsBankingTransaction(Guid guid)
+        bool IDataBaseConnectorAdapter.ExistsBankingTransaction(Guid guid)
         {
             return bankingTransactionDBSimulator.ExistsData(guid);
         }
 
-        void IDataBaseConnectorFacade.Commit()
+        void IDataBaseConnectorAdapter.Commit()
         {
             dBOperationer.Commit();
         }
 
-        Dictionary<Guid, BankAccount> IDataBaseConnectorFacade.GetAllBankAccounts()
+        Dictionary<Guid, BankAccount> IDataBaseConnectorAdapter.GetAllBankAccounts()
         {
             return bankAccountDBSimulator.GetAllData();
         }
 
-        Dictionary<Guid, BankingTransaction> IDataBaseConnectorFacade.GetAllBankingTransactions()
+        Dictionary<Guid, BankingTransaction> IDataBaseConnectorAdapter.GetAllBankingTransactions()
         {
             return bankingTransactionDBSimulator.GetAllData();
         }
 
-        Dictionary<Guid, TransactionTag> IDataBaseConnectorFacade.GetAllTransactionTags()
+        Dictionary<Guid, TransactionTag> IDataBaseConnectorAdapter.GetAllTransactionTags()
         {
             return transactionTagDBSimulator.GetAllData();
         }
@@ -64,22 +64,22 @@ namespace SYFY_Plugin_DatabaseSimulation
             return transactionTagDBSimulator.GetDataById(guid);
         }
 
-        void IDataBaseConnectorFacade.Rollback()
+        void IDataBaseConnectorAdapter.Rollback()
         {
             dBOperationer.Rollback();
         }
 
-        BankAccount IDataBaseConnectorFacade.SaveBankAccount(BankAccount bankAccount)
+        BankAccount IDataBaseConnectorAdapter.SaveBankAccount(BankAccount bankAccount)
         {
             return bankAccountDBSimulator.SaveData(bankAccount);
         }
 
-        BankingTransaction IDataBaseConnectorFacade.SaveBankingTransaction(BankingTransaction bankingTransaction)
+        BankingTransaction IDataBaseConnectorAdapter.SaveBankingTransaction(BankingTransaction bankingTransaction)
         {
             return bankingTransactionDBSimulator.SaveData(bankingTransaction);
         }
 
-        TransactionTag IDataBaseConnectorFacade.SaveTransactionTag(TransactionTag transactionTag)
+        TransactionTag IDataBaseConnectorAdapter.SaveTransactionTag(TransactionTag transactionTag)
         {
             return transactionTagDBSimulator.SaveData(transactionTag);
         }
@@ -89,7 +89,7 @@ namespace SYFY_Plugin_DatabaseSimulation
             return bankAccountDBSimulator.GetDefaultData();
         }
 
-        void IDataBaseConnectorFacade.StartDBTransaction()
+        void IDataBaseConnectorAdapter.StartDBTransaction()
         {
             dBOperationer.OpenTransaction();
         }
@@ -109,12 +109,12 @@ namespace SYFY_Plugin_DatabaseSimulation
             bankAccountDBSimulator.DeleteData(bankAccount);
         }
 
-        bool IDataBaseConnectorFacade.ExistsTransactionTag(Guid guid)
+        bool IDataBaseConnectorAdapter.ExistsTransactionTag(Guid guid)
         {
             return transactionTagDBSimulator.ExistsData(guid);
         }
 
-        bool IDataBaseConnectorFacade.ExistsBankAccount(Guid guid)
+        bool IDataBaseConnectorAdapter.ExistsBankAccount(Guid guid)
         {
             return bankAccountDBSimulator.ExistsData(guid);
         }

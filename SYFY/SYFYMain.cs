@@ -19,7 +19,7 @@ namespace SYFY
                
         static void Main(string[] args)
         {
-            IDataBaseConnectorFacade dbConnector = new DataBaseSimulator();
+            IDataBaseConnectorAdapter dbConnector = new DataBaseSimulator();
             DataManagement dataManagement = new DataManagement(dbConnector);
             TestDataCreator.CreateTestData(dataManagement);
 
