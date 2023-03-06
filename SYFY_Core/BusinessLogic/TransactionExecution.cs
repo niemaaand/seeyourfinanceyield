@@ -13,9 +13,9 @@ namespace SYFY_Application.BusinessLogic
     internal class TransactionExecution
     {
 
-        private IDataBaseConnector _DataManger;
+        private IDataBaseConnectorFacade _DataManger;
 
-        public TransactionExecution(IDataBaseConnector dataManager)
+        public TransactionExecution(IDataBaseConnectorFacade dataManager)
         {
             _DataManger = dataManager;
         }

@@ -1,269 +1,122 @@
 ﻿using SYFY_Application.DatabaseAccess;
 using SYFY_Domain.model;
+using SYFY_Plugin_DatabaseSimulation.DataDBSimulators;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SYFY_Plugin_DatabaseSimulation
 {
-    public class DataBaseSimulator : IDataBaseConnector
+    public class DataBaseSimulator : IDataBaseConnectorFacade
     {
 
-        private Dictionary<Guid, BankingTransaction> _Transactions;
-        private Dictionary<Guid, BankAccount> _BankAccounts;
-        private Dictionary<Guid, TransactionTag> _TransactionTags;
-        private bool _CurrentlyPerformingTransaction;
+        private BankAccountDBSimulator bankAccountDBSimulator;
+        private BankingTransactionDBSimulator bankingTransactionDBSimulator;
+        private TransactionTagDBSimulator transactionTagDBSimulator;
+        private DBOperationer dBOperationer;
 
         public DataBaseSimulator()
         {
-            _Transactions = new Dictionary<Guid, BankingTransaction>();
-            _BankAccounts = new Dictionary<Guid, BankAccount>();
-            _TransactionTags = new Dictionary<Guid, TransactionTag>();
+            bankAccountDBSimulator = new BankAccountDBSimulator();
+            bankingTransactionDBSimulator = new BankingTransactionDBSimulator();
+            transactionTagDBSimulator = new TransactionTagDBSimulator();
 
-            _CurrentlyPerformingTransaction = false;
+            dBOperationer = new DBOperationer();
+
         }
 
-        bool IDataBaseConnector.ExistsBankingTransaction(Guid guid)
+        bool IDataBaseConnectorFacade.ExistsBankingTransaction(Guid guid)
         {
-            return _Transactions.ContainsKey(guid) ? true : false;
+            return bankingTransactionDBSimulator.ExistsData(guid);
         }
 
-        void IDataBaseConnector.Commit()
+        void IDataBaseConnectorFacade.Commit()
         {
-            //TODO
-            if (_CurrentlyPerformingTransaction == false)
-            {
-                throw new NullReferenceException("No data base transaction running currently!");
-            }
-
-            _CurrentlyPerformingTransaction = false;
-            Console.WriteLine("Commit Transaction!");
+            dBOperationer.Commit();
         }
 
-
-        Dictionary<Guid, BankAccount> IDataBaseConnector.GetAllBankAccounts()
+        Dictionary<Guid, BankAccount> IDataBaseConnectorFacade.GetAllBankAccounts()
         {
-            // load bank accounts from data base
-
-
-            //TODO
-            return _BankAccounts;
+            return bankAccountDBSimulator.GetAllData();
         }
 
-        Dictionary<Guid, BankingTransaction> IDataBaseConnector.GetAllBankingTransactions()
+        Dictionary<Guid, BankingTransaction> IDataBaseConnectorFacade.GetAllBankingTransactions()
         {
-            //TODO
-            return _Transactions;
+            return bankingTransactionDBSimulator.GetAllData();
         }
 
-        Dictionary<Guid, TransactionTag> IDataBaseConnector.GetAllTransactionTags()
+        Dictionary<Guid, TransactionTag> IDataBaseConnectorFacade.GetAllTransactionTags()
         {
-            //TODO
-            return _TransactionTags;
+            return transactionTagDBSimulator.GetAllData();
         }
 
         public BankAccount GetBankAccountByID(Guid guid)
         {
-            //TODO
-            return _BankAccounts.ContainsKey(guid)?_BankAccounts[guid]:null;
+            return bankAccountDBSimulator.GetDataById(guid);
         }
 
         public BankingTransaction GetBankingTransactionById(Guid guid)
         {
-            //TODO
-            return _Transactions.ContainsKey(guid)?_Transactions[guid]:null;
+            return bankingTransactionDBSimulator.GetDataById(guid);
         }
 
         public TransactionTag GetTransactionTagById(Guid guid)
         {
-            //TODO
-            return _TransactionTags.ContainsKey(guid) ? _TransactionTags[guid] : null;
+            return transactionTagDBSimulator.GetDataById(guid);
         }
 
-
-        private Guid NewGuid()
+        void IDataBaseConnectorFacade.Rollback()
         {
-            //TODO
-            Guid g = Guid.NewGuid();
-            return g;
+            dBOperationer.Rollback();
         }
 
-        void IDataBaseConnector.Rollback()
+        BankAccount IDataBaseConnectorFacade.SaveBankAccount(BankAccount bankAccount)
         {
-            //TODO
-            _CurrentlyPerformingTransaction = false;
-            Console.WriteLine("Rollback!");
+            return bankAccountDBSimulator.SaveData(bankAccount);
         }
 
-        BankAccount IDataBaseConnector.SaveBankAccount(BankAccount bankAccount)
+        BankingTransaction IDataBaseConnectorFacade.SaveBankingTransaction(BankingTransaction bankingTransaction)
         {
-            //TODO
-            if (SaveData(bankAccount, GetBankAccountByID(bankAccount.Guid), _TransactionTags.Keys))
-            {
-                // save newly
-                Guid id;
-
-                do
-                {
-                    id = NewGuid();
-                } while (_TransactionTags.ContainsKey(id));
-
-                bankAccount.Guid = id;
-                _BankAccounts.Add(bankAccount.Guid, bankAccount);
-            }
-            else
-            {
-                // update
-                _BankAccounts[bankAccount.Guid] = bankAccount;
-            }
-        
-
-            return _BankAccounts[bankAccount.Guid];
-
+            return bankingTransactionDBSimulator.SaveData(bankingTransaction);
         }
 
-        BankingTransaction IDataBaseConnector.SaveBankingTransaction(BankingTransaction bankingTransaction)
+        TransactionTag IDataBaseConnectorFacade.SaveTransactionTag(TransactionTag transactionTag)
         {
-            //TODO
-
-            if (SaveData(bankingTransaction, GetBankingTransactionById(bankingTransaction.Guid), _Transactions.Keys))
-            {
-                // save newly
-                Guid id;
-
-                do
-                {
-                    id = NewGuid();
-                } while (_TransactionTags.ContainsKey(id));
-
-                bankingTransaction.Guid = id;
-                _Transactions.Add(bankingTransaction.Guid, bankingTransaction);
-            }
-            else
-            {
-                // update
-                _Transactions[bankingTransaction.Guid] = bankingTransaction;
-            }
-
-            return _Transactions[bankingTransaction.Guid];
-        }
-
-       
-
-        TransactionTag IDataBaseConnector.SaveTransactionTag(TransactionTag transactionTag)
-        {
-            if(SaveData(transactionTag, GetTransactionTagById(transactionTag.Guid), _TransactionTags.Keys))
-            {
-                // save newly
-                Guid id; 
-
-                do
-                {
-                    id = NewGuid();
-                } while (_TransactionTags.ContainsKey(id));
-
-                transactionTag.Guid = id;
-                _TransactionTags.Add(transactionTag.Guid, transactionTag);
-            }
-            else
-            {
-                // update
-                _TransactionTags[transactionTag.Guid] = transactionTag;
-            }
-
-            return _TransactionTags[transactionTag.Guid];
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="savedData"></param>
-        /// <param name="keys"></param>
-        /// <returns>true: save newly, false: update</returns>
-        /// <exception cref="InvalidOperationException"></exception>
-        private bool SaveData(DeleteableData data, DeleteableData savedData, ICollection<Guid> keys)
-        {
-            if(savedData == null)
-            {
-                return true;
-            }
-            else if(savedData.Deleted || data.Deleted)
-            {
-                throw new InvalidOperationException("Data is deleted and can therefore not be changed.");
-            }
-            else
-            {
-                return false;
-            }
-
+            return transactionTagDBSimulator.SaveData(transactionTag);
         }
 
         public BankAccount GetDefaultBankAccount()
         {
-            Guid defaultId = new Guid("F4635B58-8D25-40A1-95B3-C9CDB424205A");
-
-            if (!_BankAccounts.ContainsKey(defaultId))
-            {
-                _BankAccounts.Add(defaultId, new BankAccount("", comment: "DEFAULT_EMPTY_BANKACCOUNT") { Guid = defaultId});
-            }
-
-            return _BankAccounts[defaultId];
+            return bankAccountDBSimulator.GetDefaultData();
         }
 
-
-        void IDataBaseConnector.StartDBTransaction()
+        void IDataBaseConnectorFacade.StartDBTransaction()
         {
-            _CurrentlyPerformingTransaction = true;
-            Console.WriteLine("Transaction started...");
-            //TODO
+            dBOperationer.OpenTransaction();
         }
 
         public void DeleteBankingTransaction(BankingTransaction transaction)
         {
-            if (_Transactions.ContainsKey(transaction.Guid))
-            {
-                _Transactions[transaction.Guid].Delete();
-            }
+            bankingTransactionDBSimulator.DeleteData(transaction);
         }
 
         public void DeleteTransactionTag(TransactionTag tag)
         {
-            if (_TransactionTags.ContainsKey(tag.Guid))
-            {
-                _TransactionTags[tag.Guid].Delete();
-            }
+            transactionTagDBSimulator.DeleteData(tag);
         }
 
         public void DeleteBankAccount(BankAccount bankAccount)
         {
-            if (_BankAccounts.ContainsKey(bankAccount.Guid))
-            {
-                _BankAccounts[bankAccount.Guid].Delete();
-            }
+            bankAccountDBSimulator.DeleteData(bankAccount);
         }
 
-        bool IDataBaseConnector.ExistsTransactionTag(Guid guid)
+        bool IDataBaseConnectorFacade.ExistsTransactionTag(Guid guid)
         {
-            if (_TransactionTags.ContainsKey(guid))
-            {
-                return true;
-            }
-
-            return false;
+            return transactionTagDBSimulator.ExistsData(guid);
         }
 
-        bool IDataBaseConnector.ExistsBankAccount(Guid guid)
+        bool IDataBaseConnectorFacade.ExistsBankAccount(Guid guid)
         {
-            if (_BankAccounts.ContainsKey(guid))
-            {
-                return true;
-            }
-
-            return false;
+            return bankAccountDBSimulator.ExistsData(guid);
         }
     }
 }

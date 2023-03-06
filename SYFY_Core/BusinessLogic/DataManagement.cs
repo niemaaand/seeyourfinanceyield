@@ -9,9 +9,9 @@ namespace SYFY_Application.BusinessLogic
     public class DataManagement
     {
         private TransactionExecution transactionExecutioner;
-        private IDataBaseConnector dataBaseConnector;
+        private IDataBaseConnectorFacade dataBaseConnector;
 
-        public DataManagement(IDataBaseConnector dataBaseConnector) {
+        public DataManagement(IDataBaseConnectorFacade dataBaseConnector) {
             this.dataBaseConnector = dataBaseConnector;
             transactionExecutioner = new TransactionExecution(dataBaseConnector);            
         }
