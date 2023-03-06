@@ -274,5 +274,115 @@ namespace SYFY_Plugin_GUI_WPF
                 }
             }
         }
+
+        private void BTN_ExpandFilterTransactions_Click(object sender, RoutedEventArgs e)
+        {
+            if(BTN_ExpandFilterTransactions.IsChecked == true)
+            {
+                RW_TransactionsFilter.Height = new GridLength(200);
+
+
+                RowDefinition row = new RowDefinition();
+                row.Height = new GridLength(100);
+
+                Button btn_reset = new Button();
+                btn_reset.Content = "Reset Filter";
+                btn_reset.HorizontalAlignment= HorizontalAlignment.Right;
+                btn_reset.VerticalAlignment = VerticalAlignment.Center;
+                btn_reset.Width = 80;
+                Grid.SetRow(btn_reset, 0);
+
+                Button btn_apply = new Button();
+                btn_apply.Content = "Apply Filter";
+                btn_apply.HorizontalAlignment = HorizontalAlignment.Center;
+                btn_apply.VerticalAlignment = VerticalAlignment.Center;
+                btn_apply.Width = 80;
+                Grid.SetRow(btn_apply, 0);
+
+                TransactionsFilterView t = new TransactionsFilterView();
+                Grid.SetRow(t.GetGrid(), 0);
+
+                //GRD_FilterTransactions.RowDefinitions.Add(row);
+                GRD_FilterTransactions.Children.Add(btn_apply);
+                GRD_FilterTransactions.Children.Add(btn_reset);
+                int i = GRD_FilterTransactions.Children.Add(t.GetGrid());
+            }
+            else
+            {
+                RW_TransactionsFilter.Height = new GridLength(40, GridUnitType.Auto);
+                GRD_FilterTransactions.Children.RemoveAt(3);
+                GRD_FilterTransactions.Children.RemoveAt(2);
+                GRD_FilterTransactions.Children.RemoveAt(1);
+                //GRD_FilterTransactions.RowDefinitions.RemoveAt(1);
+            }
+
+            
+            
+        }
+    }
+
+    internal class TransactionsFilterView
+    {
+        private Grid grid;
+        private TextBox TB_MinAmount;
+        private TextBox TB_MaxAmount;
+        
+
+
+
+        public TransactionsFilterView()
+        {
+            grid = new Grid();
+
+            for(int i = 0; i < 2; i++)
+            {
+                grid.RowDefinitions.Add(NewRow(40));
+            }
+
+
+            for (int i = 0; i < 4; i++)
+            {
+                grid.ColumnDefinitions.Add(NewColumn(100));
+            }
+            
+            Label LBL_MinAmount = new Label();
+            LBL_MinAmount.Content = "Min Amount";
+            Grid.SetRow(LBL_MinAmount, 0);
+            Grid.SetColumn(LBL_MinAmount, 0);
+
+            TB_MinAmount = new TextBox();
+            Grid.SetRow(TB_MinAmount, 0);
+            Grid.SetColumn(TB_MinAmount, 1);
+
+            Label LBL_MaxAmount = new Label() { Content = "Max Amount" };
+            Grid.SetRow(LBL_MaxAmount, 0);
+            Grid.SetColumn(LBL_MaxAmount, 2);
+            
+            TB_MaxAmount= new TextBox();
+            Grid.SetRow(TB_MaxAmount, 0);
+            Grid.SetColumn(TB_MaxAmount, 3);
+
+            grid.Children.Add(LBL_MaxAmount);
+            grid.Children.Add(TB_MaxAmount);
+            grid.Children.Add(LBL_MinAmount);
+            grid.Children.Add(TB_MinAmount);
+
+        }
+
+        public Grid GetGrid()
+        {
+            return grid;
+        }
+
+        private ColumnDefinition NewColumn(int width)
+        {
+            return new ColumnDefinition() { Width = new GridLength(width) };
+        }
+
+        private RowDefinition NewRow(int height)
+        {
+            return new RowDefinition() { Height = new GridLength(height) };
+        }
+
     }
 }

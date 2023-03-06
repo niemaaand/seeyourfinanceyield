@@ -4,14 +4,12 @@ using System.Collections.ObjectModel;
 
 namespace SYFY_Adapter_GUI.ViewDataHandlers
 {
-    internal class ViewDataBankingTransactionHandler : IViewDataHandler
+    public class ViewDataBankingTransactionHandler : IViewDataHandler
     {
         private ObservableCollection<BankingTransaction> data;
         private HashSet<DeleteableData> changedData;
         private HashSet<DeleteableData> deletedData;
         private DataManagement dataManager;
-
-        //HandledType ???
 
         public ViewDataBankingTransactionHandler(ObservableCollection<BankingTransaction> data, DataManagement dataManager)
         {
@@ -21,18 +19,26 @@ namespace SYFY_Adapter_GUI.ViewDataHandlers
             deletedData = new HashSet<DeleteableData>();
         }
 
-        public void DataChanged(DeleteableData d, bool deleted = false)
+        public void DataChanged(DeleteableData d, bool deleted = false, bool newlyCreated = false)
         {
-            //TODO       
-            if (!deleted)
+            if (Handles(d))
             {
-                changedData.Add(d);
-            }
-            else
-            {
-                deletedData.Add(d);
-                data.Remove((BankingTransaction)d);
-            }
+                if (newlyCreated)
+                {
+                    data.Add((BankingTransaction)d);
+                }
+
+                //TODO       
+                if (!deleted)
+                {
+                    changedData.Add(d);
+                }
+                else
+                {
+                    deletedData.Add(d);
+                    data.Remove((BankingTransaction)d);
+                }
+            }            
         }
 
         public void SaveChanges()
@@ -114,7 +120,7 @@ namespace SYFY_Adapter_GUI.ViewDataHandlers
             }
         }
 
-        bool IViewDataHandler.Handles(DeleteableData d)
+        public bool Handles(DeleteableData d)
         {
             return d is BankingTransaction;
         }

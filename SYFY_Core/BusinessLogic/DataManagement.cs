@@ -48,9 +48,11 @@ namespace SYFY_Application.BusinessLogic
             // ?only return copy of bank accounts?
             Dictionary<Guid, BankAccount> bankAccountsCopy = new Dictionary<Guid, BankAccount>();
 
+            Guid defaultId = GetNoneBankAccountId();
+
             foreach (BankAccount b in dataBaseConnector.GetAllBankAccounts().Values)
             {
-                if(b.Guid != Guid.Empty && !b.Deleted)
+                if(b.Guid != Guid.Empty && !b.Deleted && !b.Guid.Equals(defaultId))
                 {
                     bankAccountsCopy.Add(b.Guid, (BankAccount)b.Clone());
                 }
@@ -181,6 +183,22 @@ namespace SYFY_Application.BusinessLogic
         public bool ExistsTransactionTag(Guid guid)
         {
            return dataBaseConnector.ExistsTransactionTag(guid);
+        }
+
+        public void RemoveTagFromTransaction(BankingTransaction transaction, TransactionTag tag)
+        {
+            if(transaction.TransactionTags.Contains(tag.Guid))
+            {
+                transaction.TransactionTags.Remove(tag.Guid);
+            }
+        }
+
+        public void AddTagToTransaction(BankingTransaction transaction, TransactionTag tag)
+        {
+            if (ExistsTransactionTag(tag.Guid))
+            {
+                transaction.TransactionTags.Add(tag.Guid);
+            }
         }
     }
 }

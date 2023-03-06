@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace SYFY_Adapter_GUI.ViewDataHandlers
 {
-    internal interface IViewDataHandler
+    public interface IViewDataHandler
     {
-        internal void DataChanged(DeleteableData d, bool deleted);
+        internal void DataChanged(DeleteableData d, bool deleted, bool newlyCreated);
         
         internal void SaveChanges();
 

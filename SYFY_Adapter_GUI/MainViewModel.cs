@@ -2,7 +2,9 @@
 using SYFY_Application.BusinessLogic;
 using SYFY_Domain.model;
 using System.Collections.ObjectModel;
-
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace SYFY_Adapter_GUI
 {
@@ -19,9 +21,8 @@ namespace SYFY_Adapter_GUI
                 
         private List<IViewDataHandler> dataHandlers;
 
-
         public MainViewModel(DataManagement dataManager)
-        {
+        {   
             this.dataManager = dataManager;
             
             bankAccounts = new ObservableCollection<BankAccount>();
@@ -30,61 +31,55 @@ namespace SYFY_Adapter_GUI
             currentTransactionTags = new ObservableCollection<TransactionTag>();
             currentlyAvailableTransactionTags = new ObservableCollection<TransactionTag>();
 
-            dataHandlers = new List<IViewDataHandler>
+            dataHandlers = new List<IViewDataHandler>();            
+        }
+               
+        public void AddDataHandler(List<IViewDataHandler> handler)
+        {
+            dataHandlers.AddRange(handler);
+
+            foreach(IViewDataHandler h in handler)
             {
-                new ViewDataBankAccountHandler(bankAccounts, dataManager),
-                new ViewDataBankingTransactionHandler(bankingTransactions, dataManager),
-                new ViewDataTransactionTagHandler(transactionTags, dataManager)
-            };
-
-            LoadData();
-
+                h.LoadData();
+            }
         }
 
         public void BTN_NewTransaction_Click(object? sender, EventArgs e)
         {
+            //TODO
             BankingTransaction transaction = dataManager.CreateEmptyBankingTransaction();
-            bankingTransactions.Insert(0, transaction);
-            DataChanged(transaction);
+            DataChanged(transaction, newlyCreated: true);
         }
 
         public void BTN_NewBankAccount_Click(object? sender, EventArgs e)
         {
             //TODO
             BankAccount b = dataManager.CreateEmptyBankAccount();
-            bankAccounts.Insert(0, b);
-            DataChanged(b);
+            DataChanged(b, newlyCreated:true);
         }
 
         public void BTN_NewTransactionTag_Click(object sender, EventArgs e)
         {
             //TODO
             TransactionTag tag = dataManager.CreateEmptyTransactionTag();
-            transactionTags.Insert(0, tag);
-            DataChanged(tag);
+            DataChanged(tag, newlyCreated:true);
         }
-
-        public void DataChanged(DeleteableData d, bool deleted = false)
-        {
-           ExecActionForAllDataHandlers((h) =>
-            {
-                if (h.Handles(d))
-                {
-                    h.DataChanged(d,deleted);
-                }
-            });
-        }
-
         private void ExecActionForAllDataHandlers(Action<IViewDataHandler> value)
         {
-            //tell dont ask (DRY)
             foreach (IViewDataHandler dataHandler in dataHandlers)
             {
                 value.Invoke(dataHandler);
             }
         }
-        
-        
+
+        public void DataChanged(DeleteableData d, bool deleted = false, bool newlyCreated = false)
+        {
+           ExecActionForAllDataHandlers((h) =>
+            {
+                h.DataChanged(d, deleted, newlyCreated);
+            });
+        }
+                
         public void SaveChanges_Click()
         {
             try
@@ -103,26 +98,7 @@ namespace SYFY_Adapter_GUI
         {
             ExecActionForAllDataHandlers((h) => h.LoadData());
         }
-              
-        public void ShowTags(BankingTransaction transaction)
-        {
-            currentTransactionTags.Clear();
-            foreach(Guid tagId in transaction.TransactionTags)
-            {
-                currentTransactionTags.Add(dataManager.GetTransactionTagByID(tagId));
-            }
-
-            currentlyAvailableTransactionTags.Clear();
-            foreach(TransactionTag tag in transactionTags)
-            {
-                if (!transaction.TransactionTags.Contains(tag.Guid))
-                {
-                    currentlyAvailableTransactionTags.Add(dataManager.GetTransactionTagByID(tag.Guid));
-                }
-            }
-        }
-
-
+            
         public void DiscardChanges_Click()
         {
             ExecActionForAllDataHandlers((h) => h.DiscardChanges());
@@ -143,9 +119,34 @@ namespace SYFY_Adapter_GUI
             return false;
         }
 
+        public void ShowTags(BankingTransaction transaction)
+        {
+            currentTransactionTags.Clear();
+            foreach (Guid tagId in transaction.TransactionTags)
+            {
+                currentTransactionTags.Add(dataManager.GetTransactionTagByID(tagId));
+            }
+
+            currentlyAvailableTransactionTags.Clear();
+            foreach (TransactionTag tag in transactionTags)
+            {
+                if (!transaction.TransactionTags.Contains(tag.Guid))
+                {
+                    try
+                    {
+                        currentlyAvailableTransactionTags.Add(dataManager.GetTransactionTagByID(tag.Guid));
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                }
+            }
+        }
+
         public void AddTagToTransaction(BankingTransaction transaction, TransactionTag tag)
         {
-            transaction.TransactionTags.Add(tag.Guid);
+            dataManager.AddTagToTransaction(transaction, tag);
             DataChanged(transaction);
             currentTransactionTags.Add(tag);
             currentlyAvailableTransactionTags.Remove(tag);
@@ -153,10 +154,10 @@ namespace SYFY_Adapter_GUI
 
         public void RemoveTagFromTransaction(BankingTransaction transaction, TransactionTag tag)
         {
-            transaction.TransactionTags.Remove(tag.Guid);
+            dataManager.RemoveTagFromTransaction(transaction, tag);
             DataChanged(transaction);
             currentTransactionTags.Remove(tag);
             currentlyAvailableTransactionTags.Add(tag);
         }
-    }
+    }   
 }
