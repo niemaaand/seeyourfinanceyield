@@ -10,31 +10,50 @@ namespace SYFY_Plugin_GUI_WPF.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            long amount = (long)value;
-            bool positiveSign = true;
-
-            if (amount < 0)
-            {
-                positiveSign = false;
-                amount = -amount;
-            }
-
-            long eur = amount / 100;
-            long cent = amount % 100;
-            return (positiveSign ? "" : "-") + eur.ToString() + "." + cent.ToString("00");
+            return ConvertLongToString.AsCurrency((long)value);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            string strValue = (string)value;
-            decimal val = 0;
+            long res;
 
-            if (Decimal.TryParse(strValue, NumberStyles.Currency, CultureInfo.InvariantCulture, out val))
+            if (ConvertStringToLong.TryFromCurrency((string)value, out res))
             {
-                return (long)(val * 100);
+                return res;
             }
 
             return DependencyProperty.UnsetValue;
+        }
+    }
+
+    internal static class ConvertLongToString
+    {
+        static internal string AsCurrency(long l)
+        {
+            int sign = Math.Sign(l);
+            l = Math.Abs(l);
+
+            long eur = l / 100;
+            long cent = l % 100;
+
+            return (sign >= 0 ? "" : "-") + eur.ToString() + "." + cent.ToString("00");
+        }
+    }
+
+    internal static class ConvertStringToLong
+    {
+        static internal bool TryFromCurrency(string amount, out long value)
+        {
+            decimal val = 0;
+            value = 0;
+
+            if (Decimal.TryParse(amount, NumberStyles.Currency, CultureInfo.InvariantCulture, out val))
+            {
+                value = (long)(val * 100);
+                return true;
+            }
+
+            return false;
         }
     }
 }
