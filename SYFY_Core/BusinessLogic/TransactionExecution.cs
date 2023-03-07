@@ -1,12 +1,6 @@
 ﻿using SYFY_Application.DatabaseAccess;
 using SYFY_Domain.model;
 using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Transactions;
 
 namespace SYFY_Application.BusinessLogic
 {

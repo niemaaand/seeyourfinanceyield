@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Windows;
 using System.Windows.Data;
 using SYFY_Application.BusinessLogic;
 
@@ -27,7 +28,8 @@ namespace SYFY_Plugin_GUI_WPF.Converters
 
         object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            return DependencyProperty.UnsetValue;
         }
     }
 }
