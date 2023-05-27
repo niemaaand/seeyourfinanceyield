@@ -27,7 +27,7 @@ namespace SYFY_Adapter_GUI.Tests
             Dictionary<Guid, TransactionTag> tags = new Dictionary<Guid, TransactionTag>();
             tags.Add(tag.Guid, tag);
 
-            Mock<IDataBaseConnector> dbConnector = new Mock<IDataBaseConnector>();
+            Mock<IDataBaseConnectorAdapter> dbConnector = new Mock<IDataBaseConnectorAdapter>();
             dbConnector.Setup(x => x.GetAllBankingTransactions()).Returns(new Dictionary<Guid, BankingTransaction>());
             dbConnector.Setup(x => x.ExistsTransactionTag(tag.Guid)).Returns(tags.ContainsKey(tag.Guid));
 
