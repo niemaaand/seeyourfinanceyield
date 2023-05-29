@@ -1,11 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SYFY_Domain.model;
-using SYFY_Plugin_DatabaseSimulation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SYFY_Plugin_DatabaseSimulation.Tests
 {
